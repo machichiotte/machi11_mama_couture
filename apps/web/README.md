@@ -1,75 +1,20 @@
-# Nuxt Minimal Starter
+# Mama Couture - Frontend
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Application Nuxt 4 pour la vitrine de **Mama Couture**.
 
-## Setup
+## Technologies
+- **Framework** : Nuxt 4
+- **Langage** : TypeScript
+- **Style** : TailwindCSS + CSS Variables (Themeable)
+- **CMS** : @machi10/types (Payload CMS Types)
 
-Make sure to install dependencies:
+## Design System
+Le design system est entièrement piloté par des variables CSS sémantiques définies dans `app/assets/css/main.css`.
+- `--primary` : Couleur principale (Textes, Bordures, Fonds foncés)
+- `--secondary` : Couleur secondaire (Fonds clairs, Cartes)
+- `--accent` : Couleur d'accentuation (Boutons, Liens hover)
 
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Commandes
+- `npm run dev` : Lancer le serveur de développement (http://localhost:3001)
+- `npm run lint` : Vérifier les types TypeScript
+- `npm run build` : Construire pour la production
