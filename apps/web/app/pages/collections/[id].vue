@@ -38,7 +38,7 @@ useHead({
 <template>
   <main v-if="collection">
     <!-- Hero Section de la Collection -->
-    <header class="h-[60vh] relative flex items-center justify-center overflow-hidden bg-black">
+    <header class="h-[60vh] relative flex items-center justify-center overflow-hidden bg-primary">
       <div class="absolute inset-0 opacity-40">
         <template v-if="collection.coverImage">
           <NuxtImg 
@@ -51,8 +51,8 @@ useHead({
       </div>
       
       <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in">
-        <h1 class="text-white text-5xl md:text-7xl font-serif mb-6 leading-tight">{{ collection.title }}</h1>
-        <p class="text-white/80 text-lg md:text-xl italic font-light max-w-2xl mx-auto">
+        <h1 class="text-secondary text-5xl md:text-7xl font-serif mb-6 leading-tight">{{ collection.title }}</h1>
+        <p class="text-secondary/80 text-lg md:text-xl italic font-light max-w-2xl mx-auto">
           {{ collection.description }}
         </p>
       </div>
@@ -60,19 +60,19 @@ useHead({
 
     <!-- Grille des Créations -->
     <section class="container mx-auto px-6 py-20">
-      <div class="flex flex-col md:flex-row justify-between items-baseline mb-16 border-b border-gray-100 pb-8">
+      <div class="flex flex-col md:flex-row justify-between items-baseline mb-16 border-b border-primary/5 pb-8">
         <div>
           <h2 class="text-accent text-sm uppercase tracking-widest mb-2 font-bold">Portfolio</h2>
-          <p class="text-3xl font-serif">Les Pièces d'Exception</p>
+          <p class="text-3xl font-serif text-primary">Les Pièces d'Exception</p>
         </div>
-        <div class="text-gray-400 text-sm italic mt-4 md:mt-0 font-serif">
+        <div class="text-primary/40 text-sm italic mt-4 md:mt-0 font-serif">
           {{ creations?.docs?.length || 0 }} créations uniques
         </div>
       </div>
 
       <div v-if="creations?.docs?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
         <article v-for="creation in creations.docs" :key="creation.id" class="group">
-          <div class="relative aspect-square overflow-hidden bg-gray-50 mb-6 rounded-sm shadow-sm group-hover:shadow-xl transition-all duration-500">
+          <div class="relative aspect-square overflow-hidden bg-secondary/50 mb-6 rounded-sm shadow-sm group-hover:shadow-xl transition-all duration-500 border border-primary/5">
             <!-- Image de la Création -->
             <template v-if="creation.images?.length && creation.images[0]?.image">
               <NuxtImg 
@@ -81,35 +81,35 @@ useHead({
                 loading="lazy"
               />
             </template>
-            <div v-else class="w-full h-full border border-gray-100 flex items-center justify-center text-gray-300">
+            <div v-else class="w-full h-full border border-primary/5 flex items-center justify-center text-primary/20">
                <span class="text-xs uppercase tracking-widest font-sans">Pas d'image</span>
             </div>
             
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-500"></div>
             
             <!-- Overlay Actions -->
             <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-              <span v-if="creation.price" class="bg-white text-black px-4 py-2 text-sm font-medium shadow-lg">{{ creation.price }}€</span>
-              <button class="bg-black text-white px-6 py-2 text-xs uppercase tracking-widest hover:bg-accent transition-colors shadow-lg">Détails</button>
+              <span v-if="creation.price" class="bg-secondary text-primary px-4 py-2 text-sm font-medium shadow-lg">{{ creation.price }}€</span>
+              <button class="bg-primary text-secondary px-6 py-2 text-xs uppercase tracking-widest hover:bg-accent transition-colors shadow-lg">Détails</button>
             </div>
           </div>
           
-          <h3 class="text-xl font-serif mb-2 group-hover:text-accent transition-colors">{{ creation.title }}</h3>
-          <p class="text-gray-500 text-sm line-clamp-2 italic font-serif leading-relaxed">{{ creation.description }}</p>
+          <h3 class="text-xl font-serif mb-2 text-primary group-hover:text-accent transition-colors">{{ creation.title }}</h3>
+          <p class="text-primary/60 text-sm line-clamp-2 italic font-serif leading-relaxed">{{ creation.description }}</p>
         </article>
       </div>
 
       <!-- État Vide -->
-      <div v-else class="text-center py-32 bg-gray-50 rounded-sm border border-dashed border-gray-200">
-        <p class="text-gray-400 font-serif italic text-lg">Cette collection ne contient pas encore de créations.</p>
-        <NuxtLink to="/contact" class="inline-block mt-6 text-accent hover:text-black transition-colors font-medium border-b border-accent">
+      <div v-else class="text-center py-32 bg-secondary/50 rounded-sm border border-dashed border-primary/10">
+        <p class="text-primary/40 font-serif italic text-lg">Cette collection ne contient pas encore de créations.</p>
+        <NuxtLink to="/contact" class="inline-block mt-6 text-accent hover:text-primary transition-colors font-medium border-b border-accent">
           Se renseigner sur les prochaines pièces
         </NuxtLink>
       </div>
       
       <!-- Bouton Retour -->
-      <nav class="mt-24 pt-12 border-t border-gray-100 flex justify-center">
-        <NuxtLink to="/collections" class="text-black hover:text-accent font-medium tracking-widest text-sm uppercase flex items-center group transition-all">
+      <nav class="mt-24 pt-12 border-t border-primary/5 flex justify-center">
+        <NuxtLink to="/collections" class="text-primary hover:text-accent font-medium tracking-widest text-sm uppercase flex items-center group transition-all">
           <span class="mr-3 transform group-hover:-translate-x-2 transition-transform duration-300">←</span>
           Retour à toutes les collections
         </NuxtLink>
@@ -118,10 +118,10 @@ useHead({
   </main>
 
   <!-- État de chargement -->
-  <div v-else class="min-h-screen flex items-center justify-center bg-white">
+  <div v-else class="min-h-screen flex items-center justify-center bg-secondary">
     <div class="text-center">
        <div class="w-16 h-16 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-       <p class="font-serif italic text-gray-500 text-lg">Immersion dans la collection...</p>
+       <p class="font-serif italic text-primary/40 text-lg">Immersion dans la collection...</p>
     </div>
   </div>
 </template>

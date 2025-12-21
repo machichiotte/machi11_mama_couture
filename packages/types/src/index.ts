@@ -94,10 +94,12 @@ export interface Config {
   globals: {
     'artisan-profile': ArtisanProfile;
     'site-settings': SiteSetting;
+    'ui-strings': UiString;
   };
   globalsSelect: {
     'artisan-profile': ArtisanProfileSelect<false> | ArtisanProfileSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'ui-strings': UiStringsSelect<false> | UiStringsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -458,6 +460,28 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ui-strings".
+ */
+export interface UiString {
+  id: string;
+  hero: {
+    exploreButton: string;
+  };
+  collections?: {
+    title?: string | null;
+    viewAll?: string | null;
+    discoverButton?: string | null;
+    noImage?: string | null;
+  };
+  common?: {
+    loading?: string | null;
+    contactTitle?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "artisan-profile_select".
  */
 export interface ArtisanProfileSelect<T extends boolean = true> {
@@ -485,6 +509,34 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   tagline?: T;
   seoDescription?: T;
   heroImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ui-strings_select".
+ */
+export interface UiStringsSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        exploreButton?: T;
+      };
+  collections?:
+    | T
+    | {
+        title?: T;
+        viewAll?: T;
+        discoverButton?: T;
+        noImage?: T;
+      };
+  common?:
+    | T
+    | {
+        loading?: T;
+        contactTitle?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
