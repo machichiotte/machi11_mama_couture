@@ -3,9 +3,10 @@
 Site vitrine premium pour la créatrice **Mama Couture**, combinant la puissance de **Payload CMS** et la fluidité de **Nuxt 4**.
 
 ## 📖 Documentation
-Pour une compréhension approfondie de l'architecture et des décisions techniques, consultez le :
-👉 **[Guide Technique Détaillé](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/TECHNICAL_GUIDE.md)**
-(Note: Documentation centralisée dans l'espace Ops)
+Pour une compréhension approfondie, consultez la documentation Ops centralisée :
+- 🏗️ **[Structure Complète](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/STRUCTURE.md)**
+- 🛡️ **[Standards de Dév](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/DEVELOPMENT_STANDARDS.md)**
+- 📘 **[Guide Technique](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/TECHNICAL_GUIDE.md)**
 
 ---
 
