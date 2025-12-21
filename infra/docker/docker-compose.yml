@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongodb/mongodb-community-server:latest
-    container_name: machi10_mongo_dev
+    container_name: machi11_mama_couture_mongo_dev
     ports:
       - "27017:27017"
     volumes:
