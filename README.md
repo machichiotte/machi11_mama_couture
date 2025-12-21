@@ -1,0 +1,50 @@
+# 🧶 Mama Couture (machi11)
+
+Site vitrine premium pour la créatrice **Mama Couture**, combinant la puissance de **Payload CMS** et la fluidité de **Nuxt 4**.
+
+## 📖 Documentation
+Pour une compréhension approfondie de l'architecture et des décisions techniques, consultez le :
+👉 **[Guide Technique Détaillé](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/TECHNICAL_GUIDE.md)**
+(Note: Documentation centralisée dans l'espace Ops)
+
+---
+
+## 🏗 Structure du Projet
+- **`apps/cms`** : Backend Payload CMS & Interface d'administration.
+- **`apps/web`** : Frontend Nuxt (structure Nuxt 4) avec design haut de gamme.
+- **`packages/types`** : Définitions TypeScript partagées (générées auto).
+- **`infra/docker`** : Infrastructure de développement locale (MongoDB).
+
+---
+
+## 🚀 Démarrage Rapide
+
+### 1. Préparer l'Infrastructure
+Lancez la base de données MongoDB via Docker :
+```bash
+docker compose -f infra/docker/docker-compose.yml up -d
+```
+
+### 2. Lancer le CMS (Backend)
+```bash
+cd apps/cms
+npm install
+npm run dev
+```
+Accès Admin : `http://localhost:3000/admin` (Identifiants à créer au premier lancement).
+
+### 3. Lancer le Web (Frontend)
+```bash
+cd apps/web
+npm install
+npm run dev
+```
+Accès Site : `http://localhost:3001`
+
+---
+
+## 🎨 Philosophie du Projet
+Ce projet n'est pas qu'un simple site, c'est un **outil de mise en valeur artisanale** :
+- **Design de Luxe** : Utilisation d'accents dorés, de typographies Serif élégantes et d'animations subtiles.
+- **Performance** : Utilisation de Nuxt Image pour des chargements ultra-rapides.
+- **Extensibilité** : Structure prête pour le multi-tenant et le partage de types.

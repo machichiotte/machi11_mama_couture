@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "declaration": true,
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "types": [
+            "payload"
+        ],
+        "paths": {
+            "payload": [
+                "../../node_modules/payload"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

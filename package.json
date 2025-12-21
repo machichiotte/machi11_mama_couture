@@ -1,0 +1,27 @@
+{
+  "name": "machi11_mama_couture",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Headless CMS foundation for creative businesses",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"CMS,WEB\" -c \"magenta,cyan\" \"npm run dev --workspace=cms\" \"npm run dev --workspace=web\"",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "generate:types": "npm run generate:types --workspace=cms"
+  },
+  "keywords": [
+    "payloadcms",
+    "nuxt",
+    "cms",
+    "headless"
+  ],
+  "author": "Machi",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
