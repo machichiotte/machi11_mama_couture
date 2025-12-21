@@ -464,6 +464,12 @@ export interface SiteSetting {
  */
 export interface UiString {
   id: string;
+  nav?: {
+    collections?: string | null;
+    artisan?: string | null;
+    contact?: string | null;
+    menuLabel?: string | null;
+  };
   hero: {
     exploreButton: string;
   };
@@ -518,6 +524,14 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "ui-strings_select".
  */
 export interface UiStringsSelect<T extends boolean = true> {
+  nav?:
+    | T
+    | {
+        collections?: T;
+        artisan?: T;
+        contact?: T;
+        menuLabel?: T;
+      };
   hero?:
     | T
     | {

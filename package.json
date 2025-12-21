@@ -11,7 +11,13 @@
     "dev": "concurrently -n \"CMS,WEB\" -c \"magenta,cyan\" \"npm run dev --workspace=cms\" \"npm run dev --workspace=web\"",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
-    "generate:types": "npm run generate:types --workspace=cms"
+    "generate:types": "npm run generate:types --workspace=cms",
+    "lint:fix": "npm run lint --workspaces --if-present -- --fix",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "apps/web/**/*.{js,ts,vue}": "npm run lint --workspace=web",
+    "apps/cms/**/*.{js,ts}": "npm run lint --workspace=cms"
   },
   "keywords": [
     "payloadcms",
@@ -22,6 +28,8 @@
   "author": "Machi",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
   }
 }

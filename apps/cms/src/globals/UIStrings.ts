@@ -8,6 +8,32 @@ export const UIStrings: GlobalConfig = {
     },
     fields: [
         {
+            name: 'nav',
+            type: 'group',
+            fields: [
+                {
+                    name: 'collections',
+                    type: 'text',
+                    defaultValue: 'Collections',
+                },
+                {
+                    name: 'artisan',
+                    type: 'text',
+                    defaultValue: 'L\'Artisan',
+                },
+                {
+                    name: 'contact',
+                    type: 'text',
+                    defaultValue: 'Contact',
+                },
+                {
+                    name: 'menuLabel',
+                    type: 'text',
+                    defaultValue: 'Menu',
+                }
+            ]
+        },
+        {
             name: 'hero',
             type: 'group',
             fields: [

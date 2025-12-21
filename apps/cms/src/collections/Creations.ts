@@ -36,7 +36,7 @@ export const Creations: CollectionConfig = {
         {
             name: 'collection',
             type: 'relationship',
-            relationTo: 'series' as any,
+            relationTo: 'series' as const,
             required: true,
             index: true,
         },
