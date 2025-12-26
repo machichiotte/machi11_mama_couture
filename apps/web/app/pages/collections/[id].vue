@@ -20,7 +20,7 @@ const { data: collection } = await useAsyncData(`collection-${collectionId}`, ()
 const { data: creations } = await useAsyncData(`creations-${collectionId}`, () => 
   getCollection('creations', { 
     where: { 
-      collection: { equals: collectionId },
+      series: { equals: collectionId },
       isPublished: { equals: true }
     }
   })
@@ -56,7 +56,7 @@ useHead({
 </script>
 
 <template>
-  <main v-if="collection">
+  <main v-if="collection && collection.isPublished">
     <!-- Hero Section de la Collection -->
     <header class="h-[60vh] relative flex items-center justify-center overflow-hidden bg-primary">
       <div class="absolute inset-0 opacity-40">

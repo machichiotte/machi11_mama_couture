@@ -7,7 +7,7 @@ const { getGlobals, getCollection } = usePayload()
 const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', () => getGlobals('site-settings'))
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 const { data: collections } = await useAsyncData('collections', () => 
-  getCollection('series', { where: { isPublished: { equals: true } } })
+  getCollection('series', { where: { isPublished: { equals: true } }, limit: 100 })
 )
 </script>
 
