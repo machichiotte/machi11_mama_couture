@@ -16,9 +16,6 @@ import { UIStrings } from './globals/UIStrings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-import { cloudStorage } from '@payloadcms/plugin-cloud-storage'
-import { cloudinaryAdapter } from '@payloadcms/plugin-cloud-storage/cloudinary'
-
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -39,21 +36,5 @@ export default buildConfig({
     url: process.env.DATABASE_URL || '',
   }),
   sharp,
-  plugins: [
-    ...(process.env.CLOUDINARY_URL
-      ? [
-        cloudStorage({
-          collections: {
-            media: {
-              adapter: cloudinaryAdapter({
-                config: {
-                  cloudinary_url: process.env.CLOUDINARY_URL,
-                },
-              }),
-            },
-          },
-        }),
-      ]
-      : []),
-  ],
+  plugins: [],
 })

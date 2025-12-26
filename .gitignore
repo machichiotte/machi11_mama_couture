@@ -30,3 +30,4 @@ Thumbs.db
 
 # Docker
 docker/mongodb_data/
+backups/
