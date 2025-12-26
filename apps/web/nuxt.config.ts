@@ -12,15 +12,22 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/image',
   ],
-  // @ts-ignore - Module types might not be augmented yet
+  nitro: {
+    preset: 'cloudflare-pages'
+  },
   image: {
-    domains: ['localhost'],
+    domains: [
+      'localhost',
+      'free-glyn-machichiotte-61a9f3f6.koyeb.app'
+    ],
   },
   runtimeConfig: {
     public: {
       payloadBaseUrl: process.env.PAYLOAD_BASE_URL || 'http://localhost:3000',
     }
   },
+
+
   app: {
     head: {
       link: [
