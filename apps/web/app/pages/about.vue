@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { ArtisanProfile, UiString } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
+import { useRichText } from '~/composables/useRichText'
 
 const { getGlobals } = usePayload()
+const { serialize } = useRichText()
 const { data: artisan } = await useAsyncData('artisan-profile', () => getGlobals('artisan-profile'))
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 </script>
@@ -29,9 +31,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
             <!-- If bio is a string (rich text HTML) -->
             <div v-if="typeof artisan.bio === 'string'" v-html="artisan.bio"></div>
             <!-- If bio is a Lexical object -->
-            <div v-else-if="artisan.bio" class="opacity-70 italic">
-                {{ ui?.common?.loading }}
-            </div>
+            <div v-else-if="artisan.bio" v-html="serialize(artisan.bio)"></div>
           </div>
         </div>
         

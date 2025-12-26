@@ -6,6 +6,10 @@ export const UIStrings: GlobalConfig = {
         name: 'UI Strings',
         group: 'Settings',
     },
+    access: {
+        read: () => true,
+        update: ({ req: { user } }) => !!user,
+    },
     fields: [
         {
             name: 'nav',
@@ -68,6 +72,11 @@ export const UIStrings: GlobalConfig = {
                     name: 'noImage',
                     type: 'text',
                     defaultValue: "Pas d'image",
+                },
+                {
+                    name: 'uniqueCreationsLabel',
+                    type: 'text',
+                    defaultValue: 'créations uniques',
                 },
             ],
         },

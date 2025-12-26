@@ -4,7 +4,7 @@ export const Creations: CollectionConfig = {
     slug: 'creations',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['title', 'collection', 'isPublished', 'createdAt'],
+        defaultColumns: ['title', 'series', 'isPublished', 'createdAt'],
     },
     access: {
         read: () => true,
@@ -34,7 +34,7 @@ export const Creations: CollectionConfig = {
             ],
         },
         {
-            name: 'collection',
+            name: 'series',
             type: 'relationship',
             relationTo: 'series' as const,
             required: true,

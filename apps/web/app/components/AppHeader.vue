@@ -20,6 +20,7 @@ const siteTitle = computed(() => siteSettings.value?.siteTitle || 'MAMA COUTURE'
       </NuxtLink>
 
       <nav v-if="ui?.nav" class="hidden md:flex space-x-8 items-center text-primary">
+
         <NuxtLink to="/collections" class="text-sm font-medium hover:text-accent transition-colors">
             {{ ui.nav.collections }}
         </NuxtLink>

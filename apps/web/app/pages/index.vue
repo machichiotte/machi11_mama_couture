@@ -14,20 +14,25 @@ const { data: collections } = await useAsyncData('collections', () =>
 <template>
   <div>
     <!-- Hero Section -->
-    <section class="relative h-[80vh] flex items-center justify-center overflow-hidden bg-primary text-secondary">
-      <div class="absolute inset-0 opacity-60">
-        <!-- Background image would go here if available -->
-        <div class="w-full h-full bg-gradient-to-v from-primary/80 to-transparent"></div>
+    <section class="relative h-[65vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-secondary text-primary">
+      <div class="absolute inset-0">
+        <NuxtImg
+          v-if="siteSettings?.heroImage && typeof siteSettings.heroImage === 'object'"
+          :src="`${useRuntimeConfig().public.payloadBaseUrl}${siteSettings.heroImage.url}`"
+          :alt="siteSettings.heroImage.alt || 'Atelier Couture'"
+          class="w-full h-full object-cover" 
+        />
+        <div class="absolute inset-0 bg-white/35"></div>
       </div>
       
       <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in">
-        <h2 class="text-lg uppercase tracking-[0.3em] text-accent mb-4 font-medium">
-          {{ siteSettings?.tagline || ui?.hero.exploreButton }}
-        </h2>
-        <h1 class="text-5xl md:text-7xl font-serif mb-8 leading-tight text-secondary">
+        <h1 class="text-5xl md:text-7xl font-serif mb-6 leading-tight text-primary">
           {{ siteSettings?.siteTitle || 'Machi11 Couture' }}
         </h1>
-        <p class="text-xl opacity-80 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+        <h2 class="text-lg uppercase tracking-[0.3em] text-primary mb-8 font-bold">
+          {{ siteSettings?.tagline || ui?.hero.exploreButton }}
+        </h2>
+        <p class="text-xl text-primary/80 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
           {{ siteSettings?.seoDescription || '' }}
         </p>
         <NuxtLink to="/collections" class="premium-button text-lg px-10 py-4 font-medium transition-all duration-500">
@@ -43,7 +48,7 @@ const { data: collections } = await useAsyncData('collections', () =>
           <h3 class="text-accent text-sm uppercase tracking-widest mb-2 font-semibold">
               {{ ui?.collections?.title || 'Nos Collections' }}
           </h3>
-          <h2 class="text-4xl font-serif">{{ ui?.collections?.title || 'Sélections' }}</h2>
+          <h2 class="text-4xl font-serif">{{ 'Nos Créations' }}</h2>
         </div>
         <NuxtLink to="/collections" class="text-sm font-medium border-b border-primary pb-1 hover:text-accent hover:border-accent transition-all">
             {{ ui?.collections?.viewAll || 'Voir tout' }}
@@ -52,7 +57,7 @@ const { data: collections } = await useAsyncData('collections', () =>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         <div v-for="collection in (collections?.docs || [])" :key="collection.id" class="group">
-          <div class="relative h-[500px] overflow-hidden rounded-sm mb-6 bg-secondary/50">
+          <div class="relative aspect-square overflow-hidden rounded-sm mb-6 bg-secondary/50">
             <template v-if="collection.coverImage">
               <NuxtImg 
                 :src="typeof collection.coverImage === 'object' ? `${useRuntimeConfig().public.payloadBaseUrl}${collection.coverImage.url}` : ''"

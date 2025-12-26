@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-    --primary: #2d2d2d;
-    /* Soft Charcoal */
-    --secondary: #f9f7f2;
-    /* Linen */
-    --accent: #bc8f8f;
-    /* Dusty Rose */
+    --primary: #594a42;
+    /* Warm Coffee Brown */
+    --secondary: #fcfbf7;
+    /* Vintage Paper Cream */
+    --accent: #b05d54;
+    /* Faded Terracotta */
 }
 
 body {

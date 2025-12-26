@@ -211,7 +211,7 @@ export interface Creation {
     image: string | Media;
     id?: string | null;
   }[];
-  collection: string | Series;
+  series: string | Series;
   price?: number | null;
   isPublished?: boolean | null;
   updatedAt: string;
@@ -365,7 +365,7 @@ export interface CreationsSelect<T extends boolean = true> {
         image?: T;
         id?: T;
       };
-  collection?: T;
+  series?: T;
   price?: T;
   isPublished?: T;
   updatedAt?: T;
@@ -478,6 +478,7 @@ export interface UiString {
     viewAll?: string | null;
     discoverButton?: string | null;
     noImage?: string | null;
+    uniqueCreationsLabel?: string | null;
   };
   common?: {
     loading?: string | null;
@@ -544,6 +545,7 @@ export interface UiStringsSelect<T extends boolean = true> {
         viewAll?: T;
         discoverButton?: T;
         noImage?: T;
+        uniqueCreationsLabel?: T;
       };
   common?:
     | T

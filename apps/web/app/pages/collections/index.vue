@@ -42,7 +42,7 @@ useHead({
         class="group cursor-pointer block"
         :style="{ animationDelay: `${index * 0.1}s` }"
       >
-        <div class="relative aspect-[4/5] overflow-hidden mb-8 bg-secondary/50 rounded-sm shadow-sm group-hover:shadow-2xl transition-all duration-700 border border-primary/5">
+        <div class="relative aspect-square overflow-hidden mb-8 bg-secondary/50 rounded-sm shadow-sm group-hover:shadow-2xl transition-all duration-700 border border-primary/5">
           <!-- Image de Couverture -->
           <template v-if="collection.coverImage">
             <NuxtImg 

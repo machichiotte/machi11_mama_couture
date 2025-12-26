@@ -26,21 +26,16 @@ Lancez la base de données MongoDB via Docker :
 docker compose -f infra/docker/docker-compose.yml up -d
 ```
 
-### 2. Lancer le CMS (Backend)
+### 2. Lancer le Projet (CMS + Frontend)
+Depuis la racine du projet :
 ```bash
-cd apps/cms
 npm install
 npm run dev
 ```
-Accès Admin : `http://localhost:3000/admin` (Identifiants à créer au premier lancement).
 
-### 3. Lancer le Web (Frontend)
-```bash
-cd apps/web
-npm install
-npm run dev
-```
-Accès Site : `http://localhost:3001`
+Cela lancera simultanément :
+- **CMS (Backend)** : [http://localhost:3000/admin](http://localhost:3000/admin)
+- **Web (Frontend)** : [http://localhost:3001](http://localhost:3001)
 
 ---
 

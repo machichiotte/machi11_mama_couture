@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Series as Collection, Creation } from '@machi10/types'
+import type { Series as Collection, Creation, UiString } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
 /**
@@ -7,7 +7,7 @@ import { usePayload } from '~/composables/usePayload'
  * Affiche la description de la collection et toutes les créations associées
  */
 const route = useRoute()
-const { getById, getCollection } = usePayload()
+const { getById, getCollection, getGlobals } = usePayload()
 
 const collectionId = route.params.id as string
 
@@ -25,6 +25,26 @@ const { data: creations } = await useAsyncData(`creations-${collectionId}`, () =
     }
   })
 )
+
+// 3. Récupérer les textes de l'interface
+const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
+
+// Helper pour extraire le texte brut du JSON Lexical
+const extractLexicalText = (root: any): string => {
+  if (!root) return ''
+  if (typeof root === 'string') return root
+  
+  let text = ''
+  if (root.children && Array.isArray(root.children)) {
+    for (const child of root.children) {
+      text += extractLexicalText(child)
+    }
+  }
+  if (root.text) {
+    text += root.text
+  }
+  return text
+}
 
 // Meta tags pour le SEO
 useHead({
@@ -66,7 +86,7 @@ useHead({
           <p class="text-3xl font-serif text-primary">Les Pièces d'Exception</p>
         </div>
         <div class="text-primary/40 text-sm italic mt-4 md:mt-0 font-serif">
-          {{ creations?.docs?.length || 0 }} créations uniques
+          {{ creations?.docs?.length || 0 }} {{ ui?.collections?.uniqueCreationsLabel || 'créations uniques' }}
         </div>
       </div>
 
@@ -95,7 +115,9 @@ useHead({
           </div>
           
           <h3 class="text-xl font-serif mb-2 text-primary group-hover:text-accent transition-colors">{{ creation.title }}</h3>
-          <p class="text-primary/60 text-sm line-clamp-2 italic font-serif leading-relaxed">{{ creation.description }}</p>
+          <p class="text-primary/60 text-sm line-clamp-2 italic font-serif leading-relaxed">
+            {{ creation.description && typeof creation.description === 'object' && creation.description.root ? extractLexicalText(creation.description.root) : creation.description }}
+          </p>
         </article>
       </div>
 
