@@ -19,16 +19,21 @@ const siteTitle = computed(() => siteSettings.value?.siteTitle || 'MAMA COUTURE'
         </h1>
       </NuxtLink>
 
-      <nav v-if="ui?.nav" class="hidden md:flex space-x-8 items-center text-primary">
-
-        <NuxtLink to="/collections" class="text-sm font-medium hover:text-accent transition-colors">
-            {{ ui.nav.collections }}
-        </NuxtLink>
-        <NuxtLink to="/about" class="text-sm font-medium hover:text-accent transition-colors">
-            {{ ui.nav.artisan }}
-        </NuxtLink>
-        <NuxtLink to="/contact" class="premium-button text-sm">
-            {{ ui.nav.contact }}
+      <nav v-if="ui?.nav" class="hidden md:flex space-x-10 items-center">
+        <NuxtLink 
+          v-for="item in [
+            { to: '/collections', label: ui.nav.collections },
+            { to: '/about', label: ui.nav.artisan },
+            { to: '/contact', label: ui.nav.contact }
+          ]" 
+          :key="item.to"
+          :to="item.to" 
+          class="text-xs uppercase tracking-[0.2em] font-bold text-primary/60 hover:text-primary transition-all relative py-1 group"
+          active-class="!text-accent !text-opacity-100"
+        >
+          {{ item.label }}
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" 
+                :class="{ 'w-full': $route.path.startsWith(item.to) }"></span>
         </NuxtLink>
       </nav>
 
