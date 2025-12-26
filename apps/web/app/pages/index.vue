@@ -7,7 +7,7 @@ const { getGlobals, getCollection } = usePayload()
 const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', () => getGlobals('site-settings'))
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 const { data: collections } = await useAsyncData('collections', () => 
-  getCollection('series', { where: { isPublished: { equals: true } }, limit: 100 })
+  getCollection('series', { where: { isPublished: { equals: true } }, limit: 4 })
 )
 </script>
 
@@ -41,44 +41,71 @@ const { data: collections } = await useAsyncData('collections', () =>
       </div>
     </section>
 
-    <!-- Collections Grid -->
-    <section class="py-24 container mx-auto px-6">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-16">
-        <div>
-          <h3 class="text-accent text-sm uppercase tracking-widest mb-2 font-semibold">
-              {{ ui?.collections?.title || 'Nos Collections' }}
+    <section class="py-32 container mx-auto px-6 overflow-hidden">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-primary/5 pb-12">
+        <div class="max-w-xl">
+          <h3 class="text-accent text-xs uppercase tracking-[0.3em] mb-4 font-bold flex items-center gap-3">
+              <span class="w-10 h-[1px] bg-accent"></span>
+              {{ ui?.collections?.title || 'Sélections' }}
           </h3>
-          <h2 class="text-4xl font-serif">{{ 'Nos Créations' }}</h2>
+          <h2 class="text-5xl md:text-6xl font-serif text-primary leading-tight">Nos Créations</h2>
         </div>
-        <NuxtLink to="/collections" class="text-sm font-medium border-b border-primary pb-1 hover:text-accent hover:border-accent transition-all">
-            {{ ui?.collections?.viewAll || 'Voir tout' }}
+        <NuxtLink to="/collections" class="group flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-primary hover:text-accent transition-all mt-8 md:mt-0">
+            <span>{{ ui?.collections?.viewAll || 'Tout Explorer' }}</span>
+            <span class="w-8 h-[1px] bg-primary group-hover:bg-accent group-hover:w-12 transition-all"></span>
         </NuxtLink>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        <div v-for="collection in (collections?.docs || [])" :key="collection.id" class="group">
-          <div class="relative aspect-square overflow-hidden rounded-sm mb-6 bg-secondary/50">
-            <template v-if="collection.coverImage">
-              <NuxtImg 
-                :src="typeof collection.coverImage === 'object' ? `${useRuntimeConfig().public.payloadBaseUrl}${collection.coverImage.url}` : ''"
-                :alt="collection.title"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-              />
-            </template>
-            <div v-else class="w-full h-full bg-accent/10 flex items-center justify-center">
-              <span class="text-accent/30 font-serif italic">{{ ui?.collections?.noImage }}</span>
+      <div class="space-y-40">
+        <div v-for="(collection, index) in (collections?.docs || [])" :key="collection.id" 
+             class="flex flex-col md:items-center gap-12 lg:gap-24 group"
+             :class="index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'">
+          
+          <!-- Image Section -->
+          <div class="w-full md:w-1/2 relative">
+            <div class="absolute -top-6 -left-6 text-8xl font-serif text-primary/5 hidden lg:block select-none">
+              0{{ index + 1 }}
             </div>
-            
-            <div class="absolute inset-0 bg-primary/20 group-hover:bg-primary/40 transition-all duration-700"></div>
-            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-               <NuxtLink :to="`/collections/${collection.id}`" class="premium-button text-sm px-8">
-                   {{ ui?.collections?.discoverButton || 'Découvrir' }}
-               </NuxtLink>
+            <div class="relative aspect-square overflow-hidden rounded-sm bg-secondary shadow-lg group-hover:shadow-2xl transition-all duration-700">
+              <template v-if="collection.coverImage">
+                <NuxtImg 
+                  :src="typeof collection.coverImage === 'object' ? `${useRuntimeConfig().public.payloadBaseUrl}${collection.coverImage.url}` : ''"
+                  :alt="collection.title"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                />
+              </template>
+              <div v-else class="w-full h-full bg-accent/5 flex items-center justify-center">
+                 <span class="text-accent/20 font-serif italic text-2xl uppercase tracking-widest">Série {{ index + 1 }}</span>
+              </div>
+              
+              <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-700"></div>
             </div>
           </div>
-          <h4 class="text-xl font-serif mb-2">{{ collection.title }}</h4>
-          <p class="text-primary/60 text-sm italic">{{ collection.description }}</p>
+
+          <!-- Text Section -->
+          <div class="w-full md:w-1/2 flex flex-col items-start" :class="index % 2 === 0 ? 'md:pl-12' : 'md:pr-12 text-right md:items-end'">
+            <span class="text-accent font-serif italic text-lg mb-4 block">Collection</span>
+            <h4 class="text-4xl lg:text-5xl font-serif mb-6 text-primary leading-tight">{{ collection.title }}</h4>
+            <p class="text-primary/60 text-lg font-light leading-relaxed mb-10 max-w-md" :class="index % 2 === 0 ? '' : 'md:text-right'">
+              {{ collection.description }}
+            </p>
+            <NuxtLink :to="`/collections/${collection.id}`" class="group/btn relative inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-bold text-primary">
+               <span class="relative z-10">{{ ui?.collections?.discoverButton || 'Découvrir la série' }}</span>
+               <div class="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center group-hover/btn:bg-accent group-hover/btn:border-accent group-hover/btn:text-white transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+               </div>
+            </NuxtLink>
+          </div>
         </div>
+      </div>
+
+      <!-- Bottom View All -->
+      <div class="mt-32 text-center pt-24 border-t border-primary/5">
+        <NuxtLink to="/collections" class="premium-button px-12 py-5 text-sm uppercase tracking-widest font-bold">
+          {{ ui?.collections?.viewAll || 'Toutes les Collections' }}
+        </NuxtLink>
       </div>
     </section>
   </div>

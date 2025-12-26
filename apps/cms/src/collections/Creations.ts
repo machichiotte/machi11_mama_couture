@@ -7,7 +7,14 @@ export const Creations: CollectionConfig = {
         defaultColumns: ['title', 'series', 'isPublished', 'createdAt'],
     },
     access: {
-        read: () => true,
+        read: ({ req: { user } }) => {
+            if (user) return true
+            return {
+                isPublished: {
+                    equals: true,
+                },
+            }
+        },
     },
     fields: [
         {
@@ -36,7 +43,7 @@ export const Creations: CollectionConfig = {
         {
             name: 'series',
             type: 'relationship',
-            relationTo: 'series' as const,
+            relationTo: 'series',
             required: true,
             index: true,
         },

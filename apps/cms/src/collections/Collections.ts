@@ -7,7 +7,14 @@ export const Collections: CollectionConfig = {
         defaultColumns: ['title', 'isPublished', 'order'],
     },
     access: {
-        read: () => true,
+        read: ({ req: { user } }) => {
+            if (user) return true
+            return {
+                isPublished: {
+                    equals: true,
+                },
+            }
+        },
     },
     fields: [
         {
