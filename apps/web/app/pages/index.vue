@@ -63,9 +63,6 @@ const { data: collections } = await useAsyncData('collections', () =>
           
           <!-- Image Section -->
           <div class="w-full md:w-1/2 relative">
-            <div class="absolute -top-6 -left-6 text-8xl font-serif text-primary/5 hidden lg:block select-none">
-              0{{ index + 1 }}
-            </div>
             <div class="relative aspect-square overflow-hidden rounded-sm bg-secondary shadow-lg group-hover:shadow-2xl transition-all duration-700">
               <template v-if="collection.coverImage">
                 <NuxtImg 

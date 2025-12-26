@@ -16,9 +16,17 @@ export const usePayload = () => {
         return await $fetch(`${baseUrl}/api/${slug}/${id}`)
     }
 
+    const create = async <T extends keyof Config['collections']>(slug: T, data: any): Promise<Config['collections'][T]> => {
+        return await $fetch(`${baseUrl}/api/${slug}`, {
+            method: 'POST',
+            body: data
+        })
+    }
+
     return {
         getGlobals,
         getCollection,
-        getById
+        getById,
+        create
     }
 }

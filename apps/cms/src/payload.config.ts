@@ -9,6 +9,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Collections } from './collections/Collections'
 import { Creations } from './collections/Creations'
+import { Messages } from './collections/Messages'
 import { ArtisanProfile } from './globals/ArtisanProfile'
 import { SiteSettings } from './globals/SiteSettings'
 import { UIStrings } from './globals/UIStrings'
@@ -25,7 +26,7 @@ export default buildConfig({
   },
   cors: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'],
   csrf: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'],
-  collections: [Users, Media, Collections, Creations],
+  collections: [Users, Media, Collections, Creations, Messages],
   globals: [ArtisanProfile, SiteSettings, UIStrings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
