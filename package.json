@@ -13,7 +13,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "generate:types": "npm run generate:types --workspace=cms",
     "lint:fix": "npm run lint --workspaces --if-present -- --fix",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "lint-staged": {
     "apps/web/**/*.{js,ts,vue}": "npm run lint --workspace=web",
