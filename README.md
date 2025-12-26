@@ -7,11 +7,12 @@ Pour une compréhension approfondie, consultez la documentation Ops centralisée
 - 🏗️ **[Structure Complète](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/STRUCTURE.md)**
 - 🛡️ **[Standards de Dév](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/DEVELOPMENT_STANDARDS.md)**
 - 📘 **[Guide Technique](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/TECHNICAL_GUIDE.md)**
+- 🚀 **[Checklist Mise en Prod](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/PRODUCTION_CHECKLIST.md)**
 
 ---
 
 ## 🏗 Structure du Projet
-- **`apps/cms`** : Backend Payload CMS & Interface d'administration.
+- **`apps/cms`** : Backend Payload CMS (Collections : Media, Collections, Créations, Messages).
 - **`apps/web`** : Frontend Nuxt (structure Nuxt 4) avec design haut de gamme.
 - **`packages/types`** : Définitions TypeScript partagées (générées auto).
 - **`infra/docker`** : Infrastructure de développement locale (MongoDB).
@@ -41,6 +42,7 @@ Cela lancera simultanément :
 
 ## 🎨 Philosophie du Projet
 Ce projet n'est pas qu'un simple site, c'est un **outil de mise en valeur artisanale** :
-- **Design de Luxe** : Utilisation d'accents dorés, de typographies Serif élégantes et d'animations subtiles.
+- **Design de Luxe** : Palette chaleureuse (Terracotta, Marron Café, Crème), typographies Serif élégantes et animations subtiles.
 - **Performance** : Utilisation de Nuxt Image pour des chargements ultra-rapides.
-- **Extensibilité** : Structure prête pour le multi-tenant et le partage de types.
+- **Gestion simplifiée** : Centralisation des messages de contact et des contenus via une interface intuitive.
+
