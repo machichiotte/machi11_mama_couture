@@ -19,6 +19,23 @@ import { cloudinaryStorage } from 'payload-cloudinary'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// Vérification stricte des variables d'environnement
+const DATABASE_URL = process.env.DATABASE_URL
+const PAYLOAD_SECRET = process.env.PAYLOAD_SECRET
+const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME
+const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY
+const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET
+
+if (!DATABASE_URL) {
+  console.error('❌ ERREUR CRITIQUE : DATABASE_URL est manquante dans les variables d\'environnement !')
+}
+if (!PAYLOAD_SECRET) {
+  console.error('❌ ERREUR CRITIQUE : PAYLOAD_SECRET est manquante ! L\'admin ne pourra pas fonctionner.')
+}
+if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+  console.error('❌ ERREUR : Les variables Cloudinary sont incomplètes ! Le stockage des médias risque de ne pas fonctionner.')
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -31,20 +48,20 @@ export default buildConfig({
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [ArtisanProfile, SiteSettings, UIStrings],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: PAYLOAD_SECRET || 'temp-secret-if-missing-but-never-in-prod',
   typescript: {
     outputFile: path.resolve(dirname, '../../../packages/types/src/index.ts'),
   },
   db: mongooseAdapter({
-    url: process.env.DATABASE_URL || '',
+    url: DATABASE_URL || '',
   }),
   sharp,
   plugins: [
     cloudinaryStorage({
       config: {
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
-        api_key: process.env.CLOUDINARY_API_KEY || '',
-        api_secret: process.env.CLOUDINARY_API_SECRET || '',
+        cloud_name: CLOUDINARY_CLOUD_NAME || '',
+        api_key: CLOUDINARY_API_KEY || '',
+        api_secret: CLOUDINARY_API_SECRET || '',
       },
       collections: {
         media: true,
