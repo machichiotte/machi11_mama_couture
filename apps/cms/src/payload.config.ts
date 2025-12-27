@@ -4,6 +4,8 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { v2 as cloudinary } from 'cloudinary'
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -14,17 +16,70 @@ import { ArtisanProfile } from './globals/ArtisanProfile'
 import { SiteSettings } from './globals/SiteSettings'
 import { UIStrings } from './globals/UIStrings'
 
-import { cloudinaryStorage } from 'payload-cloudinary'
-
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Validation stricte au démarrage
-if (!process.env.DATABASE_URL) throw new Error('FATAL: DATABASE_URL is not defined')
-if (!process.env.PAYLOAD_SECRET) throw new Error('FATAL: PAYLOAD_SECRET is not defined')
-if (!process.env.CLOUDINARY_CLOUD_NAME) throw new Error('FATAL: CLOUDINARY_CLOUD_NAME is not defined')
-if (!process.env.CLOUDINARY_API_KEY) throw new Error('FATAL: CLOUDINARY_API_KEY is not defined')
-if (!process.env.CLOUDINARY_API_SECRET) throw new Error('FATAL: CLOUDINARY_API_SECRET is not defined')
+// Validation stricte des variables d'environnement
+const {
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  DATABASE_URL,
+  PAYLOAD_SECRET,
+  PAYLOAD_PUBLIC_SERVER_URL
+} = process.env
+
+if (!DATABASE_URL) throw new Error('FATAL: DATABASE_URL is missing')
+if (!PAYLOAD_SECRET) throw new Error('FATAL: PAYLOAD_SECRET is missing')
+if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+  console.warn('⚠️ Cloudinary variables are missing. Media uploads will fail.')
+}
+
+// Configuration du SDK Cloudinary
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+})
+
+// Définition de l'Adapter Cloudinary "In-House" (Payload v3 compatible)
+const customCloudinaryAdapter = () => ({
+  name: 'cloudinary-adapter',
+  async handleUpload({ file }: any) {
+    const uploadResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: 'auto',
+          public_id: `media/${file.filename.replace(/\.[^/.]+$/, '')}`,
+          overwrite: false,
+          use_filename: true,
+        },
+        (error, result) => {
+          if (error) return reject(error)
+          resolve(result)
+        },
+      )
+      uploadStream.end(file.buffer)
+    })
+
+    const result = uploadResult as any
+    file.filename = result.public_id
+    file.mimeType = result.format
+    file.filesize = result.bytes
+  },
+
+  async handleDelete({ filename }: any) {
+    try {
+      await cloudinary.uploader.destroy(`media/${filename.replace(/\.[^/.]+$/, '')}`)
+    } catch (error) {
+      console.error('Cloudinary Delete Error:', error)
+    }
+  },
+
+  staticHandler() {
+    return new Response('Not implemented', { status: 501 })
+  },
+})
 
 export default buildConfig({
   admin: {
@@ -33,30 +88,30 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  // Optionnel mais recommandé pour éviter les 500 sur l'admin
-  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
+  serverURL: PAYLOAD_PUBLIC_SERVER_URL,
   cors: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'].filter(Boolean) as string[],
   csrf: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [ArtisanProfile, SiteSettings, UIStrings],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET!,
+  secret: PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, '../../../packages/types/src/index.ts'),
   },
   db: mongooseAdapter({
-    url: process.env.DATABASE_URL!,
+    url: DATABASE_URL,
   }),
   sharp,
   plugins: [
-    cloudinaryStorage({
-      config: {
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-        api_key: process.env.CLOUDINARY_API_KEY!,
-        api_secret: process.env.CLOUDINARY_API_SECRET!,
-      },
+    cloudStoragePlugin({
       collections: {
-        media: true,
+        media: {
+          adapter: customCloudinaryAdapter() as any,
+          disableLocalStorage: true,
+          generateFileURL: ({ filename }) => {
+            return cloudinary.url(`media/${filename}`, { secure: true })
+          },
+        },
       },
     }),
   ],
