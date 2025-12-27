@@ -19,22 +19,12 @@ import { cloudinaryStorage } from 'payload-cloudinary'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Vérification stricte des variables d'environnement
-const DATABASE_URL = process.env.DATABASE_URL
-const PAYLOAD_SECRET = process.env.PAYLOAD_SECRET
-const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME
-const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY
-const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET
-
-if (!DATABASE_URL) {
-  console.error('❌ ERREUR CRITIQUE : DATABASE_URL est manquante dans les variables d\'environnement !')
-}
-if (!PAYLOAD_SECRET) {
-  console.error('❌ ERREUR CRITIQUE : PAYLOAD_SECRET est manquante ! L\'admin ne pourra pas fonctionner.')
-}
-if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
-  console.error('❌ ERREUR : Les variables Cloudinary sont incomplètes ! Le stockage des médias risque de ne pas fonctionner.')
-}
+// Validation stricte au démarrage
+if (!process.env.DATABASE_URL) throw new Error('FATAL: DATABASE_URL is not defined')
+if (!process.env.PAYLOAD_SECRET) throw new Error('FATAL: PAYLOAD_SECRET is not defined')
+if (!process.env.CLOUDINARY_CLOUD_NAME) throw new Error('FATAL: CLOUDINARY_CLOUD_NAME is not defined')
+if (!process.env.CLOUDINARY_API_KEY) throw new Error('FATAL: CLOUDINARY_API_KEY is not defined')
+if (!process.env.CLOUDINARY_API_SECRET) throw new Error('FATAL: CLOUDINARY_API_SECRET is not defined')
 
 export default buildConfig({
   admin: {
@@ -43,25 +33,27 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  cors: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'],
-  csrf: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'],
+  // Optionnel mais recommandé pour éviter les 500 sur l'admin
+  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
+  cors: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'].filter(Boolean) as string[],
+  csrf: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [ArtisanProfile, SiteSettings, UIStrings],
   editor: lexicalEditor(),
-  secret: PAYLOAD_SECRET || 'temp-secret-if-missing-but-never-in-prod',
+  secret: process.env.PAYLOAD_SECRET!,
   typescript: {
     outputFile: path.resolve(dirname, '../../../packages/types/src/index.ts'),
   },
   db: mongooseAdapter({
-    url: DATABASE_URL || '',
+    url: process.env.DATABASE_URL!,
   }),
   sharp,
   plugins: [
     cloudinaryStorage({
       config: {
-        cloud_name: CLOUDINARY_CLOUD_NAME || '',
-        api_key: CLOUDINARY_API_KEY || '',
-        api_secret: CLOUDINARY_API_SECRET || '',
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+        api_key: process.env.CLOUDINARY_API_KEY!,
+        api_secret: process.env.CLOUDINARY_API_SECRET!,
       },
       collections: {
         media: true,
