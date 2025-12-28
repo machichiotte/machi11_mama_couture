@@ -44,9 +44,9 @@ const customCloudinaryAdapter: any = () => ({
     const uploadResult = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          resource_type: 'auto',
-          public_id: file.filename.replace(/\.[^/.]+$/, ''),
-          folder: 'machi11', // Range tout dans ce dossier stable
+          resource_type: 'image',
+          // On force le dossier DIRECTEMENT dans le public_id pour que Payload l'enregistre en base
+          public_id: `machi11/${file.filename.replace(/\.[^/.]+$/, '').replace(/\s+/g, '_')}`,
           tags: ['machi11_cms'], // Tag stable pour le suivi
           overwrite: true,
         },
@@ -67,7 +67,8 @@ const customCloudinaryAdapter: any = () => ({
 
   async handleDelete({ filename }: any) {
     try {
-      await cloudinary.uploader.destroy(filename)
+      // Supprime en utilisant le chemin enregistré (machi11/...)
+      await cloudinary.uploader.destroy(filename.replace(/\.[^/.]+$/, ''))
     } catch (error) {
       console.error('Cloudinary Delete Error:', error)
     }
@@ -109,7 +110,8 @@ export default buildConfig({
             // On utilise le helper officiel qui gère parfaitement les dossiers et les versions
             return cloudinary.url(filename, {
               secure: true,
-              resource_type: 'auto',
+              resource_type: 'image', // On force image pour avoir /image/upload/ au lieu de /auto/
+              version: Math.floor(Date.now() / 1000), // Force le rafraîchissement
             })
           },
         },
