@@ -26,16 +26,16 @@ useHead({
 </script>
 
 <template>
-  <div class="py-24 container mx-auto px-6">
-    <header class="max-w-3xl mb-20 animate-fade-in">
-      <h1 class="text-4xl md:text-6xl font-serif mb-8 leading-tight text-primary">Nos Collections</h1>
-      <div class="w-20 h-1 bg-accent mb-8"></div>
+  <div class="py-12 md:py-24 container mx-auto px-6">
+    <header class="max-w-3xl mb-12 md:mb-20 animate-fade-in">
+      <h1 class="text-4xl md:text-6xl font-serif mb-6 md:mb-8 leading-tight text-primary">Nos Collections</h1>
+      <div class="w-20 h-1 bg-accent mb-6 md:mb-8"></div>
       <p class="text-primary/60 text-xl leading-relaxed font-light italic">
         Chaque collection est une exploration de formes, de matières et d'histoires, façonnées avec patience et passion.
       </p>
     </header>
 
-    <div v-if="collections?.docs?.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-10 gap-y-16">
+    <div v-if="collections?.docs?.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-10 gap-y-10 md:gap-y-16">
       <NuxtLink 
         v-for="(collection, index) in collections.docs" 
         :key="collection.id" 
@@ -43,7 +43,7 @@ useHead({
         class="group cursor-pointer block"
         :style="{ animationDelay: `${index * 0.1}s` }"
       >
-        <div class="relative aspect-square overflow-hidden mb-8 bg-secondary/50 rounded-sm shadow-sm group-hover:shadow-2xl transition-all duration-700 border border-primary/5">
+        <div class="relative aspect-square overflow-hidden mb-4 md:mb-8 bg-secondary/50 rounded-sm shadow-sm group-hover:shadow-2xl transition-all duration-700 border border-primary/5">
           <!-- Image de Couverture -->
           <template v-if="collection.coverImage">
             <NuxtImg 

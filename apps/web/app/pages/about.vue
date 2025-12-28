@@ -11,7 +11,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
 
 <template>
   <div class="py-6 md:py-10 container mx-auto px-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-start md:items-center">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-start md:items-center">
       <!-- Image Section -->
       <div class="relative w-full max-w-xl mx-auto aspect-square bg-secondary/50 overflow-hidden rounded-sm border border-primary/5 shadow-lg">
         <div class="absolute inset-0 bg-accent/5 z-10"></div>

@@ -38,10 +38,10 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="py-20 container mx-auto px-6">
+  <div class="py-10 md:py-20 container mx-auto px-6">
     <div class="max-w-2xl mx-auto text-center">
-      <h2 class="text-accent text-sm uppercase tracking-widest mb-4 font-semibold italic">Une question ?</h2>
-      <h1 class="text-4xl md:text-5xl font-serif mb-12 text-primary">Nous Contacter</h1>
+      <h2 class="text-accent text-sm uppercase tracking-widest mb-3 md:mb-4 font-semibold italic">Une question ?</h2>
+      <h1 class="text-4xl md:text-5xl font-serif mb-8 md:mb-12 text-primary">Nous Contacter</h1>
       
       <div v-if="isSuccess" class="bg-secondary/50 p-12 rounded-sm border border-accent/20 animate-fade-in">
         <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
@@ -58,10 +58,10 @@ const handleSubmit = async () => {
         </button>
       </div>
 
-      <form v-else @submit.prevent="handleSubmit" class="space-y-10 text-left bg-white p-10 md:p-14 shadow-xl border border-primary/5 rounded-sm relative overflow-hidden">
+      <form v-else @submit.prevent="handleSubmit" class="space-y-6 md:space-y-10 text-left bg-white p-6 md:p-14 shadow-xl border border-primary/5 rounded-sm relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent/20 via-accent to-accent/20"></div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           <div class="space-y-3">
             <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">Votre Nom</label>
             <input 
@@ -112,7 +112,7 @@ const handleSubmit = async () => {
           </span>
         </button>
         
-        <p class="text-center text-[10px] text-primary/30 uppercase tracking-widest mt-8">
+        <p class="text-center text-[10px] text-primary/30 uppercase tracking-widest mt-6 md:mt-8">
           {{ form.email === 'zespamfull4@gmail.com' ? 'Mode test activé : Vérification de réception.' : 'Votre vie privée est respectée. Aucune donnée n\'est partagée.' }}
         </p>
       </form>

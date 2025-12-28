@@ -58,7 +58,7 @@ useHead({
 <template>
   <main v-if="collection && collection.isPublished">
     <!-- Hero Section de la Collection -->
-    <header class="h-[60vh] relative flex items-center justify-center overflow-hidden bg-primary">
+    <header class="h-[40vh] md:h-[60vh] relative flex items-center justify-center overflow-hidden bg-primary">
       <div class="absolute inset-0 opacity-40">
         <template v-if="collection.coverImage">
           <NuxtImg 
@@ -71,7 +71,7 @@ useHead({
       </div>
       
       <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in">
-        <h1 class="text-secondary text-5xl md:text-7xl font-serif mb-6 leading-tight">{{ collection.title }}</h1>
+        <h1 class="text-secondary text-4xl md:text-7xl font-serif mb-4 md:mb-6 leading-tight">{{ collection.title }}</h1>
         <p class="text-secondary/80 text-lg md:text-xl italic font-light max-w-2xl mx-auto">
           {{ collection.description }}
         </p>
@@ -79,7 +79,7 @@ useHead({
     </header>
 
     <!-- Grille des Créations -->
-    <section class="container mx-auto px-6 py-20">
+    <section class="container mx-auto px-6 py-10 md:py-20">
       <div class="flex flex-col md:flex-row justify-between items-baseline mb-16 border-b border-primary/5 pb-8">
         <div>
           <h2 class="text-accent text-sm uppercase tracking-widest mb-2 font-bold">Portfolio</h2>
@@ -90,7 +90,7 @@ useHead({
         </div>
       </div>
 
-      <div v-if="creations?.docs?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+      <div v-if="creations?.docs?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-16">
         <article v-for="creation in creations.docs" :key="creation.id" class="group">
           <div class="relative aspect-square overflow-hidden bg-secondary/50 mb-6 rounded-sm shadow-sm group-hover:shadow-xl transition-all duration-500 border border-primary/5">
             <!-- Image de la Création -->
@@ -130,7 +130,7 @@ useHead({
       </div>
       
       <!-- Bouton Retour -->
-      <nav class="mt-24 pt-12 border-t border-primary/5 flex justify-center">
+      <nav class="mt-16 md:mt-24 pt-8 md:pt-12 border-t border-primary/5 flex justify-center">
         <NuxtLink to="/collections" class="text-primary hover:text-accent font-medium tracking-widest text-sm uppercase flex items-center group transition-all">
           <span class="mr-3 transform group-hover:-translate-x-2 transition-transform duration-300">←</span>
           Retour à toutes les collections
