@@ -19,7 +19,6 @@ import { UIStrings } from './globals/UIStrings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Validation stricte des variables d'environnement
 const {
   CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY,
@@ -29,21 +28,19 @@ const {
   PAYLOAD_PUBLIC_SERVER_URL
 } = process.env
 
+// Sécurité : on crash tôt si les variables vitales manquent
 if (!DATABASE_URL) throw new Error('FATAL: DATABASE_URL is missing')
 if (!PAYLOAD_SECRET) throw new Error('FATAL: PAYLOAD_SECRET is missing')
-if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
-  console.warn('⚠️ Cloudinary variables are missing. Media uploads will fail.')
-}
 
-// Configuration du SDK Cloudinary
+// Config Cloudinary globale
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
   api_secret: CLOUDINARY_API_SECRET,
 })
 
-// Définition de l'Adapter Cloudinary "In-House" (Payload v3 compatible)
-const customCloudinaryAdapter = () => ({
+// Définition de l'Adapter (La fonction factory)
+const customCloudinaryAdapter: any = () => ({
   name: 'cloudinary-adapter',
   async handleUpload({ file }: any) {
     const uploadResult = await new Promise((resolve, reject) => {
@@ -106,7 +103,7 @@ export default buildConfig({
     cloudStoragePlugin({
       collections: {
         media: {
-          adapter: customCloudinaryAdapter() as any,
+          adapter: customCloudinaryAdapter, // ON NE MET PAS DE PARENTHÈSES ICI (C'est la fonction que le plugin appellera)
           disableLocalStorage: true,
           generateFileURL: ({ filename }) => {
             return cloudinary.url(`media/${filename}`, { secure: true })
