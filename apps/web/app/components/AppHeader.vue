@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { SiteSetting, UiString } from '@machi10/types'
+import type { SiteSetting, UiString, ArtisanProfile } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
 const { getGlobals } = usePayload()
 const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', () => getGlobals('site-settings'))
+const { data: artisan } = await useAsyncData<ArtisanProfile>('artisan-profile', () => getGlobals('artisan-profile'))
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 
 const isMenuOpen = ref(false)
@@ -22,6 +23,13 @@ const siteTitle = computed(() => siteSettings.value?.siteTitle || 'MAMA COUTURE'
 // Fermer le menu au changement de route
 watch(() => useRoute().fullPath, () => {
   isMenuOpen.value = false
+})
+
+// Verrouiller le scroll du corps quand le menu est ouvert
+watch(isMenuOpen, (val) => {
+  if (process.client) {
+    document.body.style.overflow = val ? 'hidden' : ''
+  }
 })
 </script>
 
@@ -84,10 +92,21 @@ watch(() => useRoute().fullPath, () => {
           </NuxtLink>
         </nav>
         
-        <div class="mt-auto pb-12">
+        <div v-if="artisan?.socialLinks?.length" class="mt-20">
           <p class="text-xs uppercase tracking-[0.3em] font-bold text-primary/30 mb-6">Suivez-nous</p>
-          <div class="flex gap-8">
-              <!-- On pourrait rajouter des icônes de réseaux sociaux ici -->
+          <div class="flex flex-wrap gap-6">
+              <a v-for="social in artisan.socialLinks" :key="social.platform" :href="social.url" target="_blank" 
+                 class="group flex items-center gap-3 transition-all duration-300"
+              >
+                <div class="w-10 h-10 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/5 transition-colors">
+                  <svg v-if="social.platform.toLowerCase().includes('instagram')" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  <svg v-else-if="social.platform.toLowerCase().includes('facebook')" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                </div>
+                <span class="text-[10px] items-center uppercase tracking-widest font-bold text-primary/60 group-hover:text-primary transition-colors">{{ social.platform }}</span>
+              </a>
           </div>
         </div>
       </div>

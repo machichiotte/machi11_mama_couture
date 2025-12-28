@@ -41,24 +41,20 @@ const { data: collections } = await useAsyncData('collections', () =>
       </div>
     </section>
 
-    <section class="py-32 container mx-auto px-6 overflow-hidden">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-primary/5 pb-12">
-        <div class="max-w-xl">
-          <h3 class="text-accent text-xs uppercase tracking-[0.3em] mb-4 font-bold flex items-center gap-3">
+    <section class="py-4 md:py-32 container mx-auto px-6 overflow-hidden">
+      <div class="mb-6 md:mb-24 border-b border-primary/5 pb-8 md:pb-12 text-center md:text-left">
+        <div class="max-w-xl mx-auto md:mx-0">
+          <h3 class="text-accent text-xs uppercase tracking-[0.3em] mb-4 font-bold flex items-center justify-center md:justify-start gap-3">
               <span class="w-10 h-[1px] bg-accent"></span>
               {{ ui?.collections?.title || 'Sélections' }}
           </h3>
-          <h2 class="text-5xl md:text-6xl font-serif text-primary leading-tight">Nos Créations</h2>
+          <h2 class="text-4xl md:text-6xl font-serif text-primary leading-tight">Nos Créations</h2>
         </div>
-        <NuxtLink to="/collections" class="group flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-primary hover:text-accent transition-all mt-8 md:mt-0">
-            <span>{{ ui?.collections?.viewAll || 'Tout Explorer' }}</span>
-            <span class="w-8 h-[1px] bg-primary group-hover:bg-accent group-hover:w-12 transition-all"></span>
-        </NuxtLink>
       </div>
 
-      <div class="space-y-40">
+      <div class="space-y-10 md:space-y-40">
         <div v-for="(collection, index) in (collections?.docs || [])" :key="collection.id" 
-             class="flex flex-col md:items-center gap-12 lg:gap-24 group"
+             class="flex flex-col md:items-center gap-8 md:gap-12 lg:gap-24 group"
              :class="index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'">
           
           <!-- Image Section -->
@@ -80,10 +76,10 @@ const { data: collections } = await useAsyncData('collections', () =>
           </div>
 
           <!-- Text Section -->
-          <div class="w-full md:w-1/2 flex flex-col items-start" :class="index % 2 === 0 ? 'md:pl-12' : 'md:pr-12 text-right md:items-end'">
-            <span class="text-accent font-serif italic text-lg mb-4 block">Collection</span>
-            <h4 class="text-4xl lg:text-5xl font-serif mb-6 text-primary leading-tight">{{ collection.title }}</h4>
-            <p class="text-primary/60 text-lg font-light leading-relaxed mb-10 max-w-md" :class="index % 2 === 0 ? '' : 'md:text-right'">
+          <div class="w-full md:w-1/2 flex flex-col items-start" :class="index % 2 === 0 ? 'md:pl-12' : 'md:pr-12 md:text-right md:items-end'">
+            <span class="text-accent font-serif italic text-base md:text-lg mb-2 md:mb-4 block">Collection</span>
+            <h4 class="text-3xl lg:text-5xl font-serif mb-2 md:mb-6 text-primary leading-tight">{{ collection.title }}</h4>
+            <p v-if="collection.description" class="text-primary/60 text-base md:text-lg font-light leading-relaxed mb-4 md:mb-10 max-w-md" :class="index % 2 === 0 ? '' : 'md:text-right'">
               {{ collection.description }}
             </p>
             <NuxtLink :to="`/collections/${collection.id}`" class="group/btn relative inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-bold text-primary">
@@ -99,7 +95,7 @@ const { data: collections } = await useAsyncData('collections', () =>
       </div>
 
       <!-- Bottom View All -->
-      <div class="mt-32 text-center pt-24 border-t border-primary/5">
+      <div class="mt-4 md:mt-32 text-center pt-2 md:pt-24 border-t border-primary/5">
         <NuxtLink to="/collections" class="premium-button px-12 py-5 text-sm uppercase tracking-widest font-bold">
           {{ ui?.collections?.viewAll || 'Toutes les Collections' }}
         </NuxtLink>

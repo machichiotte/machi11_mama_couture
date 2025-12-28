@@ -10,7 +10,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
 </script>
 
 <template>
-  <div class="py-6 md:py-10 container mx-auto px-6">
+  <div class="py-4 md:py-10 container mx-auto px-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-start md:items-center">
       <!-- Image Section -->
       <div class="relative w-full max-w-xl mx-auto aspect-square bg-secondary/50 overflow-hidden rounded-sm border border-primary/5 shadow-lg">
@@ -37,7 +37,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
           {{ artisan?.name || 'Notre Histoire' }}
         </h1>
         
-        <div class="prose prose-lg text-primary/80 font-light leading-relaxed mb-6 max-w-none">
+        <div class="prose prose-lg text-primary/80 font-light leading-relaxed mb-4 md:mb-6 max-w-none">
           <p v-if="!artisan">{{ ui?.common?.loading || 'Chargement...' }}</p>
           <div v-else>
             <!-- If bio is a string (rich text HTML) -->
@@ -47,7 +47,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
           </div>
         </div>
         
-        <div class="border-t border-primary/10 pt-6 mt-6 bg-secondary/30 p-6 rounded-sm">
+        <div class="border-t border-primary/10 pt-4 md:pt-6 mt-4 md:mt-6 bg-secondary/30 p-4 md:p-6 rounded-sm">
           <h4 class="font-serif text-2xl italic text-primary mb-4 flex items-center gap-3">
              <span class="w-6 h-[1px] bg-accent"></span>
              <span>{{ ui?.common?.contactTitle || 'Restons en Contact' }}</span>
