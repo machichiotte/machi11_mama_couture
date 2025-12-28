@@ -106,9 +106,11 @@ export default buildConfig({
           adapter: customCloudinaryAdapter,
           disableLocalStorage: true,
           generateFileURL: ({ filename }) => {
-            // On force l'URL absolue pour éviter que Payload ne rajoute son domaine
-            // On s'assure que Cloudinary reçoive bien une URL typique avec une extension
-            return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${filename}`
+            // On utilise le helper officiel qui gère parfaitement les dossiers et les versions
+            return cloudinary.url(filename, {
+              secure: true,
+              resource_type: 'auto',
+            })
           },
         },
       },
