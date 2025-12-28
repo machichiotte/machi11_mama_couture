@@ -25,22 +25,18 @@ const {
   CLOUDINARY_API_SECRET,
   DATABASE_URL,
   PAYLOAD_SECRET,
-  PAYLOAD_PUBLIC_SERVER_URL,
   PAYLOAD_PUBLIC_SITE_URL
 } = process.env
 
-// Sécurité : on crash tôt si les variables vitales manquent
 if (!DATABASE_URL) throw new Error('FATAL: DATABASE_URL is missing')
 if (!PAYLOAD_SECRET) throw new Error('FATAL: PAYLOAD_SECRET is missing')
 
-// Config Cloudinary globale
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
   api_secret: CLOUDINARY_API_SECRET,
 })
 
-// Définition de l'Adapter (La fonction factory)
 const customCloudinaryAdapter: any = () => ({
   name: 'cloudinary-adapter',
   async handleUpload({ file }: any) {
@@ -79,14 +75,6 @@ const customCloudinaryAdapter: any = () => ({
   },
 })
 
-// On prépare les domaines autorisés pour CORS et CSRF
-const allowedDomains = [
-  PAYLOAD_PUBLIC_SERVER_URL, // Le CMS lui-même (Koyeb)
-  PAYLOAD_PUBLIC_SITE_URL,   // Le site Nugt (Cloudflare)
-  'http://localhost:3000',
-  'http://localhost:3001',
-].filter(Boolean) as string[]
-
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -94,10 +82,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  // On aide Payload à se situer derrière le proxy de Koyeb
-  serverURL: PAYLOAD_PUBLIC_SERVER_URL,
-  cors: allowedDomains,
-  csrf: allowedDomains,
+  // On simplifie au maximum pour laisser Payload gérer en v3
+  cors: [PAYLOAD_PUBLIC_SITE_URL].filter(Boolean) as string[],
+  csrf: [PAYLOAD_PUBLIC_SITE_URL].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [ArtisanProfile, SiteSettings, UIStrings],
   editor: lexicalEditor(),
