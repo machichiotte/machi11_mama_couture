@@ -25,6 +25,7 @@ const {
   CLOUDINARY_API_SECRET,
   DATABASE_URL,
   PAYLOAD_SECRET,
+  PAYLOAD_PUBLIC_SERVER_URL,
   PAYLOAD_PUBLIC_SITE_URL
 } = process.env
 
@@ -82,9 +83,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  // On simplifie au maximum pour laisser Payload gérer en v3
-  cors: [PAYLOAD_PUBLIC_SITE_URL].filter(Boolean) as string[],
-  csrf: [PAYLOAD_PUBLIC_SITE_URL].filter(Boolean) as string[],
+  serverURL: PAYLOAD_PUBLIC_SERVER_URL,
+  cors: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000'].filter(Boolean) as string[],
+  csrf: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [ArtisanProfile, SiteSettings, UIStrings],
   editor: lexicalEditor(),
