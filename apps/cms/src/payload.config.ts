@@ -45,9 +45,8 @@ const customCloudinaryAdapter: any = () => ({
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: 'auto',
-          public_id: `media/${file.filename.replace(/\.[^/.]+$/, '')}`,
-          overwrite: false,
-          use_filename: true,
+          public_id: file.filename.replace(/\.[^/.]+$/, ''),
+          overwrite: true,
         },
         (error, result) => {
           if (error) return reject(error)
@@ -65,7 +64,7 @@ const customCloudinaryAdapter: any = () => ({
 
   async handleDelete({ filename }: any) {
     try {
-      await cloudinary.uploader.destroy(`media/${filename.replace(/\.[^/.]+$/, '')}`)
+      await cloudinary.uploader.destroy(filename)
     } catch (error) {
       console.error('Cloudinary Delete Error:', error)
     }
@@ -104,7 +103,8 @@ export default buildConfig({
           adapter: customCloudinaryAdapter,
           disableLocalStorage: true,
           generateFileURL: ({ filename }) => {
-            return cloudinary.url(`media/${filename}`, { secure: true })
+            // On renvoie une URL ABSOLUE. Payload ne rajoutera rien devant.
+            return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${filename}`
           },
         },
       },
