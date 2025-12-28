@@ -23,6 +23,7 @@ const {
   CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
+  CLOUDINARY_FOLDER = 'machi11', // Dossier par défaut
   DATABASE_URL,
   PAYLOAD_SECRET,
   PAYLOAD_PUBLIC_SERVER_URL,
@@ -41,13 +42,16 @@ cloudinary.config({
 const customCloudinaryAdapter: any = () => ({
   name: 'cloudinary-adapter',
   async handleUpload({ file }: any) {
+    const cleanName = file.filename.replace(/\.[^/.]+$/, '').replace(/\s+/g, '_')
+
     const uploadResult = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: 'image',
-          // On force le dossier DIRECTEMENT dans le public_id pour que Payload l'enregistre en base
-          public_id: `machi11/${file.filename.replace(/\.[^/.]+$/, '').replace(/\s+/g, '_')}`,
-          tags: ['machi11_cms'], // Tag stable pour le suivi
+          public_id: cleanName, // Juste le nom, sans le dossier
+          asset_folder: CLOUDINARY_FOLDER, // Dossier dans la Media Library UI
+          use_asset_folder_as_public_id_prefix: true, // Le dossier sera aussi dans l'URL
+          tags: ['machi11_cms'],
           overwrite: true,
         },
         (error, result) => {
@@ -59,7 +63,6 @@ const customCloudinaryAdapter: any = () => ({
     })
 
     const result = uploadResult as any
-    // On garde l'extension pour que Payload reconnaisse le type d'image pour les thumbnails
     file.filename = `${result.public_id}.${result.format}`
     file.mimeType = result.format
     file.filesize = result.bytes
@@ -107,12 +110,10 @@ export default buildConfig({
           adapter: customCloudinaryAdapter,
           disableLocalStorage: true,
           generateFileURL: ({ filename }) => {
-            // On utilise le helper officiel qui gère parfaitement les dossiers et les versions
-            return cloudinary.url(filename, {
-              secure: true,
-              resource_type: 'image', // On force image pour avoir /image/upload/ au lieu de /auto/
-              version: Math.floor(Date.now() / 1000), // Force le rafraîchissement
-            })
+            // Payload enregistre juste le nom du fichier sans le dossier
+            // On doit donc le reconstruire : dossier + filename
+            const fullPath = `${CLOUDINARY_FOLDER}/${filename}`
+            return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${fullPath}`
           },
         },
       },
