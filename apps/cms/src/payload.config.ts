@@ -25,7 +25,8 @@ const {
   CLOUDINARY_API_SECRET,
   DATABASE_URL,
   PAYLOAD_SECRET,
-  PAYLOAD_PUBLIC_SERVER_URL
+  PAYLOAD_PUBLIC_SERVER_URL,
+  PAYLOAD_PUBLIC_SITE_URL
 } = process.env
 
 // Sécurité : on crash tôt si les variables vitales manquent
@@ -78,6 +79,14 @@ const customCloudinaryAdapter: any = () => ({
   },
 })
 
+// On prépare les domaines autorisés pour CORS et CSRF
+const allowedDomains = [
+  PAYLOAD_PUBLIC_SERVER_URL, // Le CMS lui-même (Koyeb)
+  PAYLOAD_PUBLIC_SITE_URL,   // Le site Nugt (Cloudflare)
+  'http://localhost:3000',
+  'http://localhost:3001',
+].filter(Boolean) as string[]
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -85,9 +94,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+  // On aide Payload à se situer derrière le proxy de Koyeb
   serverURL: PAYLOAD_PUBLIC_SERVER_URL,
-  cors: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'].filter(Boolean) as string[],
-  csrf: [process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001', 'http://localhost:3000'].filter(Boolean) as string[],
+  cors: allowedDomains,
+  csrf: allowedDomains,
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [ArtisanProfile, SiteSettings, UIStrings],
   editor: lexicalEditor(),
@@ -103,7 +113,7 @@ export default buildConfig({
     cloudStoragePlugin({
       collections: {
         media: {
-          adapter: customCloudinaryAdapter, // ON NE MET PAS DE PARENTHÈSES ICI (C'est la fonction que le plugin appellera)
+          adapter: customCloudinaryAdapter,
           disableLocalStorage: true,
           generateFileURL: ({ filename }) => {
             return cloudinary.url(`media/${filename}`, { secure: true })
