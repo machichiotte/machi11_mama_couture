@@ -22,6 +22,11 @@ export default defineNuxtConfig({
       'res.cloudinary.com'
     ],
   },
+  ssr: true,
+  routeRules: {
+    // Désactiver le prerendering pour éviter les erreurs si le CMS n'est pas accessible au build
+    '/**': { ssr: true, prerender: false }
+  },
   runtimeConfig: {
     public: {
       payloadBaseUrl: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
