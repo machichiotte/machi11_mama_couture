@@ -23,10 +23,23 @@ export const usePayload = () => {
         })
     }
 
+    const getImageUrl = (image: any): string => {
+        if (!image) return ''
+        const url = typeof image === 'string' ? image : image.url
+        if (!url) return ''
+
+        // Si l'URL est déjà absolue (Cloudinary), on la renvoie telle quelle
+        if (url.startsWith('http')) return url
+
+        // Sinon on rajoute la base URL du CMS
+        return `${baseUrl}${url}`
+    }
+
     return {
         getGlobals,
         getCollection,
         getById,
-        create
+        create,
+        getImageUrl
     }
 }

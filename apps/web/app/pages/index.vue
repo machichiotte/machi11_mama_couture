@@ -2,7 +2,7 @@
 import type { Series as Collection, SiteSetting, UiString } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
-const { getGlobals, getCollection } = usePayload()
+const { getGlobals, getCollection, getImageUrl } = usePayload()
 
 const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', () => getGlobals('site-settings'))
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
@@ -17,9 +17,9 @@ const { data: collections } = await useAsyncData('collections', () =>
     <section class="relative h-[65vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-secondary text-primary">
       <div class="absolute inset-0">
         <NuxtImg
-          v-if="siteSettings?.heroImage && typeof siteSettings.heroImage === 'object'"
-          :src="`${useRuntimeConfig().public.payloadBaseUrl}${siteSettings.heroImage.url}`"
-          :alt="siteSettings.heroImage.alt || 'Atelier Couture'"
+          v-if="siteSettings?.heroImage"
+          :src="getImageUrl(siteSettings.heroImage)"
+          :alt="typeof siteSettings.heroImage === 'object' ? (siteSettings.heroImage.alt || 'Atelier Couture') : 'Atelier Couture'"
           class="w-full h-full object-cover" 
         />
         <div class="absolute inset-0 bg-white/35"></div>
@@ -66,7 +66,7 @@ const { data: collections } = await useAsyncData('collections', () =>
             <div class="relative aspect-square overflow-hidden rounded-sm bg-secondary shadow-lg group-hover:shadow-2xl transition-all duration-700">
               <template v-if="collection.coverImage">
                 <NuxtImg 
-                  :src="typeof collection.coverImage === 'object' ? `${useRuntimeConfig().public.payloadBaseUrl}${collection.coverImage.url}` : ''"
+                  :src="getImageUrl(collection.coverImage)"
                   :alt="collection.title"
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                 />

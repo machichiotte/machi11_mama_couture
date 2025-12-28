@@ -7,7 +7,7 @@ import { usePayload } from '~/composables/usePayload'
  * Affiche la description de la collection et toutes les créations associées
  */
 const route = useRoute()
-const { getById, getCollection, getGlobals } = usePayload()
+const { getById, getCollection, getGlobals, getImageUrl } = usePayload()
 
 const collectionId = route.params.id as string
 
@@ -62,7 +62,7 @@ useHead({
       <div class="absolute inset-0 opacity-40">
         <template v-if="collection.coverImage">
           <NuxtImg 
-            :src="typeof collection.coverImage === 'object' ? `${useRuntimeConfig().public.payloadBaseUrl}${collection.coverImage.url}` : ''"
+            :src="getImageUrl(collection.coverImage)"
             class="w-full h-full object-cover"
             placeholder
           />
@@ -96,7 +96,7 @@ useHead({
             <!-- Image de la Création -->
             <template v-if="creation.images?.length && creation.images[0]?.image">
               <NuxtImg 
-                :src="typeof creation.images[0].image === 'object' ? `${useRuntimeConfig().public.payloadBaseUrl}${creation.images[0].image.url}` : ''"
+                :src="getImageUrl(creation.images[0].image)"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                 loading="lazy"
               />

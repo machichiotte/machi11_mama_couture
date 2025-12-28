@@ -6,7 +6,7 @@ import { usePayload } from '~/composables/usePayload'
  * Page de listing des collections
  * Affiche toutes les séries thématiques publiées
  */
-const { getCollection } = usePayload()
+const { getCollection, getImageUrl } = usePayload()
 
 // Récupérer toutes les collections triées par l'ordre défini dans Payload
 const { data: collections } = await useAsyncData('all-collections', () => 
@@ -47,7 +47,7 @@ useHead({
           <!-- Image de Couverture -->
           <template v-if="collection.coverImage">
             <NuxtImg 
-              :src="typeof collection.coverImage === 'object' ? `${useRuntimeConfig().public.payloadBaseUrl}${collection.coverImage.url}` : ''"
+              :src="getImageUrl(collection.coverImage)"
               :alt="collection.title"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
               loading="lazy"

@@ -3,7 +3,7 @@ import type { ArtisanProfile, UiString } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 import { useRichText } from '~/composables/useRichText'
 
-const { getGlobals } = usePayload()
+const { getGlobals, getImageUrl } = usePayload()
 const { serialize } = useRichText()
 const { data: artisan } = await useAsyncData('artisan-profile', () => getGlobals('artisan-profile'))
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
@@ -17,8 +17,8 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
         <div class="absolute inset-0 bg-accent/5 z-10"></div>
         <!-- Profile Image Placeholder -->
         <NuxtImg 
-          v-if="artisan?.profileImage && typeof artisan.profileImage === 'object'"
-          :src="`${useRuntimeConfig().public.payloadBaseUrl}${artisan.profileImage.url}`"
+          v-if="artisan?.profileImage"
+          :src="getImageUrl(artisan.profileImage)"
           class="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
         />
         <div v-else class="w-full h-full flex items-center justify-center text-primary/20 bg-secondary">

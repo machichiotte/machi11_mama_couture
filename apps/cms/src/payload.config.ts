@@ -46,6 +46,8 @@ const customCloudinaryAdapter: any = () => ({
         {
           resource_type: 'auto',
           public_id: file.filename.replace(/\.[^/.]+$/, ''),
+          folder: 'machi11', // Range tout dans ce dossier stable
+          tags: ['machi11_cms'], // Tag stable pour le suivi
           overwrite: true,
         },
         (error, result) => {
