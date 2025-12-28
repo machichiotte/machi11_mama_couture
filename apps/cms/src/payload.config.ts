@@ -59,7 +59,8 @@ const customCloudinaryAdapter: any = () => ({
     })
 
     const result = uploadResult as any
-    file.filename = result.public_id
+    // On garde l'extension pour que Payload reconnaisse le type d'image pour les thumbnails
+    file.filename = `${result.public_id}.${result.format}`
     file.mimeType = result.format
     file.filesize = result.bytes
   },
@@ -105,7 +106,8 @@ export default buildConfig({
           adapter: customCloudinaryAdapter,
           disableLocalStorage: true,
           generateFileURL: ({ filename }) => {
-            // On renvoie une URL ABSOLUE. Payload ne rajoutera rien devant.
+            // On force l'URL absolue pour éviter que Payload ne rajoute son domaine
+            // On s'assure que Cloudinary reçoive bien une URL typique avec une extension
             return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${filename}`
           },
         },

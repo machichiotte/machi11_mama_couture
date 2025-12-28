@@ -18,7 +18,8 @@ export default defineNuxtConfig({
   image: {
     domains: [
       'localhost',
-      'free-glyn-machichiotte-61a9f3f6.koyeb.app'
+      'free-glyn-machichiotte-61a9f3f6.koyeb.app',
+      'res.cloudinary.com'
     ],
   },
   runtimeConfig: {
