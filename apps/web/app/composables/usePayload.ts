@@ -28,11 +28,20 @@ export const usePayload = () => {
         const url = typeof image === 'string' ? image : image.url
         if (!url) return ''
 
-        // Si l'URL est déjà absolue (Cloudinary), on la renvoie telle quelle
-        if (url.startsWith('http')) return url
+        // Debug pour voir ce que le CMS nous envoie
+        console.log('[getImageUrl] Input:', image)
 
-        // Sinon on rajoute la base URL du CMS
-        return `${baseUrl}${url}`
+        let finalUrl = ''
+        // Si l'URL est déjà absolue (Cloudinary), on la renvoie telle quelle
+        if (url.startsWith('http')) {
+            finalUrl = url
+        } else {
+            // Sinon on rajoute la base URL du CMS
+            finalUrl = `${baseUrl}${url}`
+        }
+
+        console.log('[getImageUrl] Output:', finalUrl)
+        return finalUrl
     }
 
     return {
