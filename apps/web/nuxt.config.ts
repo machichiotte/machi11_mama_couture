@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      payloadBaseUrl: process.env.PAYLOAD_BASE_URL || 'http://localhost:3000',
+      payloadBaseUrl: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
     }
   },
 
