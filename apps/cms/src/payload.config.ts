@@ -7,6 +7,7 @@ import sharp from 'sharp'
 import { v2 as cloudinary } from 'cloudinary'
 import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
 
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Collections } from './collections/Collections'
@@ -103,6 +104,26 @@ export default buildConfig({
     url: DATABASE_URL,
   }),
   sharp,
+  email: nodemailerAdapter({
+    defaultFromAddress: process.env.SMTP_FROM_ADDRESS || 'atelier@mamacouture.fr',
+    defaultFromName: process.env.SMTP_FROM_NAME || 'Mama Couture',
+    // On n'active le transport réel que si SMTP_HOST est présent
+    transportOptions: process.env.SMTP_HOST
+      ? {
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT) || 587,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      }
+      : {
+        // Bouchon (mock) pour le développement local
+        streamTransport: true,
+        newline: 'unix',
+        buffer: true,
+      },
+  }),
   plugins: [
     cloudStoragePlugin({
       collections: {

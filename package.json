@@ -13,6 +13,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "generate:types": "npm run generate:types --workspace=cms",
     "lint:fix": "npm run lint --workspaces --if-present -- --fix",
+    "db:dev": "docker start machi11_mama_couture_mongo_dev || docker compose -f infra/docker/docker-compose.yml up -d",
     "prepare": "husky || true"
   },
   "lint-staged": {

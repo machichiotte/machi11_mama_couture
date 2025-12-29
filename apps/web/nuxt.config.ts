@@ -24,7 +24,14 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    // Désactiver le prerendering pour éviter les erreurs si le CMS n'est pas accessible au build
+    // Proxy vers le CMS pour l'admin et l'API
+    // On utilise des redirections serveur pures pour éviter les conflits d'hydratation
+    '/admin': { proxy: `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/admin` },
+    '/admin/**': { proxy: `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/admin/**` },
+    '/api/**': { proxy: `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/api/**` },
+    '/_next/**': { proxy: `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/_next/**` },
+
+    // Désactiver le prerendering global
     '/**': { ssr: true, prerender: false }
   },
   runtimeConfig: {
