@@ -47,7 +47,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
           </div>
         </div>
         
-        <div class="border-t border-primary/10 pt-4 md:pt-6 mt-4 md:mt-6 bg-secondary/30 p-4 md:p-6 rounded-sm">
+        <div class="border-t border-primary/10 pt-4 md:pt-6 mt-4 md:mt-6 bg-primary/5 p-4 md:p-6 rounded-sm">
           <h4 class="font-serif text-2xl italic text-primary mb-4 flex items-center gap-3">
              <span class="w-6 h-[1px] bg-accent"></span>
              <span>{{ ui?.common?.contactTitle || 'Restons en Contact' }}</span>
@@ -67,7 +67,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
              <!-- Social Networks -->
              <div v-if="about?.socialLinks?.length" class="flex flex-wrap gap-4 mt-2">
                 <a v-for="social in about?.socialLinks" :key="social.platform" :href="social.url" target="_blank" 
-                   class="group flex items-center gap-3 px-5 py-3 bg-white border border-primary/10 rounded-sm hover:border-accent/50 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
+                   class="group flex items-center gap-3 px-5 py-3 bg-secondary/50 backdrop-blur-sm border border-primary/10 rounded-sm hover:border-accent/50 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
                 >
                   <!-- Icon based on platform name (simple check) -->
                   <svg v-if="social.platform.toLowerCase().includes('instagram')" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>

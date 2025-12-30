@@ -14,7 +14,7 @@ const { data: collections } = await useAsyncData('collections', () =>
 <template>
   <div>
     <!-- Hero Section -->
-    <section class="relative h-[65vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-secondary text-primary">
+    <section class="relative h-[65vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-secondary transition-colors duration-500">
       <div class="absolute inset-0">
         <NuxtImg
           v-if="siteSettings?.heroImage"
@@ -22,10 +22,11 @@ const { data: collections } = await useAsyncData('collections', () =>
           :alt="typeof siteSettings.heroImage === 'object' ? (siteSettings.heroImage.alt || 'Atelier Couture') : 'Atelier Couture'"
           class="w-full h-full object-cover" 
         />
-        <div class="absolute inset-0 bg-white/35"></div>
+        <!-- Dynamic Overlay: Lighter in light mode, Darker in dark mode -->
+        <div class="absolute inset-0 bg-white/30 dark:bg-black/60 transition-colors duration-500"></div>
       </div>
       
-      <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in">
+      <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in banner-text-protected">
         <h1 class="text-5xl md:text-7xl font-serif mb-6 leading-tight text-primary">
           {{ siteSettings?.siteTitle || 'Machi11 Couture' }}
         </h1>
