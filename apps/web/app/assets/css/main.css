@@ -45,8 +45,13 @@ h6 {
 
 /* Banner Text Protection */
 .banner-text-protected {
-    /* Subtle white glow in light mode to pop from background image */
-    text-shadow: 0 2px 15px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.5);
+    /* Nettoyage : un contour blanc net (1px) pour découper le texte sombre du fond */
+    text-shadow:
+        -1px -1px 0 rgba(255, 255, 255, 0.8),
+        1px -1px 0 rgba(255, 255, 255, 0.8),
+        -1px 1px 0 rgba(255, 255, 255, 0.8),
+        1px 1px 0 rgba(255, 255, 255, 0.8),
+        0 4px 15px rgba(255, 255, 255, 1);
 }
 
 .dark .banner-text-protected {
