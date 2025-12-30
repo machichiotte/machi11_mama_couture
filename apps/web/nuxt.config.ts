@@ -50,6 +50,19 @@ export default defineNuxtConfig({
       mode: 'out-in'
     },
     head: {
+      script: [
+        {
+          children: `(function() {
+            try {
+              const stored = localStorage.getItem('color-mode');
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              const colorMode = stored || (prefersDark ? 'dark' : 'light');
+              document.documentElement.classList.remove('light', 'dark');
+              document.documentElement.classList.add(colorMode);
+            } catch (e) {}
+          })()`
+        }
+      ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },

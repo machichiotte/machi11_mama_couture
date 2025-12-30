@@ -1,31 +1,28 @@
 export const useColorMode = () => {
-    const colorMode = useState<'light' | 'dark'>('color-mode', () => {
-        if (process.client) {
-            const stored = localStorage.getItem('color-mode')
-            if (stored === 'dark' || stored === 'light') return stored
+    // Default to 'light' for SSR
+    const colorMode = useState<'light' | 'dark'>('color-mode', () => 'light')
 
-            // Check system preference
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                return 'dark'
-            }
+    // On client mount, sync with reality (localStorage or system)
+    onMounted(() => {
+        const stored = localStorage.getItem('color-mode')
+        if (stored === 'dark' || stored === 'light') {
+            colorMode.value = stored
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            colorMode.value = 'dark'
         }
-        return 'light'
+
+        // Ensure class is applied
+        document.documentElement.classList.remove('light', 'dark')
+        document.documentElement.classList.add(colorMode.value)
     })
 
     const toggleColorMode = () => {
         const newMode = colorMode.value === 'light' ? 'dark' : 'light'
         colorMode.value = newMode
 
-        if (process.client) {
-            localStorage.setItem('color-mode', newMode)
-            document.documentElement.classList.remove('light', 'dark')
-            document.documentElement.classList.add(newMode)
-        }
-    }
-
-    // Apply on mount
-    if (process.client) {
-        document.documentElement.classList.add(colorMode.value)
+        localStorage.setItem('color-mode', newMode)
+        document.documentElement.classList.remove('light', 'dark')
+        document.documentElement.classList.add(newMode)
     }
 
     return {
