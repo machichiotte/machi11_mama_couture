@@ -22,8 +22,8 @@ const { data: collections } = await useAsyncData('collections', () =>
           :alt="typeof siteSettings.heroImage === 'object' ? (siteSettings.heroImage.alt || 'Atelier Couture') : 'Atelier Couture'"
           class="w-full h-full object-cover" 
         />
-        <!-- Dynamic Overlay: Lighter in light mode, Darker in dark mode -->
-        <div class="absolute inset-0 bg-white/30 dark:bg-black/60 transition-colors duration-500"></div>
+        <!-- Overlay intelligent : Blanc en mode clair, Noir en mode sombre -->
+        <div class="absolute inset-0 bg-white/40 dark:bg-black/60 transition-colors duration-500"></div>
       </div>
       
       <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in banner-text-protected">

@@ -58,7 +58,7 @@ const handleSubmit = async () => {
         </button>
       </div>
 
-      <form v-else @submit.prevent="handleSubmit" class="md:space-y-10 text-left bg-white p-4 md:p-14 shadow-xl border border-primary/5 rounded-sm relative overflow-hidden">
+      <form v-else @submit.prevent="handleSubmit" class="md:space-y-10 text-left bg-secondary p-4 md:p-14 shadow-xl border border-primary/10 rounded-sm relative overflow-hidden transition-colors duration-500">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent/20 via-accent to-accent/20"></div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-10">
