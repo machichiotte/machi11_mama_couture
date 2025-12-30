@@ -22,8 +22,8 @@ const { data: collections } = await useAsyncData('collections', () =>
           :alt="typeof siteSettings.heroImage === 'object' ? (siteSettings.heroImage.alt || 'Atelier Couture') : 'Atelier Couture'"
           class="w-full h-full object-cover" 
         />
-        <!-- Overlay plus clair en mode light pour faire ressortir le texte marron -->
-        <div class="absolute inset-0 bg-white/70 dark:bg-black/60 transition-colors duration-500"></div>
+        <!-- Overlay ultra-premium : voile crème lumineux et flou artistique pour une lisibilité parfaite -->
+        <div class="absolute inset-0 bg-secondary/80 backdrop-blur-[2px] dark:bg-black/60 transition-colors duration-500"></div>
       </div>
       
       <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in banner-text-protected">

@@ -44,19 +44,14 @@ h6 {
 }
 
 /* Banner Text Protection */
-.banner-text-protected {
-    /* Nettoyage : un contour blanc net (1px) pour découper le texte sombre du fond */
-    text-shadow:
-        -1px -1px 0 rgba(255, 255, 255, 0.8),
-        1px -1px 0 rgba(255, 255, 255, 0.8),
-        -1px 1px 0 rgba(255, 255, 255, 0.8),
-        1px 1px 0 rgba(255, 255, 255, 0.8),
-        0 4px 15px rgba(255, 255, 255, 1);
+.banner-text-protected h1 {
+    /* Uniquement pour le titre : une ombre de profondeur très douce, pas de contour */
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .dark .banner-text-protected {
-    /* Strong dark shadow in dark mode */
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.5);
+    /* Ombre profonde chic en mode sombre */
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
 }
 
 .premium-card {
