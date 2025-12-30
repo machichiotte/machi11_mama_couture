@@ -20,10 +20,10 @@ const { data: collections } = await useAsyncData('collections', () =>
           v-if="siteSettings?.heroImage"
           :src="getImageUrl(siteSettings.heroImage)"
           :alt="typeof siteSettings.heroImage === 'object' ? (siteSettings.heroImage.alt || 'Atelier Couture') : 'Atelier Couture'"
-          class="w-full h-full object-cover" 
+          class="w-full h-full object-cover opacity-30 dark:opacity-100 transition-opacity duration-500" 
         />
-        <!-- Overlay ultra-premium : voile crème lumineux et flou artistique pour une lisibilité parfaite -->
-        <div class="absolute inset-0 bg-secondary/80 backdrop-blur-[2px] dark:bg-black/60 transition-colors duration-500"></div>
+        <!-- Filtre noir uniquement en mode sombre pour l'effet "Luxury Midnight" -->
+        <div class="absolute inset-0 bg-transparent dark:bg-black/60 transition-colors duration-500"></div>
       </div>
       
       <div class="relative z-10 text-center px-6 max-w-4xl animate-fade-in banner-text-protected">
