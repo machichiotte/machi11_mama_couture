@@ -20,9 +20,9 @@ export const UIStrings: GlobalConfig = {
                     defaultValue: 'Collections',
                 },
                 {
-                    name: 'artisan',
+                    name: 'about',
                     type: 'text',
-                    defaultValue: 'L\'Artisan',
+                    defaultValue: 'À Propos',
                 },
                 {
                     name: 'contact',

@@ -22,21 +22,28 @@ Pour une compréhension approfondie, consultez la documentation Ops centralisée
 ## 🚀 Démarrage Rapide
 
 ### 1. Préparer l'Infrastructure
-Lancez la base de données MongoDB via Docker :
+Lancez la base de données MongoDB localement :
 ```bash
-docker compose -f infra/docker/docker-compose.yml up -d
+npm run db:dev
 ```
 
-### 2. Lancer le Projet (CMS + Frontend)
-Depuis la racine du projet :
+### 2. Lancer le Projet (Mode Développement)
+Utilisez la commande racine pour lancer simultanément le CMS et le Web :
 ```bash
-npm install
 npm run dev
 ```
+- **CMS Admin** : `http://localhost:3000/admin`
+- **Frontend** : `http://localhost:3001`
 
-Cela lancera simultanément :
-- **CMS (Backend)** : [http://localhost:3000/admin](http://localhost:3000/admin)
-- **Web (Frontend)** : [http://localhost:3001](http://localhost:3001)
+---
+
+## ✨ Fonctionnalités Premium Incluses
+- 🖼️ **Cloudinary 2.0** : Gestion optimisée des médias avec dossier dynamique.
+- 📧 **SMTP Plug & Play** : Système d'e-mail avec fallback console pour le développement.
+- 🛡️ **Draft System** : Mode brouillon activé sur les collections critiques.
+- 📁 **Proxy Single-URL** : Navigation fluide entre Nuxt et Payload sur un domaine unique.
+- 📨 **Messages Auto** : Collection de contact avec notifications e-mail prêtes à l'emploi.
+- 🎯 **SEO Ready** : Champs SEO (titre, description, image) sur toutes les collections.
 
 ---
 

@@ -1,19 +1,23 @@
 <script setup lang="ts">
-import type { SiteSetting, UiString, ArtisanProfile } from '@machi10/types'
+import type { SiteSetting, UiString, About } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
 const { getGlobals } = usePayload()
 const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', () => getGlobals('site-settings'))
-const { data: artisan } = await useAsyncData<ArtisanProfile>('artisan-profile', () => getGlobals('artisan-profile'))
+const { data: about } = await useAsyncData<About>('about', () => getGlobals('about'))
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 
 const isMenuOpen = ref(false)
 
 const navItems = computed(() => {
-  if (!ui.value?.nav) return []
+  if (!ui.value?.nav) return [
+    { to: '/collections', label: 'Collections' },
+    { to: '/about', label: 'About' },
+    { to: '/contact', label: 'Contact' }
+  ]
   return [
     { to: '/collections', label: ui.value.nav.collections },
-    { to: '/about', label: ui.value.nav.artisan },
+    { to: '/about', label: ui.value.nav.about },
     { to: '/contact', label: ui.value.nav.contact }
   ]
 })
@@ -92,10 +96,10 @@ watch(isMenuOpen, (val) => {
           </NuxtLink>
         </nav>
         
-        <div v-if="artisan?.socialLinks?.length" class="mt-20">
+        <div v-if="about?.socialLinks?.length" class="mt-20">
           <p class="text-xs uppercase tracking-[0.3em] font-bold text-primary/30 mb-6">Suivez-nous</p>
           <div class="flex flex-wrap gap-6">
-              <a v-for="social in artisan.socialLinks" :key="social.platform" :href="social.url" target="_blank" 
+              <a v-for="social in about.socialLinks" :key="social.platform" :href="social.url" target="_blank" 
                  class="group flex items-center gap-3 transition-all duration-300"
               >
                 <div class="w-10 h-10 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/5 transition-colors">

@@ -1,7 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
-export const ArtisanProfile: GlobalConfig = {
-    slug: 'artisan-profile',
+export const About: GlobalConfig = {
+    slug: 'about',
     access: {
         read: () => true,
     },

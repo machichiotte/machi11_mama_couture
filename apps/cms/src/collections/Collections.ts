@@ -16,6 +16,9 @@ export const Collections: CollectionConfig = {
             }
         },
     },
+    versions: {
+        drafts: true,
+    },
     fields: [
         {
             name: 'title',
@@ -42,6 +45,25 @@ export const Collections: CollectionConfig = {
             name: 'order',
             type: 'number',
             index: true,
+        },
+        {
+            name: 'seo',
+            type: 'group',
+            fields: [
+                {
+                    name: 'title',
+                    type: 'text',
+                },
+                {
+                    name: 'description',
+                    type: 'textarea',
+                },
+                {
+                    name: 'image',
+                    type: 'upload',
+                    relationTo: 'media',
+                },
+            ],
         },
     ],
 }

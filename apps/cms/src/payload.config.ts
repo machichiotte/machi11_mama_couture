@@ -13,7 +13,7 @@ import { Media } from './collections/Media'
 import { Collections } from './collections/Collections'
 import { Creations } from './collections/Creations'
 import { Messages } from './collections/Messages'
-import { ArtisanProfile } from './globals/ArtisanProfile'
+import { About } from './globals/About'
 import { SiteSettings } from './globals/SiteSettings'
 import { UIStrings } from './globals/UIStrings'
 
@@ -94,7 +94,7 @@ export default buildConfig({
   cors: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000'].filter(Boolean) as string[],
   csrf: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
-  globals: [ArtisanProfile, SiteSettings, UIStrings],
+  globals: [About, SiteSettings, UIStrings],
   editor: lexicalEditor(),
   secret: PAYLOAD_SECRET,
   typescript: {

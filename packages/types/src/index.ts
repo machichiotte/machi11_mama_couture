@@ -94,12 +94,12 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
-    'artisan-profile': ArtisanProfile;
+    about: About;
     'site-settings': SiteSetting;
     'ui-strings': UiString;
   };
   globalsSelect: {
-    'artisan-profile': ArtisanProfileSelect<false> | ArtisanProfileSelect<true>;
+    about: AboutSelect<false> | AboutSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'ui-strings': UiStringsSelect<false> | UiStringsSelect<true>;
   };
@@ -184,8 +184,14 @@ export interface Series {
   coverImage: string | Media;
   isPublished?: boolean | null;
   order?: number | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -216,8 +222,14 @@ export interface Creation {
   series: string | Series;
   price?: number | null;
   isPublished?: boolean | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -368,8 +380,16 @@ export interface SeriesSelect<T extends boolean = true> {
   coverImage?: T;
   isPublished?: T;
   order?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -387,8 +407,16 @@ export interface CreationsSelect<T extends boolean = true> {
   series?: T;
   price?: T;
   isPublished?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -444,9 +472,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "artisan-profile".
+ * via the `definition` "about".
  */
-export interface ArtisanProfile {
+export interface About {
   id: string;
   name: string;
   bio: {
@@ -497,7 +525,7 @@ export interface UiString {
   id: string;
   nav?: {
     collections?: string | null;
-    artisan?: string | null;
+    about?: string | null;
     contact?: string | null;
     menuLabel?: string | null;
   };
@@ -520,9 +548,9 @@ export interface UiString {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "artisan-profile_select".
+ * via the `definition` "about_select".
  */
-export interface ArtisanProfileSelect<T extends boolean = true> {
+export interface AboutSelect<T extends boolean = true> {
   name?: T;
   bio?: T;
   profileImage?: T;
@@ -560,7 +588,7 @@ export interface UiStringsSelect<T extends boolean = true> {
     | T
     | {
         collections?: T;
-        artisan?: T;
+        about?: T;
         contact?: T;
         menuLabel?: T;
       };

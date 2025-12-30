@@ -16,6 +16,9 @@ export const Creations: CollectionConfig = {
             }
         },
     },
+    versions: {
+        drafts: true,
+    },
     fields: [
         {
             name: 'title',
@@ -43,7 +46,7 @@ export const Creations: CollectionConfig = {
         {
             name: 'series',
             type: 'relationship',
-            relationTo: 'series',
+            relationTo: 'series' as any,
             required: true,
             index: true,
         },
@@ -56,6 +59,25 @@ export const Creations: CollectionConfig = {
             type: 'checkbox',
             defaultValue: false,
             index: true,
+        },
+        {
+            name: 'seo',
+            type: 'group',
+            fields: [
+                {
+                    name: 'title',
+                    type: 'text',
+                },
+                {
+                    name: 'description',
+                    type: 'textarea',
+                },
+                {
+                    name: 'image',
+                    type: 'upload',
+                    relationTo: 'media',
+                },
+            ],
         },
     ],
     timestamps: true,
