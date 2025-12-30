@@ -34,7 +34,7 @@ const { data: collections } = await useAsyncData('collections', () =>
           {{ siteSettings?.tagline || ui?.hero.exploreButton }}
         </h2>
         <p class="text-xl text-primary/80 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-          {{ siteSettings?.seoDescription || '' }}
+          {{ siteSettings?.seo?.description || '' }}
         </p>
         <NuxtLink to="/collections" class="premium-button text-lg px-10 py-4 font-medium transition-all duration-500">
           {{ ui?.hero.exploreButton || 'Explorer' }}

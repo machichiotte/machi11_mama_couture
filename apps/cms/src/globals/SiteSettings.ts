@@ -17,13 +17,28 @@ export const SiteSettings: GlobalConfig = {
             type: 'text',
         },
         {
-            name: 'seoDescription',
-            type: 'textarea',
-        },
-        {
             name: 'heroImage',
             type: 'upload',
             relationTo: 'media',
+        },
+        {
+            name: 'seo',
+            type: 'group',
+            fields: [
+                {
+                    name: 'title',
+                    type: 'text',
+                },
+                {
+                    name: 'description',
+                    type: 'textarea',
+                },
+                {
+                    name: 'image',
+                    type: 'upload',
+                    relationTo: 'media',
+                },
+            ],
         },
     ],
 }
