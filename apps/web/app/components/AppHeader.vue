@@ -8,6 +8,7 @@ const { data: about } = await useAsyncData<About>('about', () => getGlobals('abo
 const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 
 const isMenuOpen = ref(false)
+const { colorMode, toggleColorMode, isDark } = useColorMode()
 
 const navItems = computed(() => {
   if (!ui.value?.nav) return [
@@ -62,9 +63,39 @@ watch(isMenuOpen, (val) => {
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" 
                 :class="{ 'w-full': $route.path.startsWith(item.to) }"></span>
         </NuxtLink>
+        
+        <!-- Dark Mode Toggle (Desktop) -->
+        <button 
+          @click="toggleColorMode"
+          class="p-2 rounded-full hover:bg-primary/5 transition-all duration-300 group"
+          :aria-label="isDark ? 'Activer le mode clair' : 'Activer le mode sombre'"
+        >
+          <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gold group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary/60 group-hover:text-primary group-hover:-rotate-12 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
       </nav>
 
-      <!-- Mobile Menu Button -->
+      <!-- Mobile Controls -->
+      <div class="md:hidden flex items-center gap-2">
+        <!-- Dark Mode Toggle (Mobile) -->
+        <button 
+          @click="toggleColorMode"
+          class="p-2 rounded-full hover:bg-primary/5 transition-all duration-300"
+          :aria-label="isDark ? 'Activer le mode clair' : 'Activer le mode sombre'"
+        >
+          <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+
+        <!-- Mobile Menu Button -->
       <button v-if="ui?.nav" 
               class="md:hidden text-primary p-2 -mr-2 relative"
               @click="isMenuOpen = !isMenuOpen"
@@ -76,7 +107,8 @@ watch(isMenuOpen, (val) => {
           <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
-      </button>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile Nav Overlay -->
