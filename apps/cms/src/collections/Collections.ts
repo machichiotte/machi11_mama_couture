@@ -5,6 +5,7 @@ export const Collections: CollectionConfig = {
     admin: {
         useAsTitle: 'title',
         defaultColumns: ['title', 'isPublished', 'order'],
+        group: 'Boutique',
     },
     access: {
         read: ({ req: { user } }) => {

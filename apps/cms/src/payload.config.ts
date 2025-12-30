@@ -83,12 +83,25 @@ const customCloudinaryAdapter: any = () => ({
   },
 })
 
+import { fr } from 'payload/i18n/fr'
+
 export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      views: {
+        Dashboard: {
+          Component: '/components/Dashboard/index.tsx#default',
+        },
+      },
+    },
+  },
+  i18n: {
+    supportedLanguages: { fr },
+    fallbackLanguage: 'fr',
   },
   serverURL: PAYLOAD_PUBLIC_SERVER_URL,
   cors: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000'].filter(Boolean) as string[],

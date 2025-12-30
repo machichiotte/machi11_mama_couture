@@ -501,6 +501,11 @@ export interface About {
         id?: string | null;
       }[]
     | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -512,8 +517,12 @@ export interface SiteSetting {
   id: string;
   siteTitle: string;
   tagline?: string | null;
-  seoDescription?: string | null;
   heroImage?: (string | null) | Media;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -562,6 +571,13 @@ export interface AboutSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -573,8 +589,14 @@ export interface AboutSelect<T extends boolean = true> {
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteTitle?: T;
   tagline?: T;
-  seoDescription?: T;
   heroImage?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

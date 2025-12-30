@@ -3,7 +3,7 @@ import type { GlobalConfig } from 'payload'
 export const UIStrings: GlobalConfig = {
     slug: 'ui-strings',
     admin: {
-        group: 'Settings',
+        group: 'Site Web',
     },
     access: {
         read: () => true,

@@ -5,6 +5,7 @@ export const Messages: CollectionConfig = {
     admin: {
         useAsTitle: 'subject',
         defaultColumns: ['name', 'email', 'subject', 'createdAt'],
+        group: 'Communication',
     },
     access: {
         create: () => true, // Anyone can send a message

@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const About: GlobalConfig = {
     slug: 'about',
+    admin: {
+        group: 'Site Web',
+    },
     access: {
         read: () => true,
     },
