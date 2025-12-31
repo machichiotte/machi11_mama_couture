@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Series as Collection, Creation, UiString } from '@machi10/types'
+import type { Series as Collection, Creation } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
 /**
@@ -7,7 +7,8 @@ import { usePayload } from '~/composables/usePayload'
  * Affiche la description de la collection et toutes les créations associées
  */
 const route = useRoute()
-const { getById, getCollection, getGlobals, getImageUrl } = usePayload()
+const { getById, getCollection, getImageUrl } = usePayload()
+const { ui } = useI18n()
 
 const collectionId = route.params.id as string
 
@@ -25,9 +26,6 @@ const { data: creations } = await useAsyncData(`creations-${collectionId}`, () =
     }
   })
 )
-
-// 3. Récupérer les textes de l'interface
-const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 
 // Helper pour extraire le texte brut du JSON Lexical
 const extractLexicalText = (root: any): string => {
@@ -82,11 +80,11 @@ useHead({
     <section class="container mx-auto px-6 py-10 md:py-20">
       <div class="flex flex-col md:flex-row justify-between items-baseline mb-16 border-b border-primary/5 pb-8">
         <div>
-          <h2 class="text-accent text-sm uppercase tracking-widest mb-2 font-bold">Portfolio</h2>
-          <p class="text-3xl font-serif text-primary">Les Pièces d'Exception</p>
+          <h2 class="text-accent text-sm uppercase tracking-widest mb-2 font-bold">{{ ui.collections.portfolioLabel }}</h2>
+          <p class="text-3xl font-serif text-primary">{{ ui.collections.piecesTitle }}</p>
         </div>
         <div class="text-primary/40 text-sm italic mt-4 md:mt-0 font-serif">
-          {{ creations?.docs?.length || 0 }} {{ ui?.collections?.uniqueCreationsLabel || 'créations uniques' }}
+          {{ creations?.docs?.length || 0 }} {{ ui.collections.uniqueCreationsLabel }}
         </div>
       </div>
 
@@ -102,7 +100,7 @@ useHead({
               />
             </template>
             <div v-else class="w-full h-full border border-primary/5 flex items-center justify-center text-primary/20">
-               <span class="text-xs uppercase tracking-widest font-sans">Pas d'image</span>
+               <span class="text-xs uppercase tracking-widest font-sans">{{ ui.collections.noImage }}</span>
             </div>
             
             <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-500"></div>
@@ -110,7 +108,7 @@ useHead({
             <!-- Overlay Actions -->
             <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
               <span v-if="creation.price" class="bg-secondary text-primary px-4 py-2 text-sm font-medium shadow-lg">{{ creation.price }}€</span>
-              <button class="bg-primary text-secondary px-6 py-2 text-xs uppercase tracking-widest hover:bg-accent transition-colors shadow-lg">Détails</button>
+              <button class="bg-primary text-secondary px-6 py-2 text-xs uppercase tracking-widest hover:bg-accent transition-colors shadow-lg">{{ ui.collections.detailsButton }}</button>
             </div>
           </div>
           
@@ -123,9 +121,9 @@ useHead({
 
       <!-- État Vide -->
       <div v-else class="text-center py-32 bg-secondary/50 rounded-sm border border-dashed border-primary/10">
-        <p class="text-primary/40 font-serif italic text-lg">Cette collection ne contient pas encore de créations.</p>
+        <p class="text-primary/40 font-serif italic text-lg">{{ ui.collections.emptyCollection }}</p>
         <NuxtLink to="/contact" class="inline-block mt-6 text-accent hover:text-primary transition-colors font-medium border-b border-accent">
-          Se renseigner sur les prochaines pièces
+          {{ ui.collections.inquiryLink }}
         </NuxtLink>
       </div>
       
@@ -133,7 +131,7 @@ useHead({
       <nav class="mt-16 md:mt-24 pt-8 md:pt-12 border-t border-primary/5 flex justify-center">
         <NuxtLink to="/collections" class="text-primary hover:text-accent font-medium tracking-widest text-sm uppercase flex items-center group transition-all">
           <span class="mr-3 transform group-hover:-translate-x-2 transition-transform duration-300">←</span>
-          Retour à toutes les collections
+          {{ ui.collections.backToAll }}
         </NuxtLink>
       </nav>
     </section>
@@ -143,7 +141,7 @@ useHead({
   <div v-else class="min-h-screen flex items-center justify-center bg-secondary">
     <div class="text-center">
        <div class="w-16 h-16 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-       <p class="font-serif italic text-primary/40 text-lg">Immersion dans la collection...</p>
+       <p class="font-serif italic text-primary/40 text-lg">{{ ui.collections.loadingCollection }}</p>
     </div>
   </div>
 </template>

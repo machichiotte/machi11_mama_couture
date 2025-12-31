@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { UiString } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
-const { create } = usePayload()
+const { create, getGlobals } = usePayload()
+const { ui } = useI18n()
 
 const form = reactive({
   name: '',
@@ -40,8 +42,8 @@ const handleSubmit = async () => {
 <template>
   <div class="py-6 md:py-20 container mx-auto px-6">
     <div class="max-w-2xl mx-auto text-center">
-      <h2 class="text-accent text-sm uppercase tracking-widest mb-2 md:mb-4 font-semibold italic">Une question ?</h2>
-      <h1 class="text-4xl md:text-5xl font-serif mb-6 md:mb-12 text-primary">Nous Contacter</h1>
+      <h2 class="text-accent text-sm uppercase tracking-widest mb-2 md:mb-4 font-semibold italic">{{ ui.contact.subtitle }}</h2>
+      <h1 class="text-4xl md:text-5xl font-serif mb-6 md:mb-12 text-primary">{{ ui.contact.title }}</h1>
       
       <div v-if="isSuccess" class="bg-secondary/50 p-12 rounded-sm border border-accent/20 animate-fade-in">
         <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
@@ -49,9 +51,9 @@ const handleSubmit = async () => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 class="text-2xl font-serif text-primary mb-4">Message Envoyé !</h3>
+        <h3 class="text-2xl font-serif text-primary mb-4">{{ ui.contact.successTitle }}</h3>
         <p class="text-primary/60 font-light italic text-lg leading-relaxed">
-          Merci pour votre message. Nous reviendrons vers vous très prochainement à l'adresse indiquée.
+          {{ ui.contact.successMessage }}
         </p>
         <button @click="isSuccess = false" class="mt-10 text-accent font-bold uppercase tracking-widest text-xs border-b border-accent pb-1">
           Envoyer un autre message
@@ -63,34 +65,34 @@ const handleSubmit = async () => {
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-10">
           <div class="md:space-y-3">
-            <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">Votre Nom</label>
+            <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">{{ ui.contact.nameLabel }}</label>
             <input 
               v-model="form.name"
               type="text" 
               required
               class="w-full bg-transparent border-b border-primary/10 py-4 focus:border-accent outline-none transition-all duration-500 text-primary placeholder:text-primary/20" 
-              placeholder="Ex: Marie Laurent" 
+              :placeholder="ui.contact.namePlaceholder" 
             />
           </div>
           <div class="md:space-y-3">
-            <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">Votre Email</label>
+            <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">{{ ui.contact.emailLabel }}</label>
             <input 
               v-model="form.email"
               type="email" 
               required
               class="w-full bg-transparent border-b border-primary/10 py-4 focus:border-accent outline-none transition-all duration-500 text-primary placeholder:text-primary/20" 
-              placeholder="marie@email.com" 
+              :placeholder="ui.contact.emailPlaceholder" 
             />
           </div>
         </div>
         <div class="mt-4 md:space-y-3">
-          <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">Votre Message</label>
+          <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">{{ ui.contact.messageLabel }}</label>
           <textarea 
             v-model="form.message"
             rows="5" 
             required
             class="w-full bg-transparent border-b border-primary/10 py-4 focus:border-accent outline-none transition-all duration-500 resize-none text-primary placeholder:text-primary/20 leading-relaxed" 
-            placeholder="Écrivez-nous votre message ici..."
+            :placeholder="ui.contact.messagePlaceholder"
           ></textarea>
         </div>
         <div v-if="error" class="text-red-500 text-sm italic py-2">
@@ -103,7 +105,7 @@ const handleSubmit = async () => {
           class="premium-button w-full py-5 text-sm uppercase tracking-[0.3em] font-bold group relative overflow-hidden mt-4 md:mt-0"
         >
           <span class="relative z-10 flex items-center justify-center gap-3">
-             {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer le message' }}
+             {{ isSubmitting ? ui.contact.submitting : ui.contact.submitButton }}
              <svg v-if="!isSubmitting" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
              </svg>
@@ -111,7 +113,7 @@ const handleSubmit = async () => {
         </button>
         
         <p class="text-center text-[10px] text-primary/30 uppercase tracking-widest mt-4 md:mt-8">
-          {{ form.email === 'zespamfull4@gmail.com' ? 'Mode test activé : Vérification de réception.' : 'Votre vie privée est respectée. Aucune donnée n\'est partagée.' }}
+          Votre vie privée est respectée. Aucune donnée n'est partagée.
         </p>
       </form>
     </div>

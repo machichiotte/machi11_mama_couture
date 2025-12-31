@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { About, UiString } from '@machi10/types'
+import type { About } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 import { useRichText } from '~/composables/useRichText'
 
 const { getGlobals, getImageUrl } = usePayload()
 const { serialize } = useRichText()
+const { ui } = useI18n()
 const { data: about } = await useAsyncData('about', () => getGlobals('about'))
-const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 </script>
 
 <template>
@@ -19,10 +19,11 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
         <NuxtImg 
           v-if="about?.profileImage"
           :src="getImageUrl(about.profileImage)"
+          :alt="ui.about.imageAlt"
           class="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
         />
         <div v-else class="w-full h-full flex items-center justify-center text-primary/20 bg-secondary">
-          <span class="font-serif italic text-lg">Photo de l'artisan</span>
+          <span class="font-serif italic text-lg">{{ ui.about.imageAlt }}</span>
         </div>
       </div>
       
@@ -30,15 +31,15 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
       <div class="flex flex-col">
         <h2 class="text-accent text-sm uppercase tracking-[0.2em] mb-2 font-semibold flex items-center gap-4">
           <span class="w-8 h-[1px] bg-accent"></span>
-          L'Âme de l'Atelier
+          {{ ui.about.badge }}
         </h2>
         
         <h1 class="text-4xl lg:text-5xl font-serif mb-6 text-primary leading-tight">
-          {{ about?.name || 'Notre Histoire' }}
+          {{ about?.name || ui.about.defaultTitle }}
         </h1>
         
         <div class="prose prose-lg text-primary/80 font-light leading-relaxed mb-4 md:mb-6 max-w-none">
-          <p v-if="!about">{{ ui?.common?.loading || 'Chargement...' }}</p>
+          <p v-if="!about">{{ ui.common.loading }}</p>
           <div v-else>
             <!-- If bio is a string (rich text HTML) -->
             <div v-if="typeof about.bio === 'string'" v-html="about.bio"></div>
@@ -50,7 +51,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
         <div class="border-t border-primary/10 pt-4 md:pt-6 mt-4 md:mt-6 bg-primary/5 p-4 md:p-6 rounded-sm">
           <h4 class="font-serif text-2xl italic text-primary mb-4 flex items-center gap-3">
              <span class="w-6 h-[1px] bg-accent"></span>
-             <span>{{ ui?.common?.contactTitle || 'Restons en Contact' }}</span>
+             <span>{{ ui.common.contactTitle }}</span>
           </h4>
           
           <div class="flex flex-col gap-4">
@@ -72,7 +73,7 @@ const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals
                   <!-- Icon based on platform name (simple check) -->
                   <svg v-if="social.platform.toLowerCase().includes('instagram')" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                   <svg v-else-if="social.platform.toLowerCase().includes('facebook')" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.6 9h4.9a8 8 0 010 9v0a8 8 0 01-4.9-3" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.4 9h-4.9a8 8 0 000 9v0a8 8 0 004.9-3" /></svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.6 9h4.9a8 8 0 010 9v0a8 8 0 01-4.9-3" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.4 9h-4.9a8 8 0 000 9v0a8 0 004.9-3" /></svg>
                   
                   <span class="uppercase text-xs font-bold tracking-widest text-primary/80 group-hover:text-primary">{{ social.platform }}</span>
                 </a>

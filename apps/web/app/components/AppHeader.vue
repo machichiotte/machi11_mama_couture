@@ -2,10 +2,10 @@
 import type { SiteSetting, UiString, About } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
+const { ui, d } = useI18n()
 const { getGlobals } = usePayload()
 const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', () => getGlobals('site-settings'))
 const { data: about } = await useAsyncData<About>('about', () => getGlobals('about'))
-const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 
 const isMenuOpen = ref(false)
 const isMounted = ref(false)
@@ -16,15 +16,11 @@ onMounted(() => {
 })
 
 const navItems = computed(() => {
-  if (!ui.value?.nav) return [
-    { to: '/collections', label: 'Collections' },
-    { to: '/about', label: 'About' },
-    { to: '/contact', label: 'Contact' }
-  ]
+  const currentNav = ui.value.nav
   return [
-    { to: '/collections', label: ui.value.nav.collections },
-    { to: '/about', label: ui.value.nav.about },
-    { to: '/contact', label: ui.value.nav.contact }
+    { to: '/collections', label: currentNav.collections },
+    { to: '/about', label: currentNav.about },
+    { to: '/contact', label: currentNav.contact }
   ]
 })
 

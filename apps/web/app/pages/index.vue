@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Series as Collection, SiteSetting, UiString } from '@machi10/types'
+import type { Series as Collection, SiteSetting } from '@machi10/types'
 import { usePayload } from '~/composables/usePayload'
 
 const { getGlobals, getCollection, getImageUrl } = usePayload()
+const { ui } = useI18n()
 
 const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', () => getGlobals('site-settings'))
-const { data: ui } = await useAsyncData<UiString>('ui-strings', () => getGlobals('ui-strings'))
 const { data: collections } = await useAsyncData('collections', () => 
   getCollection('series', { where: { isPublished: { equals: true } }, limit: 4 })
 )
@@ -31,13 +31,13 @@ const { data: collections } = await useAsyncData('collections', () =>
           {{ siteSettings?.siteTitle || 'Machi11 Couture' }}
         </h1>
         <h2 class="text-lg uppercase tracking-[0.3em] text-primary mb-8 font-bold">
-          {{ siteSettings?.tagline || ui?.hero.exploreButton }}
+          {{ siteSettings?.tagline || ui.hero.exploreButton }}
         </h2>
         <p class="text-xl text-primary/80 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
           {{ siteSettings?.seo?.description || '' }}
         </p>
         <NuxtLink to="/collections" class="premium-button text-lg px-10 py-4 font-medium transition-all duration-500">
-          {{ ui?.hero.exploreButton || 'Explorer' }}
+          {{ ui.hero.exploreButton }}
         </NuxtLink>
       </div>
     </section>
@@ -47,9 +47,9 @@ const { data: collections } = await useAsyncData('collections', () =>
         <div class="max-w-xl mx-auto md:mx-0">
           <h3 class="text-accent text-xs uppercase tracking-[0.3em] mb-4 font-bold flex items-center justify-center md:justify-start gap-3">
               <span class="w-10 h-[1px] bg-accent"></span>
-              {{ ui?.collections?.title || 'Sélections' }}
+              {{ ui.collections.title }}
           </h3>
-          <h2 class="text-4xl md:text-6xl font-serif text-primary leading-tight">Nos Créations</h2>
+          <h2 class="text-4xl md:text-6xl font-serif text-primary leading-tight">{{ ui.collections.title }}</h2>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ const { data: collections } = await useAsyncData('collections', () =>
                 />
               </template>
               <div v-else class="w-full h-full bg-accent/5 flex items-center justify-center">
-                 <span class="text-accent/20 font-serif italic text-2xl uppercase tracking-widest">Série {{ index + 1 }}</span>
+                 <span class="text-accent/20 font-serif italic text-2xl uppercase tracking-widest">{{ ui.collections.noImage }} {{ index + 1 }}</span>
               </div>
               
               <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-700"></div>
@@ -84,7 +84,7 @@ const { data: collections } = await useAsyncData('collections', () =>
               {{ collection.description }}
             </p>
             <NuxtLink :to="`/collections/${collection.id}`" class="group/btn relative inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-bold text-primary">
-               <span class="relative z-10">{{ ui?.collections?.discoverButton || 'Découvrir la série' }}</span>
+               <span class="relative z-10">{{ ui.collections.discoverButton }}</span>
                <div class="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center group-hover/btn:bg-accent group-hover/btn:border-accent group-hover/btn:text-white transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -98,7 +98,7 @@ const { data: collections } = await useAsyncData('collections', () =>
       <!-- Bottom View All -->
       <div class="mt-4 md:mt-32 text-center pt-2 md:pt-24 border-t border-primary/5">
         <NuxtLink to="/collections" class="premium-button px-12 py-5 text-sm uppercase tracking-widest font-bold">
-          {{ ui?.collections?.viewAll || 'Toutes les Collections' }}
+          {{ ui.collections.viewAll }}
         </NuxtLink>
       </div>
     </section>

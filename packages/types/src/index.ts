@@ -543,14 +543,46 @@ export interface UiString {
   };
   collections?: {
     title?: string | null;
+    description?: string | null;
     viewAll?: string | null;
     discoverButton?: string | null;
+    exploreLabel?: string | null;
+    noCollections?: string | null;
+    notifyMe?: string | null;
+    portfolioLabel?: string | null;
+    piecesTitle?: string | null;
+    detailsButton?: string | null;
+    emptyCollection?: string | null;
+    inquiryLink?: string | null;
+    backToAll?: string | null;
+    loadingCollection?: string | null;
     noImage?: string | null;
     uniqueCreationsLabel?: string | null;
   };
   common?: {
     loading?: string | null;
     contactTitle?: string | null;
+    footerCopyright?: string | null;
+    adminAccess?: string | null;
+  };
+  contact?: {
+    title?: string | null;
+    subtitle?: string | null;
+    successTitle?: string | null;
+    successMessage?: string | null;
+    submitButton?: string | null;
+    submitting?: string | null;
+    nameLabel?: string | null;
+    namePlaceholder?: string | null;
+    emailLabel?: string | null;
+    emailPlaceholder?: string | null;
+    messageLabel?: string | null;
+    messagePlaceholder?: string | null;
+  };
+  about?: {
+    badge?: string | null;
+    defaultTitle?: string | null;
+    imageAlt?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -623,8 +655,19 @@ export interface UiStringsSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        description?: T;
         viewAll?: T;
         discoverButton?: T;
+        exploreLabel?: T;
+        noCollections?: T;
+        notifyMe?: T;
+        portfolioLabel?: T;
+        piecesTitle?: T;
+        detailsButton?: T;
+        emptyCollection?: T;
+        inquiryLink?: T;
+        backToAll?: T;
+        loadingCollection?: T;
         noImage?: T;
         uniqueCreationsLabel?: T;
       };
@@ -633,6 +676,31 @@ export interface UiStringsSelect<T extends boolean = true> {
     | {
         loading?: T;
         contactTitle?: T;
+        footerCopyright?: T;
+        adminAccess?: T;
+      };
+  contact?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        successTitle?: T;
+        successMessage?: T;
+        submitButton?: T;
+        submitting?: T;
+        nameLabel?: T;
+        namePlaceholder?: T;
+        emailLabel?: T;
+        emailPlaceholder?: T;
+        messageLabel?: T;
+        messagePlaceholder?: T;
+      };
+  about?:
+    | T
+    | {
+        badge?: T;
+        defaultTitle?: T;
+        imageAlt?: T;
       };
   updatedAt?: T;
   createdAt?: T;
