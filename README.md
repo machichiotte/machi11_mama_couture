@@ -2,13 +2,6 @@
 
 Site vitrine premium pour la créatrice **Mama Couture**, combinant la puissance de **Payload CMS** et la fluidité de **Nuxt 4**.
 
-## 📖 Documentation
-Pour une compréhension approfondie, consultez la documentation Ops centralisée :
-- 🏗️ **[Structure Complète](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/STRUCTURE.md)**
-- 🛡️ **[Standards de Dév](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/DEVELOPMENT_STANDARDS.md)**
-- 📘 **[Guide Technique](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/TECHNICAL_GUIDE.md)**
-- 🚀 **[Checklist Mise en Prod](https://github.com/machichiotte/machi00_ops/blob/main/machi11_mama_couture/1-active/PRODUCTION_CHECKLIST.md)**
-
 ---
 
 ## 🏗 Structure du Projet
@@ -21,19 +14,97 @@ Pour une compréhension approfondie, consultez la documentation Ops centralisée
 
 ## 🚀 Démarrage Rapide
 
-### 1. Préparer l'Infrastructure
-Lancez la base de données MongoDB localement :
+### Prérequis
+- **Node.js** : v20+ recommandé
+- **Docker** : Pour MongoDB local
+- **pnpm/npm** : Gestionnaire de paquets
+
+### 1. Installation
 ```bash
-npm run db:dev
+# Installer les dépendances
+npm install
 ```
 
-### 2. Lancer le Projet (Mode Développement)
-Utilisez la commande racine pour lancer simultanément le CMS et le Web :
+### 2. Configuration
+Créez les fichiers `.env` nécessaires :
+
+**`apps/cms/.env`** :
+```env
+DATABASE_URL=mongodb://localhost:27017/machi11_mama_couture_dev
+PAYLOAD_SECRET=votre-secret-ici
+PAYLOAD_PUBLIC_SERVER_URL=http://localhost:3000
+PAYLOAD_PUBLIC_SITE_URL=http://localhost:3001
+
+# Cloudinary (optionnel en dev)
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+
+**`apps/web/.env`** :
+```env
+NUXT_PUBLIC_PAYLOAD_BASE_URL=http://localhost:3000
+```
+
+### 3. Lancer MongoDB (Docker)
 ```bash
+# Démarrer MongoDB en arrière-plan
+npm run db:dev
+
+# Vérifier que MongoDB tourne
+docker ps | grep machi11_mama_couture_mongo_dev
+```
+
+**Commandes utiles MongoDB :**
+```bash
+# Arrêter MongoDB
+docker stop machi11_mama_couture_mongo_dev
+
+# Redémarrer MongoDB
+docker restart machi11_mama_couture_mongo_dev
+
+# Voir les logs MongoDB
+docker logs machi11_mama_couture_mongo_dev
+
+# Supprimer complètement (⚠️ perte de données)
+docker compose -f infra/docker/docker-compose.yml down -v
+```
+
+### 4. Lancer le Projet (Mode Développement)
+```bash
+# Lancer CMS + Web simultanément
 npm run dev
 ```
-- **CMS Admin** : `http://localhost:3000/admin`
-- **Frontend** : `http://localhost:3001`
+
+**Accès :**
+- 🔐 **CMS Admin** : `http://localhost:3000/admin`
+- 🌐 **Frontend** : `http://localhost:3001`
+- 📡 **API REST** : `http://localhost:3000/api`
+
+### 5. Premier Lancement
+1. Créez votre premier utilisateur admin sur `/admin`
+2. Configurez les **Globals** (Site Settings, About, UI Strings)
+3. Ajoutez vos premières **Créations** et **Collections**
+
+---
+
+## 🔧 Commandes Utiles
+
+```bash
+# Développement
+npm run dev              # Lancer CMS + Web
+npm run db:dev          # Lancer MongoDB
+
+# Build
+npm run build           # Build CMS + Web
+
+# Types
+npm run generate:types  # Générer les types TypeScript
+
+# Qualité de code
+npm run lint            # Linter tout le projet
+npm run lint:fix        # Corriger automatiquement
+```
 
 ---
 
