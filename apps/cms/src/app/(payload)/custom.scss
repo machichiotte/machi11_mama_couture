@@ -1,0 +1,60 @@
+/* 
+  Personnalisation du menu latéral (Sidebar)
+  Amélioration de la hiérarchie visuelle entre Groupes et Éléments
+*/
+
+.nav-group {
+    margin-bottom: 2rem;
+    /* Plus d'espace entre les blocs */
+
+    &__toggle {
+        text-transform: uppercase;
+        font-weight: 800 !important;
+        font-size: 0.8rem !important;
+        letter-spacing: 0.12em;
+        color: var(--theme-elevation-600) !important;
+        margin-bottom: 0.75rem !important;
+        padding-top: 1rem !important;
+        padding-bottom: 0.25rem !important;
+        border-bottom: 2px solid var(--theme-elevation-200);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &:hover {
+            color: var(--theme-elevation-900) !important;
+            border-bottom-color: var(--theme-elevation-400);
+        }
+    }
+}
+
+.nav__link {
+    font-size: 0.95rem !important;
+    color: var(--theme-elevation-800) !important;
+    padding: 0.5rem 0 !important;
+    padding-left: 0.5rem !important;
+    /* Petit retrait pour les éléments */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 400;
+    border-radius: 4px;
+
+    &:hover {
+        padding-left: 1rem !important;
+        color: var(--theme-primary-500) !important;
+        background-color: var(--theme-elevation-50) !important;
+    }
+
+    &.active {
+        font-weight: 600 !important;
+        background-color: var(--theme-elevation-100) !important;
+        color: var(--theme-primary-600) !important;
+        border-left: 4px solid var(--theme-primary-500);
+    }
+}
+
+/* Ajustement global de la sidebar pour plus de souffle */
+.nav {
+    padding: 2rem !important;
+    background-color: var(--theme-elevation-0) !important;
+}
