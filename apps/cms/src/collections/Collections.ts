@@ -22,10 +22,35 @@ export const Collections: CollectionConfig = {
     },
     fields: [
         {
-            name: 'title',
-            label: 'Titre',
-            type: 'text',
-            required: true,
+            type: 'tabs',
+            tabs: [
+                {
+                    label: 'Général',
+                    fields: [
+                        {
+                            name: 'title',
+                            label: 'Titre',
+                            type: 'text',
+                            required: true,
+                        },
+                        {
+                            name: 'description',
+                            type: 'textarea',
+                        },
+                        {
+                            name: 'coverImage',
+                            type: 'upload',
+                            relationTo: 'media',
+                            required: true,
+                        },
+                        {
+                            name: 'order',
+                            type: 'number',
+                            index: true,
+                        },
+                    ],
+                },
+            ],
         },
         {
             name: 'slug',
@@ -47,24 +72,12 @@ export const Collections: CollectionConfig = {
             },
         },
         {
-            name: 'description',
-            type: 'textarea',
-        },
-        {
-            name: 'coverImage',
-            type: 'upload',
-            relationTo: 'media',
-            required: true,
-        },
-        {
             name: 'isPublished',
             type: 'checkbox',
             defaultValue: false,
-            index: true,
-        },
-        {
-            name: 'order',
-            type: 'number',
+            admin: {
+                position: 'sidebar',
+            },
             index: true,
         },
     ],

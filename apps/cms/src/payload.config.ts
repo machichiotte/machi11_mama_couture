@@ -157,6 +157,7 @@ export default buildConfig({
       collections: ['series', 'creations'],
       globals: ['site-settings', 'about'],
       uploadsCollection: 'media',
+      tabbedUI: true,
       generateTitle: ({ doc }: any) => `Mama Couture - ${doc?.title?.value || doc?.name?.value || 'Atelier'}`,
       generateDescription: ({ doc }: any) => doc?.description?.value || doc?.bio?.value,
     }),

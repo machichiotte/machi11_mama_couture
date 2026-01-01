@@ -180,13 +180,8 @@ export interface Media {
 export interface Series {
   id: string;
   title: string;
-  /**
-   * Généré automatiquement à partir du titre
-   */
-  slug?: string | null;
   description?: string | null;
   coverImage: string | Media;
-  isPublished?: boolean | null;
   order?: number | null;
   meta?: {
     title?: string | null;
@@ -196,6 +191,11 @@ export interface Series {
      */
     image?: (string | null) | Media;
   };
+  /**
+   * Généré automatiquement à partir du titre
+   */
+  slug?: string | null;
+  isPublished?: boolean | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -207,10 +207,6 @@ export interface Series {
 export interface Creation {
   id: string;
   title: string;
-  /**
-   * Généré automatiquement à partir du titre
-   */
-  slug?: string | null;
   description?: {
     root: {
       type: string;
@@ -232,7 +228,6 @@ export interface Creation {
   }[];
   series: string | Series;
   price?: number | null;
-  isPublished?: boolean | null;
   /**
    * Ajoutez les points spécifiques à cette création (ex: Matières, usage, etc.)
    */
@@ -250,6 +245,11 @@ export interface Creation {
      */
     image?: (string | null) | Media;
   };
+  /**
+   * Généré automatiquement à partir du titre
+   */
+  slug?: string | null;
+  isPublished?: boolean | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -399,10 +399,8 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface SeriesSelect<T extends boolean = true> {
   title?: T;
-  slug?: T;
   description?: T;
   coverImage?: T;
-  isPublished?: T;
   order?: T;
   meta?:
     | T
@@ -411,6 +409,8 @@ export interface SeriesSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  slug?: T;
+  isPublished?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -421,7 +421,6 @@ export interface SeriesSelect<T extends boolean = true> {
  */
 export interface CreationsSelect<T extends boolean = true> {
   title?: T;
-  slug?: T;
   description?: T;
   images?:
     | T
@@ -431,7 +430,6 @@ export interface CreationsSelect<T extends boolean = true> {
       };
   series?: T;
   price?: T;
-  isPublished?: T;
   features?:
     | T
     | {
@@ -445,6 +443,8 @@ export interface CreationsSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  slug?: T;
+  isPublished?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

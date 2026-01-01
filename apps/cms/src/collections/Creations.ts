@@ -22,10 +22,74 @@ export const Creations: CollectionConfig = {
     },
     fields: [
         {
-            name: 'title',
-            label: 'Titre',
-            type: 'text',
-            required: true,
+            type: 'tabs',
+            tabs: [
+                {
+                    label: 'Général',
+                    fields: [
+                        {
+                            name: 'title',
+                            label: 'Titre',
+                            type: 'text',
+                            required: true,
+                        },
+                        {
+                            name: 'description',
+                            type: 'richText',
+                        },
+                        {
+                            name: 'images',
+                            type: 'array',
+                            required: true,
+                            minRows: 1,
+                            fields: [
+                                {
+                                    name: 'image',
+                                    type: 'upload',
+                                    relationTo: 'media',
+                                    required: true,
+                                },
+                            ],
+                        },
+                        {
+                            name: 'series',
+                            type: 'relationship',
+                            relationTo: 'series' as any,
+                            required: true,
+                            index: true,
+                        },
+                        {
+                            name: 'price',
+                            type: 'number',
+                        },
+                    ],
+                },
+                {
+                    label: 'Signature',
+                    fields: [
+                        {
+                            name: 'features',
+                            label: 'Détails Signature (points clés)',
+                            type: 'array',
+                            admin: {
+                                description: 'Ajoutez les points spécifiques à cette création (ex: Matières, usage, etc.)',
+                            },
+                            fields: [
+                                {
+                                    name: 'label',
+                                    type: 'text',
+                                    required: true,
+                                },
+                            ],
+                            defaultValue: [
+                                { label: 'Fait-main avec soin dans mon atelier' },
+                                { label: 'Pièce unique ou petite série' },
+                                { label: 'Matériaux de haute qualité' },
+                            ],
+                        },
+                    ],
+                },
+            ],
         },
         {
             name: 'slug',
@@ -47,59 +111,13 @@ export const Creations: CollectionConfig = {
             },
         },
         {
-            name: 'description',
-            type: 'richText',
-        },
-        {
-            name: 'images',
-            type: 'array',
-            required: true,
-            minRows: 1,
-            fields: [
-                {
-                    name: 'image',
-                    type: 'upload',
-                    relationTo: 'media',
-                    required: true,
-                },
-            ],
-        },
-        {
-            name: 'series',
-            type: 'relationship',
-            relationTo: 'series' as any,
-            required: true,
-            index: true,
-        },
-        {
-            name: 'price',
-            type: 'number',
-        },
-        {
             name: 'isPublished',
             type: 'checkbox',
             defaultValue: false,
-            index: true,
-        },
-        {
-            name: 'features',
-            label: 'Détails Signature (points clés)',
-            type: 'array',
             admin: {
-                description: 'Ajoutez les points spécifiques à cette création (ex: Matières, usage, etc.)',
+                position: 'sidebar',
             },
-            fields: [
-                {
-                    name: 'label',
-                    type: 'text',
-                    required: true,
-                },
-            ],
-            defaultValue: [
-                { label: 'Fait-main avec soin dans mon atelier' },
-                { label: 'Pièce unique ou petite série' },
-                { label: 'Matériaux de haute qualité' },
-            ],
+            index: true,
         },
     ],
     timestamps: true,
