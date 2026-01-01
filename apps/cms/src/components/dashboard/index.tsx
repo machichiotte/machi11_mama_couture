@@ -2,6 +2,8 @@ import React from 'react'
 import { Gutter } from '@payloadcms/ui'
 
 const Dashboard: React.FC = () => {
+    const umamiUrl = process.env.PAYLOAD_PUBLIC_UMAMI_SHARE_URL || 'https://cloud.umami.is/share/9H69gzfLnecxs9K4'
+
     return (
         <div className="dashboard">
             <Gutter>
@@ -37,7 +39,7 @@ const Dashboard: React.FC = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
 
                     {/* Card Créations */}
-                    <div style={cardStyle}>
+                    <div style={{ ...cardStyle, borderLeft: '4px solid #e11d48' }}>
                         <h2 style={cardTitleStyle}>👗 Boutique</h2>
                         <p style={cardDescStyle}>Gérez vos pièces uniques et organisez vos collections thématiques.</p>
                         <div style={{ display: 'flex', gap: '10px' }}>
@@ -47,33 +49,14 @@ const Dashboard: React.FC = () => {
                     </div>
 
                     {/* Card Messages */}
-                    <div style={cardStyle}>
+                    <div style={{ ...cardStyle, borderLeft: '4px solid #10b981' }}>
                         <h2 style={cardTitleStyle}>💌 Derniers Messages</h2>
                         <p style={cardDescStyle}>Consultez vos demandes de personnalisation et réservations.</p>
                         <a href="/admin/collections/messages" style={primaryButtonStyle}>Voir la messagerie</a>
                     </div>
 
-                    {/* Card Analytics */}
-                    <div style={{
-                        ...cardStyle,
-                        borderLeft: '4px solid #2563eb'
-                    }}>
-                        <h2 style={cardTitleStyle}>📊 Visibilité</h2>
-                        <p style={cardDescStyle}>Suivez vos visites et découvrez vos pièces les plus populaires en temps réel.</p>
-                        <a href="https://cloud.umami.is/login"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                ...primaryButtonStyle,
-                                backgroundColor: '#2563eb',
-                                color: 'white'
-                            }}>
-                            Stats Umami
-                        </a>
-                    </div>
-
                     {/* Card Configuration */}
-                    <div style={cardStyle}>
+                    <div style={{ ...cardStyle, borderLeft: '4px solid #f59e0b' }}>
                         <h2 style={cardTitleStyle}>🛠️ Configuration</h2>
                         <p style={cardDescStyle}>Textes du site, interface et paramètres globaux de l'Atelier.</p>
                         <div style={{ display: 'flex', gap: '10px' }}>
@@ -83,13 +66,31 @@ const Dashboard: React.FC = () => {
                     </div>
 
                     {/* Boîte à outils */}
-                    <div style={{ ...cardStyle, gridColumn: '1 / -1', marginTop: '20px', backgroundColor: 'transparent', border: '1px dashed var(--theme-elevation-200)' }}>
-                        <h3 style={{ fontSize: '1rem', marginBottom: '15px', color: 'var(--theme-elevation-500)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>🧰 Boîte à outils</h3>
-                        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                            <a href="https://cloudinary.com/console" target="_blank" rel="noreferrer" style={toolLinkStyle}>📸 Médiathèque Cloudinary</a>
-                            <a href="https://instagram.com" target="_blank" rel="noreferrer" style={toolLinkStyle}>📸 Instagram Atelier Petit Point</a>
+                    <div style={{ ...cardStyle, borderLeft: '4px solid #6366f1' }}>
+                        <h2 style={cardTitleStyle}>🧰 Boîte à outils</h2>
+                        <p style={cardDescStyle}>Accès rapides à vos supports externes pour l'atelier.</p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <a href="https://cloudinary.com/console" target="_blank" rel="noreferrer" style={toolLinkStyle}>📸 Cloudinary</a>
+                            <a href="https://instagram.com" target="_blank" rel="noreferrer" style={toolLinkStyle}>📸 Instagram</a>
                         </div>
                     </div>
+
+                    {/* Card Analytics */}
+                    <div style={{ ...cardStyle, borderLeft: '4px solid #2563eb' }}>
+                        <h2 style={cardTitleStyle}>📊 Visibilité</h2>
+                        <p style={cardDescStyle}>Suivez vos visites et découvrez vos pièces les plus populaires en temps réel.</p>
+                        <a href={umamiUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                ...primaryButtonStyle,
+                                backgroundColor: '#2563eb',
+                                color: 'white'
+                            }}>
+                            Stats Umami ↗
+                        </a>
+                    </div>
+
                 </div>
             </Gutter>
         </div>
@@ -156,7 +157,8 @@ const toolLinkStyle: React.CSSProperties = {
     color: 'var(--theme-elevation-600)',
     textDecoration: 'none',
     borderBottom: '1px solid var(--theme-elevation-200)',
-    paddingBottom: '2px'
+    paddingBottom: '2px',
+    width: 'fit-content'
 }
 
 export default Dashboard
