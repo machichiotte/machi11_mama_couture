@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
                             👁️ Voir le site
                         </a>
                         <a href="/admin/collections/creations/create" style={quickButtonStyle}>
-                            ✨ Nouvelle créations
+                            ✨ Nouvelle création
                         </a>
                         <a href="/admin/globals/about" style={quickButtonStyle}>
                             📖 Ma Bio
@@ -102,7 +102,10 @@ const cardStyle: React.CSSProperties = {
     padding: '30px',
     backgroundColor: 'var(--theme-elevation-50)',
     borderRadius: '12px',
-    border: '1px solid var(--theme-elevation-100)',
+    borderTop: '1px solid var(--theme-elevation-100)',
+    borderRight: '1px solid var(--theme-elevation-100)',
+    borderBottom: '1px solid var(--theme-elevation-100)',
+    borderLeft: '1px solid var(--theme-elevation-100)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between'
