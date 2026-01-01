@@ -82,6 +82,32 @@ const Dashboard: React.FC = () => {
                         </a>
                     </div>
 
+                    {/* Card Analytics */}
+                    <div style={{
+                        padding: '30px',
+                        backgroundColor: 'var(--theme-elevation-50)',
+                        borderRadius: '10px',
+                        border: '1px solid var(--theme-elevation-100)',
+                        gridColumn: '1 / -1'
+                    }}>
+                        <h2 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>📊 Statistiques (Umami)</h2>
+                        <p style={{ marginBottom: '20px' }}>Consultez les visites, les clics sur vos collections et les réservations en temps réel.</p>
+                        <a href="https://cloud.umami.is/login"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                display: 'inline-block',
+                                padding: '10px 20px',
+                                backgroundColor: '#2563eb',
+                                color: 'white',
+                                textDecoration: 'none',
+                                borderRadius: '4px',
+                                fontSize: '0.9rem',
+                                fontWeight: 'bold'
+                            }}>
+                            Accéder à mon tableau de bord Umami
+                        </a>
+                    </div>
                 </div>
             </Gutter>
         </div>

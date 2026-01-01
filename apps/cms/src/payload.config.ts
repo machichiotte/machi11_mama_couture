@@ -94,8 +94,8 @@ export default buildConfig({
     },
     components: {
       views: {
-        Dashboard: {
-          Component: '/components/Dashboard/index.tsx#default',
+        dashboard: {
+          Component: './components/dashboard/index.tsx#default',
         },
       },
     },
