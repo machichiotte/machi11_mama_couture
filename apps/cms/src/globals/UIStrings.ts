@@ -246,6 +246,52 @@ export const UIStrings: GlobalConfig = {
                     defaultValue: "Photo de l'artisan",
                 }
             ]
+        },
+        {
+            name: 'creation',
+            type: 'group',
+            fields: [
+                {
+                    name: 'historyLabel',
+                    type: 'text',
+                    defaultValue: "L'histoire de cette pièce",
+                },
+                {
+                    name: 'detailsLabel',
+                    type: 'text',
+                    defaultValue: 'Détails Signature',
+                },
+                {
+                    name: 'handMade',
+                    type: 'text',
+                    defaultValue: 'Fait-main avec soin dans mon atelier',
+                },
+                {
+                    name: 'preorderButton',
+                    type: 'text',
+                    defaultValue: 'Réserver cette pièce',
+                },
+                {
+                    name: 'securityLabel',
+                    type: 'text',
+                    defaultValue: 'Paiement sécurisé & Envoi soigné',
+                },
+                {
+                    name: 'onQuote',
+                    type: 'text',
+                    defaultValue: 'Sur devis personnalisé',
+                },
+                {
+                    name: 'backToCollections',
+                    type: 'text',
+                    defaultValue: 'Retour aux collections',
+                },
+                {
+                    name: 'errorTitle',
+                    type: 'text',
+                    defaultValue: 'Oups, cette création reste timide.',
+                },
+            ]
         }
     ],
 }

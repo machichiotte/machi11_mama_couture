@@ -40,6 +40,18 @@ export const STRINGS_FR = {
         messageLabel: 'Votre Message',
         messagePlaceholder: 'Écrivez-nous votre message ici...',
     },
+    creation: {
+        historyLabel: "L'histoire de cette pièce",
+        detailsLabel: 'Détails Signature',
+        handMade: 'Fait-main avec soin dans mon atelier',
+        uniquePiece: 'Pièce unique ou petite série thématique',
+        qualityMaterials: 'Matériaux sélectionnés pour leur qualité',
+        preorderButton: 'Réserver cette pièce',
+        securityLabel: 'Paiement sécurisé & Envoi soigné',
+        onQuote: 'Sur devis personnalisé',
+        backToCollections: 'Retour aux collections',
+        errorTitle: 'Oups, cette création reste timide.',
+    },
     about: {
         badge: "L'Âme de l'Atelier",
         defaultTitle: 'Notre Histoire',

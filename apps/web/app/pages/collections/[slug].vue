@@ -112,14 +112,15 @@ useSeoMeta({
               
               <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                 <span v-if="creation.price" class="bg-secondary text-primary px-4 py-2 text-sm font-medium shadow-lg">{{ creation.price }}€</span>
-                <button 
+                <NuxtLink 
+                  :to="`/creations/${creation.slug || creation.id}`"
                   class="bg-primary text-secondary px-6 py-2 text-xs uppercase tracking-widest hover:bg-accent transition-colors shadow-lg"
                   :data-umami-event="`view_creation_detail`"
                   :data-umami-event-creation="creation.title"
                   :data-umami-event-collection="collection.title"
                 >
                   {{ ui.collections.detailsButton }}
-                </button>
+                </NuxtLink>
               </div>
             </div>
             

@@ -5,17 +5,22 @@ import { usePayload } from '~/composables/usePayload'
 const { create, getGlobals } = usePayload()
 const { ui } = useI18n()
 
+const route = useRoute()
+
 const form = reactive({
   name: '',
   email: '',
-  message: ''
+  message: (route.query.message as string) || ''
 })
+
+const subject = ref((route.query.subject as string) || '')
 
 const isSubmitting = ref(false)
 const isSuccess = ref(false)
 const error = ref('')
 
 const handleSubmit = async () => {
+  if (isSubmitting.value) return
   isSubmitting.value = true
   error.value = ''
   
@@ -24,7 +29,7 @@ const handleSubmit = async () => {
       name: form.name,
       email: form.email,
       message: form.message,
-      subject: `Nouveau message de ${form.name}`
+      subject: subject.value || `Nouveau message de ${form.name}`
     })
     
     // Suivi Analytics Umami
@@ -91,6 +96,18 @@ const handleSubmit = async () => {
             />
           </div>
         </div>
+
+        <!-- Champ Sujet (visible si pré-rempli ou nécessaire) -->
+        <div v-if="subject" class="mt-4 md:space-y-3">
+          <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">Objet du message</label>
+          <input 
+            v-model="subject"
+            type="text" 
+            readonly
+            class="w-full bg-transparent border-b border-primary/10 py-4 outline-none text-primary/60 italic font-serif cursor-default" 
+          />
+        </div>
+
         <div class="mt-4 md:space-y-3">
           <label class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/40 block">{{ ui.contact.messageLabel }}</label>
           <textarea 

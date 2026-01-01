@@ -207,6 +207,10 @@ export interface Series {
 export interface Creation {
   id: string;
   title: string;
+  /**
+   * Généré automatiquement à partir du titre
+   */
+  slug?: string | null;
   description?: {
     root: {
       type: string;
@@ -229,6 +233,15 @@ export interface Creation {
   series: string | Series;
   price?: number | null;
   isPublished?: boolean | null;
+  /**
+   * Ajoutez les points spécifiques à cette création (ex: Matières, usage, etc.)
+   */
+  features?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -408,6 +421,7 @@ export interface SeriesSelect<T extends boolean = true> {
  */
 export interface CreationsSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
   description?: T;
   images?:
     | T
@@ -418,6 +432,12 @@ export interface CreationsSelect<T extends boolean = true> {
   series?: T;
   price?: T;
   isPublished?: T;
+  features?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
   meta?:
     | T
     | {
@@ -601,6 +621,16 @@ export interface UiString {
     defaultTitle?: string | null;
     imageAlt?: string | null;
   };
+  creation?: {
+    historyLabel?: string | null;
+    detailsLabel?: string | null;
+    handMade?: string | null;
+    preorderButton?: string | null;
+    securityLabel?: string | null;
+    onQuote?: string | null;
+    backToCollections?: string | null;
+    errorTitle?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -718,6 +748,18 @@ export interface UiStringsSelect<T extends boolean = true> {
         badge?: T;
         defaultTitle?: T;
         imageAlt?: T;
+      };
+  creation?:
+    | T
+    | {
+        historyLabel?: T;
+        detailsLabel?: T;
+        handMade?: T;
+        preorderButton?: T;
+        securityLabel?: T;
+        onQuote?: T;
+        backToCollections?: T;
+        errorTitle?: T;
       };
   updatedAt?: T;
   createdAt?: T;

@@ -17,6 +17,7 @@ export const useI18n = () => {
             hero: { ...STRINGS_FR.hero, ...data.value?.hero },
             collections: { ...STRINGS_FR.collections, ...data.value?.collections },
             contact: { ...STRINGS_FR.contact, ...data.value?.contact },
+            creation: { ...STRINGS_FR.creation, ...data.value?.creation },
             about: { ...STRINGS_FR.about, ...data.value?.about },
             common: { ...STRINGS_FR.common, ...data.value?.common },
         }
