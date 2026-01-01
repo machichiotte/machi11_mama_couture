@@ -5,19 +5,30 @@ export const usePayload = () => {
     const baseUrl = config.public.payloadBaseUrl as string
 
     const getGlobals = async <T extends keyof Config['globals']>(slug: T): Promise<Config['globals'][T]> => {
-        return await $fetch(`${baseUrl}/api/globals/${slug}`)
+        return await $fetch(`/api/globals/${slug}`)
     }
 
     const getCollection = async <T extends keyof Config['collections']>(slug: T, params = {}): Promise<{ docs: Config['collections'][T][] }> => {
-        return await $fetch(`${baseUrl}/api/${slug}`, { query: params })
+        return await $fetch(`/api/${slug}`, { query: params })
     }
 
     const getById = async <T extends keyof Config['collections']>(slug: T, id: string): Promise<Config['collections'][T]> => {
-        return await $fetch(`${baseUrl}/api/${slug}/${id}`)
+        return await $fetch(`/api/${slug}/${id}`)
+    }
+
+    const findBySlug = async <T extends keyof Config['collections']>(collection: T, slug: string): Promise<Config['collections'][T] | null> => {
+        const response = await $fetch<{ docs: Config['collections'][T][] }>(`/api/${collection}`, {
+            query: {
+                where: {
+                    slug: { equals: slug }
+                }
+            }
+        })
+        return response.docs?.[0] || null
     }
 
     const create = async <T extends keyof Config['collections']>(slug: T, data: any): Promise<Config['collections'][T]> => {
-        return await $fetch(`${baseUrl}/api/${slug}`, {
+        return await $fetch(`/api/${slug}`, {
             method: 'POST' as any,
             body: data
         })
@@ -39,6 +50,7 @@ export const usePayload = () => {
         getGlobals,
         getCollection,
         getById,
+        findBySlug,
         create,
         getImageUrl
     }

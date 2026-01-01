@@ -26,6 +26,12 @@ const handleSubmit = async () => {
       message: form.message,
       subject: `Nouveau message de ${form.name}`
     })
+    
+    // Suivi Analytics Umami
+    if (window.umami) {
+      window.umami.track('contact_form_submit', { name: form.name })
+    }
+
     isSuccess.value = true
     form.name = ''
     form.email = ''

@@ -59,6 +59,8 @@ watch(isMenuOpen, (val) => {
           :to="item.to" 
           class="text-xs uppercase tracking-[0.2em] font-bold text-primary/60 hover:text-primary transition-all relative py-1 group"
           active-class="!text-accent !text-opacity-100"
+          :data-umami-event="`nav_click`"
+          :data-umami-event-page="item.label"
         >
           {{ item.label }}
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" 
@@ -69,10 +71,14 @@ watch(isMenuOpen, (val) => {
         <div class="w-9 h-9 flex items-center justify-center">
           <button 
             v-if="isMounted"
-            @click="toggleColorMode"
+            @click="() => { 
+              toggleColorMode(); 
+              if (window.umami) window.umami.track('theme_toggle', { mode: isDark ? 'light' : 'dark' });
+            }"
             class="p-2 rounded-full hover:bg-primary/5 transition-all duration-300 group"
             :aria-label="isDark ? 'Activer le mode clair' : 'Activer le mode sombre'"
           >
+            <!-- ... icones ... -->
             <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gold group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
@@ -89,7 +95,10 @@ watch(isMenuOpen, (val) => {
         <div class="w-10 h-10 flex items-center justify-center">
           <button 
             v-if="isMounted"
-            @click="toggleColorMode"
+            @click="() => { 
+                toggleColorMode(); 
+                if (window.umami) window.umami.track('theme_toggle_mobile', { mode: isDark ? 'light' : 'dark' });
+              }"
             class="p-2 rounded-full hover:bg-primary/5 transition-all duration-300"
             :aria-label="isDark ? 'Activer le mode clair' : 'Activer le mode sombre'"
           >
@@ -140,6 +149,8 @@ watch(isMenuOpen, (val) => {
           <div class="flex flex-wrap gap-6">
               <a v-for="social in about.socialLinks" :key="social.platform" :href="social.url" target="_blank" 
                  class="group flex items-center gap-3 transition-all duration-300"
+                 :data-umami-event="`social_click`"
+                 :data-umami-event-platform="social.platform"
               >
                 <div class="w-10 h-10 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/5 transition-colors">
                   <svg v-if="social.platform.toLowerCase().includes('instagram')" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>

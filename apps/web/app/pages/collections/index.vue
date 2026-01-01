@@ -18,11 +18,11 @@ const { data: collections } = await useAsyncData('all-collections', () =>
   })
 )
 
-useHead({
-  title: `${ui.value.collections.title} - Artisanat d'Exception`,
-  meta: [
-    { name: 'description', content: ui.value.collections.description }
-  ]
+useSeoMeta({
+  title: `${ui.value.collections.title} - Mama Couture`,
+  ogTitle: `${ui.value.collections.title} - Mama Couture`,
+  description: ui.value.collections.description,
+  ogDescription: ui.value.collections.description,
 })
 </script>
 
@@ -40,9 +40,11 @@ useHead({
       <NuxtLink 
         v-for="(collection, index) in collections.docs" 
         :key="collection.id" 
-        :to="`/collections/${collection.id}`"
+        :to="`/collections/${collection.slug || collection.id}`"
         class="group cursor-pointer block"
         :style="{ animationDelay: `${index * 0.1}s` }"
+        :data-umami-event="`view_collection_list`"
+        :data-umami-event-collection="collection.title"
       >
         <div class="relative aspect-square overflow-hidden mb-4 md:mb-8 bg-secondary/50 rounded-sm shadow-sm group-hover:shadow-2xl transition-all duration-700 border border-primary/5">
           <!-- Image de Couverture -->

@@ -7,6 +7,16 @@ const { getGlobals, getImageUrl } = usePayload()
 const { serialize } = useRichText()
 const { ui } = useI18n()
 const { data: about } = await useAsyncData('about', () => getGlobals('about'))
+
+// SEO Metadata
+useSeoMeta({
+  title: about.value?.meta?.title || `À propos - ${about.value?.name || 'Mama Couture'}`,
+  ogTitle: about.value?.meta?.title || about.value?.name,
+  description: about.value?.meta?.description || 'Découvrez l\'histoire et les créations de Mama Couture.',
+  ogDescription: about.value?.meta?.description,
+  ogImage: about.value?.meta?.image ? getImageUrl(about.value.meta.image) : (about.value?.profileImage ? getImageUrl(about.value.profileImage) : ''),
+  twitterCard: 'summary_large_image',
+})
 </script>
 
 <template>

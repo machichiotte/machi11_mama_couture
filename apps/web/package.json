@@ -11,10 +11,11 @@
     "lint": "echo 'Nuxt linting via TypeScript check' && nuxt typecheck"
   },
   "dependencies": {
+    "@machi10/types": "*",
+    "@nuxtjs/sitemap": "^7.5.0",
     "nuxt": "^4.2.2",
     "vue": "^3.5.25",
-    "vue-router": "^4.6.4",
-    "@machi10/types": "*"
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@nuxt/image": "^2.0.0",

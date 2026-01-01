@@ -11,6 +11,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/image',
+    '@nuxtjs/sitemap',
   ],
   nitro: {
     preset: 'cloudflare-pages'
@@ -37,7 +38,16 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       payloadBaseUrl: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
+      siteUrl: process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001',
+      umamiId: 'b7a59ea1-29bc-47cf-a67a-b76b60b3cd3d',
     }
+  },
+  site: {
+    url: process.env.PAYLOAD_PUBLIC_SITE_URL || 'http://localhost:3001',
+    name: 'Mama Couture',
+  },
+  sitemap: {
+    autoLastmod: true,
   },
 
   app: {
@@ -51,6 +61,11 @@ export default defineNuxtConfig({
     },
     head: {
       script: [
+        {
+          src: 'https://cloud.umami.is/script.js',
+          defer: true,
+          'data-website-id': 'b7a59ea1-29bc-47cf-a67a-b76b60b3cd3d'
+        },
         {
           children: `(function() {
             try {

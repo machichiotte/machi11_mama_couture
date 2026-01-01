@@ -9,6 +9,16 @@ const { data: siteSettings } = await useAsyncData<SiteSetting>('site-settings', 
 const { data: collections } = await useAsyncData('collections', () => 
   getCollection('series', { where: { isPublished: { equals: true } }, limit: 4 })
 )
+
+// SEO Metadata
+useSeoMeta({
+  title: siteSettings.value?.meta?.title || siteSettings.value?.siteTitle || 'Mama Couture',
+  ogTitle: siteSettings.value?.meta?.title || siteSettings.value?.siteTitle || 'Mama Couture',
+  description: siteSettings.value?.meta?.description || siteSettings.value?.tagline,
+  ogDescription: siteSettings.value?.meta?.description || siteSettings.value?.tagline,
+  ogImage: siteSettings.value?.meta?.image ? getImageUrl(siteSettings.value.meta.image) : (siteSettings.value?.heroImage ? getImageUrl(siteSettings.value.heroImage) : ''),
+  twitterCard: 'summary_large_image',
+})
 </script>
 
 <template>
@@ -83,7 +93,12 @@ const { data: collections } = await useAsyncData('collections', () =>
             <p v-if="collection.description" class="text-primary/60 text-base md:text-lg font-light leading-relaxed mb-4 md:mb-10 max-w-md" :class="index % 2 === 0 ? '' : 'md:text-right'">
               {{ collection.description }}
             </p>
-            <NuxtLink :to="`/collections/${collection.id}`" class="group/btn relative inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-bold text-primary">
+            <NuxtLink 
+              :to="`/collections/${collection.slug || collection.id}`" 
+              class="group/btn relative inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-bold text-primary"
+              :data-umami-event="`view_collection_home`"
+              :data-umami-event-collection="collection.title"
+            >
                <span class="relative z-10">{{ ui.collections.discoverButton }}</span>
                <div class="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center group-hover/btn:bg-accent group-hover/btn:border-accent group-hover/btn:text-white transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

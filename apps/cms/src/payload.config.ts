@@ -13,6 +13,7 @@ import { Media } from './collections/Media'
 import { Collections } from './collections/Collections'
 import { Creations } from './collections/Creations'
 import { Messages } from './collections/Messages'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import { About } from './globals/About'
 import { SiteSettings } from './globals/SiteSettings'
 import { UIStrings } from './globals/UIStrings'
@@ -104,8 +105,8 @@ export default buildConfig({
     fallbackLanguage: 'fr',
   },
   serverURL: PAYLOAD_PUBLIC_SERVER_URL,
-  cors: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000'].filter(Boolean) as string[],
-  csrf: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000'].filter(Boolean) as string[],
+  cors: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
+  csrf: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [About, SiteSettings, UIStrings],
   editor: lexicalEditor(),
@@ -151,6 +152,13 @@ export default buildConfig({
           },
         },
       },
+    }),
+    seoPlugin({
+      collections: ['series', 'creations'],
+      globals: ['site-settings', 'about'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }: any) => `Mama Couture - ${doc?.title?.value || doc?.name?.value || 'Atelier'}`,
+      generateDescription: ({ doc }: any) => doc?.description?.value || doc?.bio?.value,
     }),
   ],
 })

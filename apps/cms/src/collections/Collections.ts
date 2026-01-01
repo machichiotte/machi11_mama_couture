@@ -23,8 +23,28 @@ export const Collections: CollectionConfig = {
     fields: [
         {
             name: 'title',
+            label: 'Titre',
             type: 'text',
             required: true,
+        },
+        {
+            name: 'slug',
+            label: 'Lien URL (Slug)',
+            type: 'text',
+            admin: {
+                position: 'sidebar',
+                description: 'Généré automatiquement à partir du titre',
+            },
+            hooks: {
+                beforeValidate: [
+                    ({ data }) => {
+                        if (data?.title) {
+                            return data.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+                        }
+                        return data?.slug
+                    },
+                ],
+            },
         },
         {
             name: 'description',
@@ -46,25 +66,6 @@ export const Collections: CollectionConfig = {
             name: 'order',
             type: 'number',
             index: true,
-        },
-        {
-            name: 'seo',
-            type: 'group',
-            fields: [
-                {
-                    name: 'title',
-                    type: 'text',
-                },
-                {
-                    name: 'description',
-                    type: 'textarea',
-                },
-                {
-                    name: 'image',
-                    type: 'upload',
-                    relationTo: 'media',
-                },
-            ],
         },
     ],
 }

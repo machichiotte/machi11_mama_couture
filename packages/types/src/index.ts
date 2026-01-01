@@ -180,13 +180,20 @@ export interface Media {
 export interface Series {
   id: string;
   title: string;
+  /**
+   * Généré automatiquement à partir du titre
+   */
+  slug?: string | null;
   description?: string | null;
   coverImage: string | Media;
   isPublished?: boolean | null;
   order?: number | null;
-  seo?: {
+  meta?: {
     title?: string | null;
     description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (string | null) | Media;
   };
   updatedAt: string;
@@ -222,9 +229,12 @@ export interface Creation {
   series: string | Series;
   price?: number | null;
   isPublished?: boolean | null;
-  seo?: {
+  meta?: {
     title?: string | null;
     description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (string | null) | Media;
   };
   updatedAt: string;
@@ -376,11 +386,12 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface SeriesSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
   description?: T;
   coverImage?: T;
   isPublished?: T;
   order?: T;
-  seo?:
+  meta?:
     | T
     | {
         title?: T;
@@ -407,7 +418,7 @@ export interface CreationsSelect<T extends boolean = true> {
   series?: T;
   price?: T;
   isPublished?: T;
-  seo?:
+  meta?:
     | T
     | {
         title?: T;
@@ -501,9 +512,12 @@ export interface About {
         id?: string | null;
       }[]
     | null;
-  seo?: {
+  meta?: {
     title?: string | null;
     description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (string | null) | Media;
   };
   updatedAt?: string | null;
@@ -518,9 +532,12 @@ export interface SiteSetting {
   siteTitle: string;
   tagline?: string | null;
   heroImage?: (string | null) | Media;
-  seo?: {
+  meta?: {
     title?: string | null;
     description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (string | null) | Media;
   };
   updatedAt?: string | null;
@@ -603,7 +620,7 @@ export interface AboutSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
-  seo?:
+  meta?:
     | T
     | {
         title?: T;
@@ -622,7 +639,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   siteTitle?: T;
   tagline?: T;
   heroImage?: T;
-  seo?:
+  meta?:
     | T
     | {
         title?: T;

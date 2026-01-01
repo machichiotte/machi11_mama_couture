@@ -61,25 +61,6 @@ export const Creations: CollectionConfig = {
             defaultValue: false,
             index: true,
         },
-        {
-            name: 'seo',
-            type: 'group',
-            fields: [
-                {
-                    name: 'title',
-                    type: 'text',
-                },
-                {
-                    name: 'description',
-                    type: 'textarea',
-                },
-                {
-                    name: 'image',
-                    type: 'upload',
-                    relationTo: 'media',
-                },
-            ],
-        },
     ],
     timestamps: true,
 }
