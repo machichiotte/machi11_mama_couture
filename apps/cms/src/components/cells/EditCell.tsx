@@ -1,24 +1,24 @@
 'use client'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 const EditCell: React.FC<any> = (props) => {
-    const { rowData, collectionConfig, collection } = props
+    const { rowData, collectionSlug, collectionConfig, collection } = props
 
-    // Détection robuste du slug de la collection
-    let slug = collectionConfig?.slug || collection?.slug
+    // 1. Utiliser les props de Payload en priorité (évite le mismatch)
+    // 2. Fallback sur les objets de config
+    const [slug, setSlug] = useState(collectionSlug || collectionConfig?.slug || collection?.slug || 'creations')
 
-    // Fallback via l'URL si on est dans un champ UI où Payload ne passe pas l'objet config
-    if (!slug && typeof window !== 'undefined') {
-        const parts = window.location.pathname.split('/')
-        const colIndex = parts.indexOf('collections')
-        if (colIndex !== -1 && parts[colIndex + 1]) {
-            slug = parts[colIndex + 1]
+    // 3. Uniquement si tout a échoué, on vérifie l'URL après l'hydratation
+    useEffect(() => {
+        if (!collectionSlug && !collectionConfig?.slug && !collection?.slug) {
+            const parts = window.location.pathname.split('/')
+            const colIndex = parts.indexOf('collections')
+            if (colIndex !== -1 && parts[colIndex + 1]) {
+                setSlug(parts[colIndex + 1])
+            }
         }
-    }
-
-    // Valeur par défaut finale
-    slug = slug || 'creations'
+    }, [collectionSlug, collectionConfig, collection])
 
     const editUrl = `/admin/collections/${slug}/${rowData.id}`
 

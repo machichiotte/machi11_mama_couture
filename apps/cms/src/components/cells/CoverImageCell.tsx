@@ -3,11 +3,23 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 const CoverImageCell: React.FC<any> = (props) => {
-    const { rowData, cellData, collectionConfig, collection } = props
+    const { rowData, cellData, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [url, setUrl] = useState<string | null>(null)
 
+    // Détection du slug avec stratégie anti-mismatch
+    const [slug, setSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'series')
+
+    useEffect(() => {
+        if (!propsSlug && !collectionConfig?.slug && !collection?.slug) {
+            const parts = window.location.pathname.split('/')
+            const colIndex = parts.indexOf('collections')
+            if (colIndex !== -1 && parts[colIndex + 1]) {
+                setSlug(parts[colIndex + 1])
+            }
+        }
+    }, [propsSlug, collectionConfig, collection])
+
     const imageDoc = cellData
-    const slug = collectionConfig?.slug || collection?.slug || 'series'
     const editUrl = `/admin/collections/${slug}/${rowData.id}`
 
     useEffect(() => {

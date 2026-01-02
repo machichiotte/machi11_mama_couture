@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 const ImageCell: React.FC<any> = (props) => {
-    const { rowData, collectionConfig, collection } = props
+    const { rowData, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [url, setUrl] = useState<string | null>(null)
 
     const images = rowData?.images || []
@@ -11,8 +11,19 @@ const ImageCell: React.FC<any> = (props) => {
     const imageDoc = firstItem?.image
     const imageCount = images.length
 
-    // Détection du slug
-    const slug = collectionConfig?.slug || collection?.slug || 'creations'
+    // Détection du slug avec stratégie anti-mismatch
+    const [slug, setSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'creations')
+
+    useEffect(() => {
+        if (!propsSlug && !collectionConfig?.slug && !collection?.slug) {
+            const parts = window.location.pathname.split('/')
+            const colIndex = parts.indexOf('collections')
+            if (colIndex !== -1 && parts[colIndex + 1]) {
+                setSlug(parts[colIndex + 1])
+            }
+        }
+    }, [propsSlug, collectionConfig, collection])
+
     const editUrl = `/admin/collections/${slug}/${rowData.id}`
 
     useEffect(() => {

@@ -1,16 +1,28 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 const NumberCell: React.FC<any> = (props) => {
-    const { cellData, rowData, field, collection } = props
+    const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [isEditing, setIsEditing] = useState(false)
     const [value, setValue] = useState(cellData)
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
     const fieldName = field.name
-    const collectionSlug = collection?.slug || 'creations'
+
+    // Détection robuste avec stratégie anti-mismatch
+    const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'creations')
+
+    useEffect(() => {
+        if (!propsSlug && !collectionConfig?.slug && !collection?.slug) {
+            const parts = window.location.pathname.split('/')
+            const colIndex = parts.indexOf('collections')
+            if (colIndex !== -1 && parts[colIndex + 1]) {
+                setCollectionSlug(parts[colIndex + 1])
+            }
+        }
+    }, [propsSlug, collectionConfig, collection])
 
     const handleSave = async () => {
         if (value === cellData) {
