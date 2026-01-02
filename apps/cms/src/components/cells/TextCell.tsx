@@ -67,7 +67,8 @@ const TextCell: React.FC<any> = (props) => {
                     border: '1px solid var(--theme-elevation-400)',
                     backgroundColor: 'var(--theme-elevation-0)',
                     color: 'var(--theme-elevation-800)',
-                    fontSize: '11px'
+                    fontSize: '13px',
+                    fontWeight: '600'
                 }}
             />
         )
@@ -78,14 +79,19 @@ const TextCell: React.FC<any> = (props) => {
             onClick={() => setIsEditing(true)}
             style={{
                 cursor: 'pointer',
-                fontSize: '11px',
+                fontSize: '13px',
+                fontWeight: '600',
                 color: value ? 'inherit' : 'var(--theme-elevation-400)',
                 fontStyle: value ? 'normal' : 'italic',
                 minHeight: '42px',
                 display: 'flex',
                 alignItems: 'center',
                 opacity: loading ? 0.5 : 1,
-                transition: 'opacity 0.2s'
+                transition: 'opacity 0.2s',
+                maxWidth: '250px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
             }}
         >
             {value || 'cliquer pour éditer...'}
