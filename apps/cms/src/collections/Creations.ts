@@ -4,7 +4,7 @@ export const Creations: CollectionConfig = {
     slug: 'creations',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoLabel', 'promoPercentage', 'stockQuantity', 'isPublished', 'updatedAt'],
+        defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoLabel', 'promoPercentage', 'isPublished', 'edit'],
         group: 'Boutique',
     },
     access: {
@@ -32,6 +32,11 @@ export const Creations: CollectionConfig = {
                             label: 'Titre',
                             type: 'text',
                             required: true,
+                            admin: {
+                                components: {
+                                    Cell: './components/cells/TextCell#default',
+                                },
+                            },
                         },
                         {
                             name: 'description',
@@ -187,6 +192,15 @@ export const Creations: CollectionConfig = {
                     ],
                 },
             ],
+        },
+        {
+            name: 'edit',
+            type: 'ui',
+            admin: {
+                components: {
+                    Cell: './components/cells/EditCell#default',
+                },
+            },
         },
     ],
     timestamps: true,
