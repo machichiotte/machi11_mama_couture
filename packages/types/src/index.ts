@@ -227,35 +227,16 @@ export interface Creation {
     id?: string | null;
   }[];
   series: string | Series;
-  /**
-   * Ajoutez les points spécifiques à cette création (ex: Matières, usage, etc.)
-   */
-  features?:
-    | {
-        label: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Laissez vide pour afficher "Sur devis"
-   */
   price?: number | null;
-  /**
-   * Choisissez "Portfolio uniquement" pour ne pas afficher de badge de disponibilité (pièce non destinée à la vente).
-   */
   stockStatus: 'hidden' | 'in-stock' | 'sold' | 'on-order';
-  /**
-   * Optionnel : indiquez le nombre d'exemplaires disponibles
-   */
   stockQuantity?: number | null;
-  /**
-   * Optionnel : texte à afficher sur la pastille promo (ex: "-20%", "NOUVEAU", "Édition limitée"). Laissez vide pour ne pas afficher de pastille.
-   */
   promoLabel?: string | null;
-  /**
-   * Si vous avez une réduction en pourcentage (ex: 20 pour -20%), le prix réduit sera calculé et affiché automatiquement.
-   */
   promoPercentage?: number | null;
+  isPublished?: boolean | null;
+  /**
+   * Généré automatiquement à partir du titre
+   */
+  slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -264,11 +245,6 @@ export interface Creation {
      */
     image?: (string | null) | Media;
   };
-  /**
-   * Généré automatiquement à partir du titre
-   */
-  slug?: string | null;
-  isPublished?: boolean | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -448,17 +424,13 @@ export interface CreationsSelect<T extends boolean = true> {
         id?: T;
       };
   series?: T;
-  features?:
-    | T
-    | {
-        label?: T;
-        id?: T;
-      };
   price?: T;
   stockStatus?: T;
   stockQuantity?: T;
   promoLabel?: T;
   promoPercentage?: T;
+  isPublished?: T;
+  slug?: T;
   meta?:
     | T
     | {
@@ -466,8 +438,6 @@ export interface CreationsSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
-  slug?: T;
-  isPublished?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

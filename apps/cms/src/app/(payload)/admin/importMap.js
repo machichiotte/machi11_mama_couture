@@ -26,6 +26,10 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93
 import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { default as default_7e60a039b30e782442972a5d91b35801 } from '../../../components/cells/RelationshipCell'
+import { default as default_23adfc248b3f44caf7da94178512c5e8 } from '../../../components/cells/NumberCell'
+import { default as default_213d1244751ebae361695daf0fa76809 } from '../../../components/cells/StatusCell'
+import { default as default_5c09f3805b2293b0a89dbc2794ba8be6 } from '../../../components/cells/ToggleCell'
 import { default as default_0204f4ba26f5b404f6278a2e51a44bfe } from '../../../components/dashboard/index.tsx'
 import { CollectionCards as CollectionCards_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 
@@ -58,6 +62,10 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "./components/cells/RelationshipCell#default": default_7e60a039b30e782442972a5d91b35801,
+  "./components/cells/NumberCell#default": default_23adfc248b3f44caf7da94178512c5e8,
+  "./components/cells/StatusCell#default": default_213d1244751ebae361695daf0fa76809,
+  "./components/cells/ToggleCell#default": default_5c09f3805b2293b0a89dbc2794ba8be6,
   "./components/dashboard/index.tsx#default": default_0204f4ba26f5b404f6278a2e51a44bfe,
   "@payloadcms/ui/rsc#CollectionCards": CollectionCards_ab83ff7e88da8d3530831f296ec4756a
 }

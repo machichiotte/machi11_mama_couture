@@ -4,7 +4,7 @@ export const Creations: CollectionConfig = {
     slug: 'creations',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['title', 'series', 'stockStatus', 'isPublished', 'createdAt'],
+        defaultColumns: ['title', 'series', 'stockStatus', 'isPublished', 'price', 'stockQuantity'],
         group: 'Boutique',
     },
     access: {
@@ -57,31 +57,11 @@ export const Creations: CollectionConfig = {
                             relationTo: 'series' as any,
                             required: true,
                             index: true,
-                        },
-                    ],
-                },
-                {
-                    label: 'Signature',
-                    fields: [
-                        {
-                            name: 'features',
-                            label: 'Détails Signature (points clés)',
-                            type: 'array',
                             admin: {
-                                description: 'Ajoutez les points spécifiques à cette création (ex: Matières, usage, etc.)',
-                            },
-                            fields: [
-                                {
-                                    name: 'label',
-                                    type: 'text',
-                                    required: true,
+                                components: {
+                                    Cell: './components/cells/RelationshipCell#default',
                                 },
-                            ],
-                            defaultValue: [
-                                { label: 'Fait-main avec soin dans mon atelier' },
-                                { label: 'Pièce unique ou petite série' },
-                                { label: 'Matériaux de haute qualité' },
-                            ],
+                            },
                         },
                     ],
                 },
@@ -93,7 +73,9 @@ export const Creations: CollectionConfig = {
                             label: 'Prix (€)',
                             type: 'number',
                             admin: {
-                                description: 'Laissez vide pour afficher "Sur devis"',
+                                components: {
+                                    Cell: './components/cells/NumberCell#default',
+                                },
                                 condition: (data) => data.stockStatus !== 'hidden',
                             },
                         },
@@ -103,27 +85,17 @@ export const Creations: CollectionConfig = {
                             type: 'select',
                             required: true,
                             defaultValue: 'hidden',
-                            options: [
-                                {
-                                    label: '🎨 Portfolio uniquement (pas de badge)',
-                                    value: 'hidden',
-                                },
-                                {
-                                    label: '✅ En stock',
-                                    value: 'in-stock',
-                                },
-                                {
-                                    label: '❌ Vendu',
-                                    value: 'sold',
-                                },
-                                {
-                                    label: '📦 Sur commande',
-                                    value: 'on-order',
-                                },
-                            ],
                             admin: {
-                                description: 'Choisissez "Portfolio uniquement" pour ne pas afficher de badge de disponibilité (pièce non destinée à la vente).',
+                                components: {
+                                    Cell: './components/cells/StatusCell#default',
+                                },
                             },
+                            options: [
+                                { label: '🎨 Portfolio uniquement', value: 'hidden' },
+                                { label: '✅ En stock', value: 'in-stock' },
+                                { label: '❌ Vendu', value: 'sold' },
+                                { label: '📦 Sur commande', value: 'on-order' },
+                            ],
                         },
                         {
                             name: 'stockQuantity',
@@ -131,7 +103,9 @@ export const Creations: CollectionConfig = {
                             type: 'number',
                             min: 0,
                             admin: {
-                                description: 'Optionnel : indiquez le nombre d\'exemplaires disponibles',
+                                components: {
+                                    Cell: './components/cells/NumberCell#default',
+                                },
                                 condition: (data) => data.stockStatus === 'in-stock',
                             },
                         },
@@ -140,8 +114,6 @@ export const Creations: CollectionConfig = {
                             label: 'Pastille promotionnelle',
                             type: 'text',
                             admin: {
-                                description: 'Optionnel : texte à afficher sur la pastille promo (ex: "-20%", "NOUVEAU", "Édition limitée"). Laissez vide pour ne pas afficher de pastille.',
-                                placeholder: 'Ex: -20%, NOUVEAU, Édition limitée',
                                 condition: (data) => data.stockStatus !== 'hidden',
                             },
                         },
@@ -152,42 +124,47 @@ export const Creations: CollectionConfig = {
                             min: 0,
                             max: 100,
                             admin: {
-                                description: 'Si vous avez une réduction en pourcentage (ex: 20 pour -20%), le prix réduit sera calculé et affiché automatiquement.',
-                                placeholder: 'Ex: 20 pour -20%',
                                 condition: (data) => data.stockStatus !== 'hidden' && !!data.price,
                             },
                         },
                     ],
                 },
+                {
+                    label: 'Visibilité',
+                    fields: [
+                        {
+                            name: 'isPublished',
+                            label: 'Publié sur le site',
+                            type: 'checkbox',
+                            defaultValue: false,
+                            index: true,
+                            admin: {
+                                components: {
+                                    Cell: './components/cells/ToggleCell#default',
+                                },
+                            },
+                        },
+                        {
+                            name: 'slug',
+                            label: 'Lien URL (Slug)',
+                            type: 'text',
+                            admin: {
+                                description: 'Généré automatiquement à partir du titre',
+                            },
+                            hooks: {
+                                beforeValidate: [
+                                    ({ data }) => {
+                                        if (data?.title) {
+                                            return data.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+                                        }
+                                        return data?.slug
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
             ],
-        },
-        {
-            name: 'slug',
-            label: 'Lien URL (Slug)',
-            type: 'text',
-            admin: {
-                position: 'sidebar',
-                description: 'Généré automatiquement à partir du titre',
-            },
-            hooks: {
-                beforeValidate: [
-                    ({ data }) => {
-                        if (data?.title) {
-                            return data.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
-                        }
-                        return data?.slug
-                    },
-                ],
-            },
-        },
-        {
-            name: 'isPublished',
-            type: 'checkbox',
-            defaultValue: false,
-            admin: {
-                position: 'sidebar',
-            },
-            index: true,
         },
     ],
     timestamps: true,

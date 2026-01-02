@@ -1,0 +1,95 @@
+'use client'
+import React, { useState, useEffect } from 'react'
+
+const NumberCell: React.FC<any> = (props) => {
+    const { cellData, rowData, field } = props
+    const [isEditing, setIsEditing] = useState(false)
+    const [value, setValue] = useState(cellData)
+    const [loading, setLoading] = useState(false)
+
+    const fieldName = field.name
+
+    const handleSave = async () => {
+        if (value === cellData) {
+            setIsEditing(false)
+            return
+        }
+
+        setLoading(true)
+        try {
+            const response = await fetch(`/api/creations/${rowData.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    [fieldName]: Number(value),
+                }),
+            })
+
+            if (!response.ok) throw new Error('Update failed')
+            setIsEditing(false)
+        } catch (err) {
+            console.error(err)
+            setValue(cellData) // Reset on error
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') handleSave()
+        if (e.key === 'Escape') {
+            setValue(cellData)
+            setIsEditing(false)
+        }
+    }
+
+    if (isEditing) {
+        return (
+            <input
+                type="number"
+                value={value || ''}
+                onChange={(e) => setValue(e.target.value)}
+                onBlur={handleSave}
+                onKeyDown={handleKeyDown}
+                autoFocus
+                style={{
+                    width: '80px',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--theme-elevation-400)',
+                    backgroundColor: 'var(--theme-elevation-0)',
+                    color: 'var(--theme-elevation-800)',
+                    fontSize: '12px'
+                }}
+            />
+        )
+    }
+
+    return (
+        <div
+            onClick={() => setIsEditing(true)}
+            style={{
+                cursor: 'pointer',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                backgroundColor: loading ? 'transparent' : 'var(--theme-elevation-50)',
+                display: 'inline-block',
+                minWidth: '40px',
+                textAlign: 'right',
+                fontSize: '13px',
+                fontWeight: '500',
+                transition: 'all 0.2s',
+                opacity: loading ? 0.5 : 1,
+                border: '1px dashed transparent'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.border = '1px dashed var(--theme-elevation-400)'}
+            onMouseLeave={(e) => e.currentTarget.style.border = '1px dashed transparent'}
+        >
+            {cellData || 0} {fieldName === 'price' ? '€' : ''}
+        </div>
+    )
+}
+
+export default NumberCell
