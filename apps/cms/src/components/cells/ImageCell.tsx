@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 const ImageCell: React.FC<any> = (props) => {
-    const { rowData } = props
+    const { rowData, collectionConfig, collection } = props
     const [url, setUrl] = useState<string | null>(null)
 
     const images = rowData?.images || []
@@ -11,8 +11,9 @@ const ImageCell: React.FC<any> = (props) => {
     const imageDoc = firstItem?.image
     const imageCount = images.length
 
-    // URL vers la fiche d'édition complète
-    const editUrl = `/admin/collections/creations/${rowData.id}`
+    // Détection du slug
+    const slug = collectionConfig?.slug || collection?.slug || 'creations'
+    const editUrl = `/admin/collections/${slug}/${rowData.id}`
 
     useEffect(() => {
         const getImageUrl = async () => {

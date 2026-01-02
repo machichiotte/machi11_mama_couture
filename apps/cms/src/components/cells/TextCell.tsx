@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const TextCell: React.FC<any> = (props) => {
-    const { cellData, rowData, field } = props
+    const { cellData, rowData, field, collectionConfig } = props
     const [isEditing, setIsEditing] = useState(false)
     const [value, setValue] = useState(cellData)
     const [loading, setLoading] = useState(false)
     const router = useRouter()
+
+    const collectionSlug = collectionConfig?.slug || 'creations'
 
     const handleSave = async () => {
         if (value === cellData) {
@@ -17,7 +19,7 @@ const TextCell: React.FC<any> = (props) => {
 
         setLoading(true)
         try {
-            const response = await fetch(`/api/creations/${rowData.id}`, {
+            const response = await fetch(`/api/${collectionSlug}/${rowData.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ export const Collections: CollectionConfig = {
     slug: 'series',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['title', 'isPublished', 'order'],
+        defaultColumns: ['coverImage', 'title', 'isPublished', 'order', 'edit'],
         group: 'Boutique',
     },
     access: {
@@ -32,6 +32,11 @@ export const Collections: CollectionConfig = {
                             label: 'Titre',
                             type: 'text',
                             required: true,
+                            admin: {
+                                components: {
+                                    Cell: './components/cells/TextCell#default',
+                                },
+                            },
                         },
                         {
                             name: 'description',
@@ -39,14 +44,26 @@ export const Collections: CollectionConfig = {
                         },
                         {
                             name: 'coverImage',
+                            label: 'Image de couverture',
                             type: 'upload',
                             relationTo: 'media',
                             required: true,
+                            admin: {
+                                components: {
+                                    Cell: './components/cells/CoverImageCell#default',
+                                },
+                            },
                         },
                         {
                             name: 'order',
+                            label: 'Ordre d\'affichage',
                             type: 'number',
                             index: true,
+                            admin: {
+                                components: {
+                                    Cell: './components/cells/NumberCell#default',
+                                },
+                            },
                         },
                     ],
                 },
@@ -73,12 +90,25 @@ export const Collections: CollectionConfig = {
         },
         {
             name: 'isPublished',
+            label: 'Publié sur le site',
             type: 'checkbox',
             defaultValue: false,
             admin: {
                 position: 'sidebar',
+                components: {
+                    Cell: './components/cells/ToggleCell#default',
+                },
             },
             index: true,
+        },
+        {
+            name: 'edit',
+            type: 'ui',
+            admin: {
+                components: {
+                    Cell: './components/cells/EditCell#default',
+                },
+            },
         },
     ],
 }

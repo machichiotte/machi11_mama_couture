@@ -3,8 +3,24 @@ import React from 'react'
 import Link from 'next/link'
 
 const EditCell: React.FC<any> = (props) => {
-    const { rowData } = props
-    const editUrl = `/admin/collections/creations/${rowData.id}`
+    const { rowData, collectionConfig, collection } = props
+
+    // Détection robuste du slug de la collection
+    let slug = collectionConfig?.slug || collection?.slug
+
+    // Fallback via l'URL si on est dans un champ UI où Payload ne passe pas l'objet config
+    if (!slug && typeof window !== 'undefined') {
+        const parts = window.location.pathname.split('/')
+        const colIndex = parts.indexOf('collections')
+        if (colIndex !== -1 && parts[colIndex + 1]) {
+            slug = parts[colIndex + 1]
+        }
+    }
+
+    // Valeur par défaut finale
+    slug = slug || 'creations'
+
+    const editUrl = `/admin/collections/${slug}/${rowData.id}`
 
     return (
         <Link
