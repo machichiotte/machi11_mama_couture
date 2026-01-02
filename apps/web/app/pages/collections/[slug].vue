@@ -94,41 +94,71 @@ useSeoMeta({
         </div>
 
         <div v-if="creations?.docs?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-16">
-          <article v-for="creation in creations.docs" :key="creation.id" class="group">
-            <div class="relative aspect-square overflow-hidden bg-secondary/50 mb-6 rounded-sm shadow-sm group-hover:shadow-xl transition-all duration-500 border border-primary/5">
-              <!-- Image de la Création -->
-              <template v-if="creation.images?.length && creation.images[0]?.image">
-                <NuxtImg 
-                  :src="getImageUrl(creation.images[0].image)"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                  loading="lazy"
-                />
-              </template>
-              <div v-else class="w-full h-full border border-primary/5 flex items-center justify-center text-primary/20">
-                 <span class="text-xs uppercase tracking-widest font-sans">{{ ui.collections.noImage }}</span>
+          <!-- Toute la carte est maintenant cliquable -->
+          <NuxtLink 
+            v-for="creation in creations.docs" 
+            :key="creation.id"
+            :to="`/creations/${creation.slug || creation.id}`"
+            class="group block cursor-pointer"
+            :data-umami-event="`view_creation_detail`"
+            :data-umami-event-creation="creation.title"
+            :data-umami-event-collection="collection.title"
+          >
+            <article class="h-full flex flex-col">
+              <!-- Image Container avec overlay et badges -->
+              <div class="relative aspect-square overflow-hidden bg-secondary/50 mb-4 rounded-sm shadow-md group-hover:shadow-2xl transition-all duration-500 border border-primary/5 group-hover:-translate-y-2">
+                
+                <!-- Pastille Promo (coin supérieur droit) -->
+                <div v-if="creation.promoLabel" class="absolute top-0 right-0 z-20">
+                  <div class="bg-accent text-secondary px-4 py-2 shadow-xl font-bold text-xs uppercase tracking-widest ribbon-corner">
+                    {{ creation.promoLabel }}
+                  </div>
+                </div>
+
+                <!-- Image de la Création -->
+                <template v-if="creation.images?.length && creation.images[0]?.image">
+                  <NuxtImg 
+                    :src="getImageUrl(creation.images[0].image)"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    loading="lazy"
+                  />
+                </template>
+                <div v-else class="w-full h-full border border-primary/5 flex items-center justify-center text-primary/20">
+                   <span class="text-xs uppercase tracking-widest font-sans">{{ ui.collections.noImage }}</span>
+                </div>
+                
+                <!-- Overlay subtil au survol -->
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/0 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <!-- Badge de statut (apparaît au survol, en haut à gauche) -->
+                <div class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
+                  <StockBadge 
+                    :status="creation.stockStatus" 
+                    :quantity="creation.stockQuantity"
+                  />
+                </div>
+                
+                <!-- Prix (toujours visible en bas à gauche) -->
+                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                  <PriceDisplay 
+                    :price="creation.price" 
+                    :promo-percentage="creation.promoPercentage"
+                  />
+                </div>
               </div>
               
-              <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-500"></div>
-              
-              <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                <span v-if="creation.price" class="bg-secondary text-primary px-4 py-2 text-sm font-medium shadow-lg">{{ creation.price }}€</span>
-                <NuxtLink 
-                  :to="`/creations/${creation.slug || creation.id}`"
-                  class="bg-primary text-secondary px-6 py-2 text-xs uppercase tracking-widest hover:bg-accent transition-colors shadow-lg"
-                  :data-umami-event="`view_creation_detail`"
-                  :data-umami-event-creation="creation.title"
-                  :data-umami-event-collection="collection.title"
-                >
-                  {{ ui.collections.detailsButton }}
-                </NuxtLink>
+              <!-- Informations produit -->
+              <div class="flex-1 flex flex-col">
+                <h3 class="text-xl font-serif mb-2 text-primary group-hover:text-accent transition-colors text-center leading-tight">
+                  {{ creation.title }}
+                </h3>
+                
+                <p class="text-primary/60 text-sm line-clamp-2 italic font-serif leading-relaxed text-center">
+                  {{ creation.description && typeof creation.description === 'object' && creation.description.root ? extractLexicalText(creation.description.root) : creation.description }}
+                </p>
               </div>
-            </div>
-            
-            <h3 class="text-xl font-serif mb-2 text-primary group-hover:text-accent transition-colors">{{ creation.title }}</h3>
-            <p class="text-primary/60 text-sm line-clamp-2 italic font-serif leading-relaxed">
-              {{ creation.description && typeof creation.description === 'object' && creation.description.root ? extractLexicalText(creation.description.root) : creation.description }}
-            </p>
-          </article>
+            </article>
+          </NuxtLink>
         </div>
 
         <!-- État Vide -->
@@ -166,5 +196,24 @@ useSeoMeta({
 }
 .animate-fade-in {
   animation: fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Effet ribbon pour la pastille promo */
+.ribbon-corner {
+  position: relative;
+  border-radius: 0 0 0 4px;
+}
+
+.ribbon-corner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 8px 8px;
+  border-color: transparent transparent rgba(0, 0, 0, 0.2) transparent;
+  transform: translateY(-100%);
 }
 </style>

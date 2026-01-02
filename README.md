@@ -115,6 +115,7 @@ npm run lint:fix        # Corriger automatiquement
 - 📁 **Proxy Single-URL** : Navigation fluide entre Nuxt et Payload sur un domaine unique.
 - 📨 **Messages Auto** : Collection de contact avec notifications e-mail prêtes à l'emploi.
 - 🎯 **SEO Ready** : Champs SEO (titre, description, image) sur toutes les collections.
+- 📦 **Stock Management** : Gestion des statuts de disponibilité avec badges visuels (Portfolio, En stock, Vendu, Sur commande).
 
 ---
 

@@ -69,9 +69,9 @@ const Dashboard: React.FC = () => {
                     <div style={{ ...cardStyle, borderLeft: '4px solid #6366f1' }}>
                         <h2 style={cardTitleStyle}>🧰 Boîte à outils</h2>
                         <p style={cardDescStyle}>Accès rapides à vos supports externes pour l'atelier.</p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <a href="https://cloudinary.com/console" target="_blank" rel="noreferrer" style={toolLinkStyle}>📸 Cloudinary</a>
-                            <a href="https://instagram.com" target="_blank" rel="noreferrer" style={toolLinkStyle}>📸 Instagram</a>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                            <a href="https://cloudinary.com/console" target="_blank" rel="noreferrer" style={primaryButtonStyle}>📸 Cloudinary</a>
+                            <a href="https://instagram.com" target="_blank" rel="noreferrer" style={secondaryButtonStyle}>📸 Instagram</a>
                         </div>
                     </div>
 

@@ -38,75 +38,105 @@ useSeoMeta({
     <div v-if="creation" class="animate-fade-in">
       
       <!-- Fil d'Ariane -->
-      <nav class="mb-6 md:mb-10">
+      <nav class="mb-6 md:mb-8">
         <NuxtLink to="/collections" class="text-[10px] uppercase tracking-widest text-primary/40 hover:text-accent transition-colors">{{ ui.nav.collections }}</NuxtLink>
         <span class="mx-3 text-primary/20 text-xs">/</span>
         <span class="text-[10px] uppercase tracking-widest text-primary font-bold">{{ creation.title }}</span>
       </nav>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
         
-        <!-- Colonne Gauche: Galerie Photo Premium -->
-        <div class="lg:col-span-5">
+        <!-- Colonne Gauche: Galerie Photo -->
+        <div class="relative">
+          <!-- Pastille Promo (si elle existe) -->
+          <div v-if="creation.promoLabel && creation.stockStatus !== 'hidden'" class="absolute top-4 right-4 z-20">
+            <div class="bg-accent text-secondary px-6 py-3 shadow-2xl font-bold text-sm uppercase tracking-widest rounded-sm">
+              {{ creation.promoLabel }}
+            </div>
+          </div>
+          
           <CreationGallery :images="creation.images || []" />
         </div>
 
         <!-- Colonne Droite: Informations -->
-        <div class="lg:col-span-7 flex flex-col">
-          <header class="mb-6 border-b border-primary/5 pb-6">
-            <h1 class="text-3xl md:text-5xl font-serif text-primary mb-4 leading-tight">{{ creation.title }}</h1>
-            <div v-if="creation.price" class="text-2xl font-light text-accent italic font-serif">
-              {{ creation.price }}€
-            </div>
-            <div v-else class="text-[10px] uppercase tracking-widest text-primary/30 font-bold italic">
-              {{ ui.creation.onQuote }}
-            </div>
-          </header>
-
-          <div class="space-y-6 mb-8">
-            <div>
-               <h2 class="text-[10px] uppercase tracking-[0.3em] font-bold text-primary/30 mb-3 italic">{{ ui.creation.historyLabel }}</h2>
-               <div class="prose prose-primary prose-lg font-light leading-relaxed text-primary/70">
-                 <!-- On affiche le RichText Lexical si dispo -->
-                 <p class="whitespace-pre-wrap italic font-serif leading-relaxed">
-                   {{ creation.description && typeof creation.description === 'object' && creation.description.root ? extractLexicalText(creation.description.root) : creation.description }}
-                 </p>
-               </div>
-            </div>
-
-            <div class="flex flex-col gap-4">
-               <h3 class="text-[10px] uppercase tracking-[0.3em] font-bold text-primary/30 mb-2 italic">{{ ui.creation.detailsLabel }}</h3>
-               <ul class="space-y-3">
-                 <template v-if="creation.features && creation.features.length">
-                   <li v-for="(feature, idx) in creation.features" :key="idx" class="flex items-center gap-4 text-sm text-primary/60 italic font-serif">
-                     <span class="w-1.5 h-1.5 rounded-full bg-accent/40"></span>
-                     {{ feature.label }}
-                   </li>
-                 </template>
-                 <template v-else>
-                   <li class="flex items-center gap-4 text-sm text-primary/60 italic font-serif">
-                     <span class="w-1.5 h-1.5 rounded-full bg-accent/40"></span>
-                     {{ ui.creation.handMade }}
-                   </li>
-                 </template>
-               </ul>
+        <div class="flex flex-col gap-6">
+          
+          <!-- En-tête -->
+          <div>
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-serif text-primary mb-4 leading-tight">
+              {{ creation.title }}
+            </h1>
+            
+            <!-- Prix avec ou sans réduction -->
+            <div v-if="creation.stockStatus !== 'hidden'">
+              <PriceDisplay 
+                :price="creation.price" 
+                :promo-percentage="creation.promoPercentage"
+                variant="large"
+              />
             </div>
           </div>
 
-          <!-- Bouton de Réservation (Conversion CTA) -->
-          <NuxtLink 
-            :to="`/contact?subject=${ui.creation.preorderButton}: ${creation.title}&message=Bonjour, je souhaite réserver ou avoir plus d'informations sur la création : ${creation.title}.`"
-            class="premium-button text-center flex items-center justify-center gap-4 py-4 shadow-xl active:scale-95 transition-transform"
-            :data-umami-event="`preorder_click`"
-            :data-umami-event-creation="creation.title"
-          >
-            <span class="text-sm uppercase tracking-[0.3em] font-bold">{{ ui.creation.preorderButton }}</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-          </NuxtLink>
+          <!-- Badge de statut -->
+          <div v-if="creation.stockStatus !== 'hidden'">
+            <StockBadge 
+              :status="creation.stockStatus" 
+              :quantity="creation.stockQuantity"
+            />
+          </div>
 
-          <p class="mt-4 text-[10px] text-center text-primary/30 uppercase tracking-widest font-bold">
-            {{ ui.creation.securityLabel }}
-          </p>
+          <!-- Description -->
+          <div class="border-t border-primary/10 pt-6">
+            <h2 class="text-xs uppercase tracking-[0.3em] font-bold text-primary/30 mb-3 italic">
+              {{ ui.creation.historyLabel }}
+            </h2>
+            <div class="prose prose-primary max-w-none">
+              <p class="text-base leading-relaxed text-primary/70 italic font-serif">
+                {{ creation.description && typeof creation.description === 'object' && creation.description.root ? extractLexicalText(creation.description.root) : creation.description }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Détails / Features -->
+          <div class="border-t border-primary/10 pt-6">
+            <h3 class="text-xs uppercase tracking-[0.3em] font-bold text-primary/30 mb-4 italic">
+              {{ ui.creation.detailsLabel }}
+            </h3>
+            <ul class="space-y-2">
+              <template v-if="creation.features && creation.features.length">
+                <li v-for="(feature, idx) in creation.features" :key="idx" class="flex items-start gap-3 text-sm text-primary/60 italic font-serif">
+                  <span class="w-1.5 h-1.5 rounded-full bg-accent/40 mt-2 flex-shrink-0"></span>
+                  <span>{{ feature.label }}</span>
+                </li>
+              </template>
+              <template v-else>
+                <li class="flex items-start gap-3 text-sm text-primary/60 italic font-serif">
+                  <span class="w-1.5 h-1.5 rounded-full bg-accent/40 mt-2 flex-shrink-0"></span>
+                  <span>{{ ui.creation.handMade }}</span>
+                </li>
+              </template>
+            </ul>
+          </div>
+
+          <!-- Bouton de Réservation (uniquement si pas portfolio) -->
+          <div v-if="creation.stockStatus !== 'hidden'" class="border-t border-primary/10 pt-6">
+            <NuxtLink 
+              :to="`/contact?subject=${ui.creation.preorderButton}: ${creation.title}&message=Bonjour, je souhaite réserver ou avoir plus d'informations sur la création : ${creation.title}.`"
+              class="premium-button w-full text-center flex items-center justify-center gap-3 py-4 shadow-xl hover:shadow-2xl active:scale-95 transition-all group"
+              :data-umami-event="`preorder_click`"
+              :data-umami-event-creation="creation.title"
+            >
+              <span class="text-sm uppercase tracking-[0.3em] font-bold">{{ ui.creation.preorderButton }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </NuxtLink>
+            
+            <p class="mt-3 text-[10px] text-center text-primary/30 uppercase tracking-widest font-bold">
+              {{ ui.creation.securityLabel }}
+            </p>
+          </div>
+
         </div>
       </div>
 
