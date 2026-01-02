@@ -4,7 +4,7 @@ export const Creations: CollectionConfig = {
     slug: 'creations',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['title', 'series', 'stockStatus', 'isPublished', 'price', 'stockQuantity'],
+        defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoPercentage', 'isPublished'],
         group: 'Boutique',
     },
     access: {
@@ -39,9 +39,15 @@ export const Creations: CollectionConfig = {
                         },
                         {
                             name: 'images',
+                            label: 'Images',
                             type: 'array',
                             required: true,
                             minRows: 1,
+                            admin: {
+                                components: {
+                                    Cell: './components/cells/ImageCell#default',
+                                },
+                            },
                             fields: [
                                 {
                                     name: 'image',
@@ -114,18 +120,34 @@ export const Creations: CollectionConfig = {
                             label: 'Pastille promotionnelle',
                             type: 'text',
                             admin: {
+                                components: {
+                                    Cell: './components/cells/TextCell#default',
+                                },
+                                placeholder: 'Ex: -20%, NOUVEAU, Édition limitée',
                                 condition: (data) => data.stockStatus !== 'hidden',
                             },
                         },
                         {
                             name: 'promoPercentage',
                             label: 'Réduction (%)',
-                            type: 'number',
-                            min: 0,
-                            max: 100,
+                            type: 'select',
+                            defaultValue: 0,
                             admin: {
+                                components: {
+                                    Cell: './components/cells/SelectCell#default',
+                                },
                                 condition: (data) => data.stockStatus !== 'hidden' && !!data.price,
                             },
+                            options: [
+                                { label: 'Pas de réduction', value: 0 },
+                                { label: '-10%', value: 10 },
+                                { label: '-15%', value: 15 },
+                                { label: '-20%', value: 20 },
+                                { label: '-25%', value: 25 },
+                                { label: '-30%', value: 30 },
+                                { label: '-40%', value: 40 },
+                                { label: '-50%', value: 50 },
+                            ],
                         },
                     ],
                 },
