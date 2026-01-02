@@ -71,6 +71,15 @@ td:first-child {
     vertical-align: middle !important;
     height: 42px; // Forcer la hauteur pour correspondre aux images
 
+    // Centrage du conteneur interne de Payload
+    .select-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        margin: 0;
+    }
+
     // S'assurer que le bouton ou l'input interne est aussi centré
     .select-row__checkbox {
         display: flex;
