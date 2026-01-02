@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useConfig } from '@payloadcms/ui'
 
 const StatusCell: React.FC<any> = (props) => {
@@ -7,6 +8,7 @@ const StatusCell: React.FC<any> = (props) => {
     const [value, setValue] = useState(cellData)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
+    const router = useRouter()
 
     const config = useConfig()
 
@@ -31,6 +33,7 @@ const StatusCell: React.FC<any> = (props) => {
             if (!response.ok) throw new Error('Update failed')
 
             setValue(newValue)
+            router.refresh()
         } catch (err) {
             console.error(err)
             setError(true)

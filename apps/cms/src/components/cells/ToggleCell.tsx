@@ -1,10 +1,12 @@
 'use client'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const ToggleCell: React.FC<any> = (props) => {
     const { cellData, rowData, field } = props
     const [checked, setChecked] = useState(cellData)
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
 
     const handleToggle = async () => {
         const newValue = !checked
@@ -24,6 +26,7 @@ const ToggleCell: React.FC<any> = (props) => {
             if (!response.ok) throw new Error('Update failed')
 
             setChecked(newValue)
+            router.refresh()
         } catch (err) {
             console.error(err)
         } finally {

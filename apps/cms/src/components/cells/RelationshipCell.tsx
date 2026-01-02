@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const RelationshipCell: React.FC<any> = (props) => {
     const { cellData, rowData, field } = props
@@ -7,6 +8,7 @@ const RelationshipCell: React.FC<any> = (props) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
     const [value, setValue] = useState(cellData?.id || cellData)
+    const router = useRouter()
 
     const relationTo = field.relationTo
 
@@ -46,6 +48,7 @@ const RelationshipCell: React.FC<any> = (props) => {
 
             if (!response.ok) throw new Error('Update failed')
             setValue(newValue)
+            router.refresh()
         } catch (err) {
             console.error(err)
             setError(true)

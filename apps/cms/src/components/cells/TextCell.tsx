@@ -1,11 +1,13 @@
 'use client'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const TextCell: React.FC<any> = (props) => {
     const { cellData, rowData, field } = props
     const [isEditing, setIsEditing] = useState(false)
     const [value, setValue] = useState(cellData)
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
 
     const handleSave = async () => {
         if (value === cellData) {
@@ -27,6 +29,7 @@ const TextCell: React.FC<any> = (props) => {
 
             if (!response.ok) throw new Error('Update failed')
             setIsEditing(false)
+            router.refresh()
         } catch (err) {
             console.error(err)
             setValue(cellData)
@@ -63,14 +66,17 @@ const TextCell: React.FC<any> = (props) => {
             style={{
                 cursor: 'pointer',
                 fontSize: '11px',
-                color: cellData ? 'inherit' : 'var(--theme-elevation-400)',
-                fontStyle: cellData ? 'normal' : 'italic',
+                color: value ? 'inherit' : 'var(--theme-elevation-400)',
+                fontStyle: value ? 'normal' : 'italic',
                 minHeight: '20px',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                opacity: loading ? 0.5 : 1,
+                transition: 'opacity 0.2s'
             }}
         >
-            {cellData || 'cliquer pour éditer...'}
+            {value || 'cliquer pour éditer...'}
+            {loading && <span style={{ marginLeft: '8px', fontSize: '10px' }}>⌛</span>}
         </div>
     )
 }

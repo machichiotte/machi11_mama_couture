@@ -1,11 +1,13 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const NumberCell: React.FC<any> = (props) => {
     const { cellData, rowData, field } = props
     const [isEditing, setIsEditing] = useState(false)
     const [value, setValue] = useState(cellData)
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
 
     const fieldName = field.name
 
@@ -29,6 +31,7 @@ const NumberCell: React.FC<any> = (props) => {
 
             if (!response.ok) throw new Error('Update failed')
             setIsEditing(false)
+            router.refresh()
         } catch (err) {
             console.error(err)
             setValue(cellData) // Reset on error
@@ -87,7 +90,8 @@ const NumberCell: React.FC<any> = (props) => {
             onMouseEnter={(e) => e.currentTarget.style.border = '1px dashed var(--theme-elevation-400)'}
             onMouseLeave={(e) => e.currentTarget.style.border = '1px dashed transparent'}
         >
-            {cellData || 0} {fieldName === 'price' ? '€' : ''}
+            {value || 0} {fieldName === 'price' ? '€' : ''}
+            {loading && <span style={{ marginLeft: '4px', fontSize: '10px' }}>⌛</span>}
         </div>
     )
 }
