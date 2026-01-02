@@ -95,7 +95,7 @@ const NumberCell: React.FC<any> = (props) => {
                 alignItems: 'center',
                 justifyContent: 'flex-end',
                 minWidth: '40px',
-                minHeight: '42px',
+                minHeight: '60px',
                 textAlign: 'right',
                 fontSize: '13px',
                 fontWeight: '500',

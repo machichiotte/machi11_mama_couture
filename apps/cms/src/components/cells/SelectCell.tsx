@@ -53,7 +53,7 @@ const SelectCell: React.FC<any> = (props) => {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', minHeight: '42px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', minHeight: '60px' }}>
             <div style={{ position: 'relative', minWidth: '100px' }}>
                 <select
                     value={value || ''}

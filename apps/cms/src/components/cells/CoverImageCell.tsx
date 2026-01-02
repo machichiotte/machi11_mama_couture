@@ -46,7 +46,7 @@ const CoverImageCell: React.FC<any> = (props) => {
     }, [imageDoc])
 
     return (
-        <Link href={editUrl} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', minHeight: '42px' }}>
+        <Link href={editUrl} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', minHeight: '60px' }}>
             <div style={{
                 width: '42px',
                 height: '42px',

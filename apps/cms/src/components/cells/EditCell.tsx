@@ -23,7 +23,7 @@ const EditCell: React.FC<any> = (props) => {
     const editUrl = `/admin/collections/${slug}/${rowData.id}`
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', minHeight: '42px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', minHeight: '60px' }}>
             <Link
                 href={editUrl}
                 style={{
