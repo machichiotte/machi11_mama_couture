@@ -50,7 +50,7 @@ const ImageCell: React.FC<any> = (props) => {
     }, [imageDoc])
 
     return (
-        <Link href={editUrl} style={{ display: 'block', textDecoration: 'none' }}>
+        <Link href={editUrl} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', minHeight: '42px' }}>
             <div style={{
                 width: '42px',
                 height: '42px',

@@ -81,7 +81,7 @@ const TextCell: React.FC<any> = (props) => {
                 fontSize: '11px',
                 color: value ? 'inherit' : 'var(--theme-elevation-400)',
                 fontStyle: value ? 'normal' : 'italic',
-                minHeight: '20px',
+                minHeight: '42px',
                 display: 'flex',
                 alignItems: 'center',
                 opacity: loading ? 0.5 : 1,

@@ -91,8 +91,11 @@ const NumberCell: React.FC<any> = (props) => {
                 padding: '4px 8px',
                 borderRadius: '4px',
                 backgroundColor: loading ? 'transparent' : 'var(--theme-elevation-50)',
-                display: 'inline-block',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
                 minWidth: '40px',
+                minHeight: '42px',
                 textAlign: 'right',
                 fontSize: '13px',
                 fontWeight: '500',
@@ -103,8 +106,10 @@ const NumberCell: React.FC<any> = (props) => {
             onMouseEnter={(e) => e.currentTarget.style.border = '1px dashed var(--theme-elevation-400)'}
             onMouseLeave={(e) => e.currentTarget.style.border = '1px dashed transparent'}
         >
-            {value || 0} {fieldName === 'price' ? '€' : ''}
-            {loading && <span style={{ marginLeft: '4px', fontSize: '10px' }}>⌛</span>}
+            <span>
+                {value || 0} {fieldName === 'price' ? '€' : ''}
+                {loading && <span style={{ marginLeft: '4px', fontSize: '10px' }}>⌛</span>}
+            </span>
         </div>
     )
 }

@@ -58,3 +58,24 @@
     padding: 2rem !important;
     background-color: var(--theme-elevation-0) !important;
 }
+
+/* Alignement vertical global pour toutes les cellules des listes */
+.table table td {
+    vertical-align: middle !important;
+}
+
+/* Fix spécifique pour la colonne des checkboxes */
+.cell-select,
+.cell-_select,
+td:first-child {
+    vertical-align: middle !important;
+    height: 42px; // Forcer la hauteur pour correspondre aux images
+
+    // S'assurer que le bouton ou l'input interne est aussi centré
+    .select-row__checkbox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+}

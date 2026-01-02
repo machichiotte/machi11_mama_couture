@@ -48,7 +48,7 @@ const ToggleCell: React.FC<any> = (props) => {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minHeight: '42px' }}>
             <div
                 onClick={!loading ? handleToggle : undefined}
                 style={{

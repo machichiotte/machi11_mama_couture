@@ -72,58 +72,60 @@ const RelationshipCell: React.FC<any> = (props) => {
     }
 
     return (
-        <div style={{ position: 'relative', minWidth: '150px' }}>
-            <select
-                value={value || ''}
-                onChange={handleChange}
-                disabled={loading}
-                style={{
-                    width: '100%',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    borderTop: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
-                    borderRight: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
-                    borderBottom: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
-                    borderLeft: `4px solid ${value ? '#6366f1' : '#94a3b8'}`,
-                    backgroundColor: error ? '#fee2e2' : 'var(--theme-elevation-100)',
-                    color: 'var(--theme-elevation-800)',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    outline: 'none',
-                    transition: 'all 0.2s',
-                    appearance: 'none',
-                    backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%20%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 8px center'
-                }}
-            >
-                <option value="">Sélectionner...</option>
-                {options.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                    </option>
-                ))}
-            </select>
+        <div style={{ display: 'flex', alignItems: 'center', minHeight: '42px' }}>
+            <div style={{ position: 'relative', minWidth: '150px' }}>
+                <select
+                    value={value || ''}
+                    onChange={handleChange}
+                    disabled={loading}
+                    style={{
+                        width: '100%',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        borderTop: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
+                        borderRight: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
+                        borderBottom: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
+                        borderLeft: `4px solid ${value ? '#6366f1' : '#94a3b8'}`,
+                        backgroundColor: error ? '#fee2e2' : 'var(--theme-elevation-100)',
+                        color: 'var(--theme-elevation-800)',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        cursor: loading ? 'not-allowed' : 'pointer',
+                        outline: 'none',
+                        transition: 'all 0.2s',
+                        appearance: 'none',
+                        backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%20%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'right 8px center'
+                    }}
+                >
+                    <option value="">Sélectionner...</option>
+                    {options.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                        </option>
+                    ))}
+                </select>
 
-            {loading && (
-                <div style={{
-                    position: 'absolute',
-                    right: '25px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    width: '10px',
-                    height: '10px',
-                    border: '2px solid #6366f1',
-                    borderTopColor: 'transparent',
-                    borderRadius: '50%',
-                    animation: 'spin 1s linear infinite'
-                }} />
-            )}
+                {loading && (
+                    <div style={{
+                        position: 'absolute',
+                        right: '25px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '10px',
+                        height: '10px',
+                        border: '2px solid #6366f1',
+                        borderTopColor: 'transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite'
+                    }} />
+                )}
 
-            <style jsx>{`
-                @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
-            `}</style>
+                <style jsx>{`
+                    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+                `}</style>
+            </div>
         </div>
     )
 }
