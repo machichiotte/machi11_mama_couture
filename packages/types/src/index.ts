@@ -231,7 +231,7 @@ export interface Creation {
   stockStatus: 'hidden' | 'in-stock' | 'sold' | 'on-order';
   stockQuantity?: number | null;
   promoLabel?: string | null;
-  promoPercentage?: (0 | 10 | 15 | 20 | 25 | 30 | 40 | 50) | null;
+  promoPercentage?: ('0' | '10' | '15' | '20' | '25' | '30' | '40' | '50') | null;
   isPublished?: boolean | null;
   /**
    * Généré automatiquement à partir du titre

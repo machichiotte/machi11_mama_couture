@@ -4,7 +4,7 @@ export const Creations: CollectionConfig = {
     slug: 'creations',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoPercentage', 'isPublished'],
+        defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoLabel', 'promoPercentage', 'stockQuantity', 'isPublished', 'updatedAt'],
         group: 'Boutique',
     },
     access: {
@@ -117,7 +117,7 @@ export const Creations: CollectionConfig = {
                         },
                         {
                             name: 'promoLabel',
-                            label: 'Pastille promotionnelle',
+                            label: 'Pastille promo',
                             type: 'text',
                             admin: {
                                 components: {
@@ -131,7 +131,7 @@ export const Creations: CollectionConfig = {
                             name: 'promoPercentage',
                             label: 'Réduction (%)',
                             type: 'select',
-                            defaultValue: 0,
+                            defaultValue: '0',
                             admin: {
                                 components: {
                                     Cell: './components/cells/SelectCell#default',
@@ -139,14 +139,14 @@ export const Creations: CollectionConfig = {
                                 condition: (data) => data.stockStatus !== 'hidden' && !!data.price,
                             },
                             options: [
-                                { label: 'Pas de réduction', value: 0 },
-                                { label: '-10%', value: 10 },
-                                { label: '-15%', value: 15 },
-                                { label: '-20%', value: 20 },
-                                { label: '-25%', value: 25 },
-                                { label: '-30%', value: 30 },
-                                { label: '-40%', value: 40 },
-                                { label: '-50%', value: 50 },
+                                { label: 'Pas de réduction', value: '0' },
+                                { label: '-10%', value: '10' },
+                                { label: '-15%', value: '15' },
+                                { label: '-20%', value: '20' },
+                                { label: '-25%', value: '25' },
+                                { label: '-30%', value: '30' },
+                                { label: '-40%', value: '40' },
+                                { label: '-50%', value: '50' },
                             ],
                         },
                     ],
