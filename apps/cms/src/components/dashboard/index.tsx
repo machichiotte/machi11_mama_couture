@@ -1,7 +1,9 @@
+'use client'
 import React from 'react'
-import { Gutter } from '@payloadcms/ui'
+import { Gutter, useAuth } from '@payloadcms/ui'
 
 const Dashboard: React.FC = () => {
+    const { user } = useAuth()
     const umamiUrl = process.env.PAYLOAD_PUBLIC_UMAMI_SHARE_URL || 'https://cloud.umami.is/share/9H69gzfLnecxs9K4'
 
     return (
@@ -16,7 +18,9 @@ const Dashboard: React.FC = () => {
                     gap: '20px'
                 }}>
                     <div>
-                        <h1 style={{ marginBottom: '10px' }}>Bienvenue, Mama Couture 🧵</h1>
+                        <h1 style={{ marginBottom: '10px' }}>
+                            Bienvenue, {user?.name || 'Mama Couture'} 🧵
+                        </h1>
                         <p style={{ color: 'var(--theme-elevation-400)', maxWidth: '600px' }}>
                             Votre centre de commande pour gérer l'atelier, vos pièces uniques et rester en contact avec vos clients.
                         </p>

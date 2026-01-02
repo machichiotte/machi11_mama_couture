@@ -67,9 +67,10 @@
     overflow: visible !important; // Pour laisser respirer les bulles de notification
 }
 
-/* Fix spécifique pour la colonne des checkboxes */
+/* Fix spécifique pour la colonne des checkboxes et miniatures */
 .cell-select,
 .cell-_select,
+.cell-thumbnail,
 td:first-child {
     vertical-align: middle !important;
     height: 60px; // Augmenté pour garantir l'absence de cropping des badges

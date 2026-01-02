@@ -4,6 +4,8 @@ export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     group: 'Médiathèque',
+    useAsTitle: 'alt',
+    defaultColumns: ['thumbnail', 'filename', 'alt', 'updatedAt', 'edit'],
   },
   access: {
     read: () => true,
@@ -16,7 +18,21 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
       required: false,
+      admin: {
+        components: {
+          Cell: './components/cells/TextCell#default',
+        }
+      }
     },
+    {
+      name: 'edit',
+      type: 'ui',
+      admin: {
+        components: {
+          Cell: './components/cells/EditCell#default',
+        }
+      }
+    }
   ],
   upload: true,
 }
