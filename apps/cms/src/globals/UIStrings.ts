@@ -5,6 +5,7 @@ export const UIStrings: GlobalConfig = {
     admin: {
         group: 'Site Web',
     },
+    label: 'Textes du site',
     access: {
         read: () => true,
         update: ({ req: { user } }) => !!user,
@@ -12,6 +13,7 @@ export const UIStrings: GlobalConfig = {
     fields: [
         {
             name: 'nav',
+            label: 'Navigation',
             type: 'group',
             fields: [
                 {
@@ -38,6 +40,7 @@ export const UIStrings: GlobalConfig = {
         },
         {
             name: 'hero',
+            label: 'Accueil / Hero',
             type: 'group',
             fields: [
                 {
@@ -50,6 +53,7 @@ export const UIStrings: GlobalConfig = {
         },
         {
             name: 'collections',
+            label: 'Collections & Créations',
             type: 'group',
             fields: [
                 {
@@ -136,6 +140,7 @@ export const UIStrings: GlobalConfig = {
         },
         {
             name: 'common',
+            label: 'Commun',
             type: 'group',
             fields: [
                 {
@@ -162,6 +167,7 @@ export const UIStrings: GlobalConfig = {
         },
         {
             name: 'contact',
+            label: 'Formulaire de Contact',
             type: 'group',
             fields: [
                 {
@@ -228,6 +234,7 @@ export const UIStrings: GlobalConfig = {
         },
         {
             name: 'about',
+            label: 'À Propos',
             type: 'group',
             fields: [
                 {
@@ -249,6 +256,7 @@ export const UIStrings: GlobalConfig = {
         },
         {
             name: 'creation',
+            label: 'Page de Création',
             type: 'group',
             fields: [
                 {

@@ -137,10 +137,8 @@ export interface UserAuthOperations {
 export interface User {
   id: string;
   name: string;
-  /**
-   * Image utilisée pour votre profil et en haut à droite de l'interface.
-   */
   avatar?: (string | null) | Media;
+  avatarUrl?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -360,6 +358,7 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
   avatar?: T;
+  avatarUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

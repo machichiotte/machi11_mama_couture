@@ -7,6 +7,10 @@ export const Media: CollectionConfig = {
     useAsTitle: 'alt',
     defaultColumns: ['thumbnail', 'filename', 'alt', 'updatedAt', 'edit'],
   },
+  labels: {
+    singular: 'Média',
+    plural: 'Médias',
+  },
   access: {
     read: () => true,
     create: ({ req: { user } }) => !!user,
@@ -16,6 +20,7 @@ export const Media: CollectionConfig = {
   fields: [
     {
       name: 'alt',
+      label: 'Texte alternatif (Alt)',
       type: 'text',
       required: false,
       admin: {
@@ -34,5 +39,7 @@ export const Media: CollectionConfig = {
       }
     }
   ],
-  upload: true,
+  upload: {
+    staticDir: 'media',
+  },
 }

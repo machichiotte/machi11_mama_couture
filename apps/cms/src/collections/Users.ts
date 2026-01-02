@@ -6,16 +6,36 @@ export const Users: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Système',
     defaultColumns: ['avatar', 'name', 'email', 'edit'],
-    // Force l'utilisation du champ 'avatar' pour l'icône de profil en haut à droite
-    avatar: 'avatar' as any,
+    // Utilisation du composant personnalisé pour l'avatar dans tout le CMS
+    avatar: './components/header/HeaderAvatar#default' as any,
   },
   auth: true,
+  labels: {
+    singular: 'Utilisateur',
+    plural: 'Utilisateurs',
+  },
   fields: [
     {
       name: 'name',
       label: 'Nom complet',
       type: 'text',
       required: true,
+      admin: {
+        components: {
+          Cell: './components/cells/TextCell#default',
+        },
+      },
+    },
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      required: true,
+      admin: {
+        components: {
+          Cell: './components/cells/TextCell#default',
+        },
+      },
     },
     {
       name: 'avatar',
@@ -24,7 +44,36 @@ export const Users: CollectionConfig = {
       relationTo: 'media',
       admin: {
         position: 'sidebar',
-        description: 'Image utilisée pour votre profil et en haut à droite de l\'interface.',
+        components: {
+          Cell: './components/cells/AvatarCell#default',
+        },
+      }
+    },
+    {
+      name: 'avatarUrl',
+      type: 'text',
+      admin: {
+        hidden: true,
+      },
+      hooks: {
+        afterRead: [
+          async ({ data, req }) => {
+            if (data?.avatar) {
+              const mediaId = typeof data.avatar === 'object' ? data.avatar.id : data.avatar;
+              try {
+                const media = await req.payload.findByID({
+                  collection: 'media',
+                  id: mediaId,
+                  depth: 0,
+                });
+                return media?.url || null;
+              } catch (e) {
+                return null;
+              }
+            }
+            return null;
+          }
+        ]
       }
     },
     {

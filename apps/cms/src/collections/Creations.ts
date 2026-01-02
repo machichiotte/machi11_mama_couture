@@ -7,6 +7,10 @@ export const Creations: CollectionConfig = {
         defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoLabel', 'promoPercentage', 'isPublished', 'edit'],
         group: 'Boutique',
     },
+    labels: {
+        singular: 'Création',
+        plural: 'Créations',
+    },
     access: {
         read: ({ req: { user } }) => {
             if (user) return true
@@ -40,6 +44,7 @@ export const Creations: CollectionConfig = {
                         },
                         {
                             name: 'description',
+                            label: 'Description',
                             type: 'richText',
                         },
                         {
@@ -56,6 +61,7 @@ export const Creations: CollectionConfig = {
                             fields: [
                                 {
                                     name: 'image',
+                                    label: 'Image',
                                     type: 'upload',
                                     relationTo: 'media',
                                     required: true,
@@ -64,6 +70,7 @@ export const Creations: CollectionConfig = {
                         },
                         {
                             name: 'series',
+                            label: 'Collection / Série',
                             type: 'relationship',
                             relationTo: 'series' as any,
                             required: true,

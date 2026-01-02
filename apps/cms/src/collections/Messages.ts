@@ -7,6 +7,10 @@ export const Messages: CollectionConfig = {
         defaultColumns: ['name', 'email', 'subject', 'createdAt'],
         group: 'Communication',
     },
+    labels: {
+        singular: 'Message',
+        plural: 'Messages',
+    },
     access: {
         create: () => true, // Anyone can send a message
         read: ({ req: { user } }) => !!user, // Only admins can read
@@ -14,20 +18,24 @@ export const Messages: CollectionConfig = {
     fields: [
         {
             name: 'name',
+            label: 'Nom',
             type: 'text',
             required: true,
         },
         {
             name: 'email',
+            label: 'Email',
             type: 'email',
             required: true,
         },
         {
             name: 'subject',
+            label: 'Sujet',
             type: 'text',
         },
         {
             name: 'message',
+            label: 'Message',
             type: 'textarea',
             required: true,
         },

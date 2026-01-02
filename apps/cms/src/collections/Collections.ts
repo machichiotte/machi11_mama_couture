@@ -7,6 +7,10 @@ export const Collections: CollectionConfig = {
         defaultColumns: ['coverImage', 'title', 'isPublished', 'order', 'edit'],
         group: 'Boutique',
     },
+    labels: {
+        singular: 'Série',
+        plural: 'Séries',
+    },
     access: {
         read: ({ req: { user } }) => {
             if (user) return true
@@ -40,6 +44,7 @@ export const Collections: CollectionConfig = {
                         },
                         {
                             name: 'description',
+                            label: 'Description',
                             type: 'textarea',
                         },
                         {

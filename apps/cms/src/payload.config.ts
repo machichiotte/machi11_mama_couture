@@ -102,6 +102,44 @@ export default buildConfig({
   },
   i18n: {
     supportedLanguages: { fr },
+    translations: {
+      fr: {
+        general: {
+          createNew: 'Ajouter',
+          create: 'Créer',
+          add: 'Ajouter',
+          edit: 'Modifier',
+          save: 'Enregistrer',
+          cancel: 'Annuler',
+          delete: 'Supprimer',
+          loading: 'Chargement...',
+          noResults: 'Aucun résultat trouvé',
+          confirm: 'Confirmer',
+        },
+        fields: {
+          name: 'Nom',
+          email: 'Email',
+          title: 'Titre',
+          description: 'Description',
+          image: 'Image',
+          images: 'Images',
+          createdAt: 'Créé le',
+          updatedAt: 'Modifié le',
+          slug: 'Lien URL',
+          status: 'Statut',
+        },
+        version: {
+          version: 'Version',
+          versions: 'Versions',
+          draft: 'Brouillon',
+          published: 'Publié',
+        },
+        collections: {
+          create: 'Ajouter',
+          createNew: 'Ajouter',
+        }
+      },
+    },
     fallbackLanguage: 'fr',
   },
   serverURL: PAYLOAD_PUBLIC_SERVER_URL,
