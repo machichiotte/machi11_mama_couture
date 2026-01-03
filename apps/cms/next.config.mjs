@@ -7,6 +7,7 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '50mb',
+      allowedOrigins: ['petitpoint.pages.dev', 'machi11-mama-couture.onrender.com'],
     },
   },
   webpack: (webpackConfig) => {
