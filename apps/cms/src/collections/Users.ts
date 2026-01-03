@@ -21,7 +21,7 @@ export const Users: CollectionConfig = {
       admin: {
         components: {
           Cell: {
-            path: '../components/cells/TextCell#default',
+            path: './components/cells/TextCell#default',
             exportName: 'default',
             clientProps: {
               collectionSlug: 'users'
@@ -38,7 +38,7 @@ export const Users: CollectionConfig = {
       admin: {
         components: {
           Cell: {
-            path: '../components/cells/TextCell#default',
+            path: './components/cells/TextCell#default',
             exportName: 'default',
             clientProps: {
               collectionSlug: 'users'
@@ -55,7 +55,7 @@ export const Users: CollectionConfig = {
       admin: {
         position: 'sidebar',
         components: {
-          Cell: '../components/cells/AvatarCell#default',
+          Cell: './components/cells/AvatarCell#default',
         },
       }
     },
@@ -92,7 +92,7 @@ export const Users: CollectionConfig = {
       type: 'ui',
       admin: {
         components: {
-          Cell: '../components/cells/EditCell#default',
+          Cell: './components/cells/EditCell#default',
         }
       }
     }
