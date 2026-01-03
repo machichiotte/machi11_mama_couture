@@ -2,12 +2,24 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const RelationshipCell: React.FC<any> = (props) => {
+interface RelationshipCellProps {
+    cellData?: { id: string } | string
+    rowData: { id: string }
+    field: { name: string, relationTo: string }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
     const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [options, setOptions] = useState<{ label: string, value: string }[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
-    const [value, setValue] = useState(cellData?.id || cellData)
+
+    // safe access to id
+    const initialId = typeof cellData === 'object' ? cellData?.id : cellData
+    const [value, setValue] = useState(initialId)
     const router = useRouter()
 
     const relationTo = field.relationTo
@@ -31,7 +43,7 @@ const RelationshipCell: React.FC<any> = (props) => {
                 const response = await fetch(`/api/${relationTo}?limit=100`)
                 const data = await response.json()
                 if (data.docs) {
-                    setOptions(data.docs.map((doc: any) => ({
+                    setOptions(data.docs.map((doc: { title?: string, name?: string, id: string }) => ({
                         label: doc.title || doc.name || doc.id,
                         value: doc.id
                     })))
@@ -75,7 +87,7 @@ const RelationshipCell: React.FC<any> = (props) => {
         <div style={{ display: 'flex', alignItems: 'center', minHeight: '60px' }}>
             <div style={{ position: 'relative', minWidth: '150px' }}>
                 <select
-                    value={value || ''}
+                    value={String(value || '')}
                     onChange={handleChange}
                     disabled={loading}
                     style={{

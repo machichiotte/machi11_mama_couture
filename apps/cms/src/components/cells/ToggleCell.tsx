@@ -2,7 +2,16 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const ToggleCell: React.FC<any> = (props) => {
+interface ToggleCellProps {
+    cellData: boolean
+    rowData: { id: string }
+    field: { name: string }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const ToggleCell: React.FC<ToggleCellProps> = (props) => {
     const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [checked, setChecked] = useState(cellData)
     const [loading, setLoading] = useState(false)

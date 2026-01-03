@@ -2,13 +2,21 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const StatusCell: React.FC<any> = (props) => {
+interface StatusCellProps {
+    cellData: string
+    rowData: { id: string }
+    field: { name: string, options?: Array<{ label: string, value: string }> }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const StatusCell: React.FC<StatusCellProps> = (props) => {
     const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [value, setValue] = useState(cellData)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
     const router = useRouter()
-
 
     const options = field.options || []
 
@@ -87,7 +95,7 @@ const StatusCell: React.FC<any> = (props) => {
                         transition: 'all 0.2s',
                     }}
                 >
-                    {options.map((opt: any) => (
+                    {options.map((opt) => (
                         <option key={opt.value} value={opt.value}>
                             {opt.label}
                         </option>

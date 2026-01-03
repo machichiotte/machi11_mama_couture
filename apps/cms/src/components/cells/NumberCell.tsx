@@ -2,10 +2,19 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const NumberCell: React.FC<any> = (props) => {
+interface NumberCellProps {
+    cellData: number
+    rowData: { id: string }
+    field: { name: string }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const NumberCell: React.FC<NumberCellProps> = (props) => {
     const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [isEditing, setIsEditing] = useState(false)
-    const [value, setValue] = useState(cellData)
+    const [value, setValue] = useState<number | string>(cellData)
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
@@ -103,8 +112,8 @@ const NumberCell: React.FC<any> = (props) => {
                 opacity: loading ? 0.5 : 1,
                 border: '1px dashed transparent'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.border = '1px dashed var(--theme-elevation-400)'}
-            onMouseLeave={(e) => e.currentTarget.style.border = '1px dashed transparent'}
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.border = '1px dashed var(--theme-elevation-400)'}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.border = '1px dashed transparent'}
         >
             <span>
                 {value || 0} {fieldName === 'price' ? '€' : ''}

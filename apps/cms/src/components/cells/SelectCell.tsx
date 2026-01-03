@@ -2,7 +2,16 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const SelectCell: React.FC<any> = (props) => {
+interface SelectCellProps {
+    cellData?: string | number
+    rowData: { id: string }
+    field: { name: string, options?: Array<{ label: string, value: string }>, required?: boolean }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const SelectCell: React.FC<SelectCellProps> = (props) => {
     const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [value, setValue] = useState(cellData)
     const [loading, setLoading] = useState(false)
@@ -56,7 +65,7 @@ const SelectCell: React.FC<any> = (props) => {
         <div style={{ display: 'flex', alignItems: 'center', minHeight: '60px' }}>
             <div style={{ position: 'relative', minWidth: '100px' }}>
                 <select
-                    value={value || ''}
+                    value={String(value || '')}
                     onChange={handleChange}
                     disabled={loading}
                     style={{
@@ -81,7 +90,7 @@ const SelectCell: React.FC<any> = (props) => {
                     }}
                 >
                     {!field.required && <option value="">-</option>}
-                    {options.map((opt: any) => (
+                    {options.map((opt) => (
                         <option key={opt.value} value={opt.value}>
                             {opt.label}
                         </option>

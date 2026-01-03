@@ -2,7 +2,14 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const EditCell: React.FC<any> = (props) => {
+interface EditCellProps {
+    rowData: { id: string }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const EditCell: React.FC<EditCellProps> = (props) => {
     const { rowData, collectionSlug, collectionConfig, collection } = props
 
     // 1. Utiliser les props de Payload en priorité (évite le mismatch)

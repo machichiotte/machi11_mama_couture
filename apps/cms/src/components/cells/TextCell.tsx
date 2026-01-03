@@ -2,7 +2,16 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const TextCell: React.FC<any> = (props) => {
+interface TextCellProps {
+    cellData: string
+    rowData: { id: string }
+    field: { name: string }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const TextCell: React.FC<TextCellProps> = (props) => {
     const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [isEditing, setIsEditing] = useState(false)
     const [value, setValue] = useState(cellData)

@@ -1,7 +1,11 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 
-const AvatarCell: React.FC<any> = (props) => {
+interface AvatarCellProps {
+    cellData?: string | { url?: string }
+}
+
+const AvatarCell: React.FC<AvatarCellProps> = (props) => {
     const { cellData } = props
     const [url, setUrl] = useState<string | null>(null)
 

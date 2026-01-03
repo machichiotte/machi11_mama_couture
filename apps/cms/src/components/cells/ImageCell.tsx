@@ -3,7 +3,17 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-const ImageCell: React.FC<any> = (props) => {
+interface ImageCellProps {
+    rowData: {
+        id: string
+        images?: Array<{ image: string | { url: string } }>
+    }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
+}
+
+const ImageCell: React.FC<ImageCellProps> = (props) => {
     const { rowData, collectionSlug: propsSlug, collectionConfig, collection } = props
     const [url, setUrl] = useState<string | null>(null)
 

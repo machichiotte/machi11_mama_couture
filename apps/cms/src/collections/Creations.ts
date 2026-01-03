@@ -1,4 +1,6 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, CollectionSlug } from 'payload'
+
+
 
 export const Creations: CollectionConfig = {
     slug: 'creations',
@@ -73,7 +75,7 @@ export const Creations: CollectionConfig = {
                             name: 'series',
                             label: 'Collection / Série',
                             type: 'relationship',
-                            relationTo: 'series' as any,
+                            relationTo: 'series' as CollectionSlug,
                             required: true,
                             index: true,
                             admin: {

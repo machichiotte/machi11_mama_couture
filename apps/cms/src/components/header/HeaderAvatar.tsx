@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { useAuth } from '@payloadcms/ui'
+import type { User } from '../../../../../packages/types/src'
 
 const HeaderAvatar: React.FC = () => {
     const { user } = useAuth()
@@ -8,7 +9,8 @@ const HeaderAvatar: React.FC = () => {
     // On essaie de récupérer l'URL de l'avatar
     // Note: Dans le header, l'avatar peut être déjà populé ou être juste un ID
     const avatar = user?.avatar
-    const avatarUrl = typeof avatar === 'object' ? avatar?.url : (user as any)?.avatarUrl
+    const userWithUrl = user as unknown as User
+    const avatarUrl = typeof avatar === 'object' ? avatar?.url : userWithUrl?.avatarUrl
 
     return (
         <div style={{

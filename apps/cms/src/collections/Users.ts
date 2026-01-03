@@ -6,8 +6,7 @@ export const Users: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Système',
     defaultColumns: ['avatar', 'name', 'email', 'edit'],
-    avatar: 'avatar',
-  } as any,
+  },
   auth: true,
   labels: {
     singular: 'Utilisateur',

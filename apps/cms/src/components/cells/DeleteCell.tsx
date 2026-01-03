@@ -2,7 +2,12 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const DeleteCell: React.FC<any> = (props) => {
+interface DeleteCellProps {
+    collectionSlug: string
+    rowData: { id: string }
+}
+
+const DeleteCell: React.FC<DeleteCellProps> = (props) => {
     const { collectionSlug, rowData } = props
     const [loading, setLoading] = useState(false)
     const router = useRouter()

@@ -32,21 +32,45 @@ const {
   PAYLOAD_PUBLIC_SITE_URL
 } = process.env
 
-if (!DATABASE_URL) throw new Error('FATAL: DATABASE_URL is missing')
-if (!PAYLOAD_SECRET) throw new Error('FATAL: PAYLOAD_SECRET is missing')
+// Fallback values for build time (Render doesn't provide env vars during docker build)
+if (!DATABASE_URL && process.env.NODE_ENV !== 'production') {
+  console.warn('⚠️ DATABASE_URL is missing, using fallback for local dev/build')
+}
+
+const finalDatabaseURL = DATABASE_URL || 'mongodb://127.0.0.1:27017/machi11_mama_couture_fallback'
+const finalPayloadSecret = PAYLOAD_SECRET || 'temp-secret-for-build-only'
+
+if (!DATABASE_URL && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
+  throw new Error('FATAL: DATABASE_URL is missing in production runtime')
+}
 
 cloudinary.config({
-  cloud_name: CLOUDINARY_CLOUD_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret: CLOUDINARY_API_SECRET,
+  cloud_name: CLOUDINARY_CLOUD_NAME || '',
+  api_key: CLOUDINARY_API_KEY || '',
+  api_secret: CLOUDINARY_API_SECRET || '',
 })
 
-const customCloudinaryAdapter: any = () => ({
+
+interface UploadFileNode {
+  filename: string
+  mimeType: string
+  filesize: number
+  buffer: Buffer
+}
+
+interface CloudinaryResult {
+  public_id: string
+  format: string
+  bytes: number
+  secure_url: string
+}
+
+const customCloudinaryAdapter = () => ({
   name: 'cloudinary-adapter',
-  async handleUpload({ file }: any) {
+  async handleUpload({ file }: { file: UploadFileNode }) {
     const cleanName = file.filename.replace(/\.[^/.]+$/, '').replace(/\s+/g, '_')
 
-    const uploadResult = await new Promise((resolve, reject) => {
+    const uploadResult = await new Promise<CloudinaryResult>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: 'image',
@@ -58,19 +82,20 @@ const customCloudinaryAdapter: any = () => ({
         },
         (error, result) => {
           if (error) return reject(error)
+          if (!result) return reject(new Error('Cloudinary upload failed: No result returned'))
           resolve(result)
         },
       )
       uploadStream.end(file.buffer)
     })
 
-    const result = uploadResult as any
+    const result = uploadResult
     file.filename = `${result.public_id}.${result.format}`
     file.mimeType = result.format
     file.filesize = result.bytes
   },
 
-  async handleDelete({ filename }: any) {
+  async handleDelete({ filename }: { filename: string }) {
     try {
       // Supprime en utilisant le chemin enregistré (machi11/...)
       await cloudinary.uploader.destroy(filename.replace(/\.[^/.]+$/, ''))
@@ -149,18 +174,18 @@ export default buildConfig({
     },
     fallbackLanguage: 'fr',
   },
-  serverURL: PAYLOAD_PUBLIC_SERVER_URL,
+  serverURL: PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
   cors: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
   csrf: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [About, SiteSettings, UIStrings],
   editor: lexicalEditor(),
-  secret: PAYLOAD_SECRET,
+  secret: finalPayloadSecret,
   typescript: {
     outputFile: path.resolve(dirname, '../../../packages/types/src/index.ts'),
   },
   db: mongooseAdapter({
-    url: DATABASE_URL,
+    url: finalDatabaseURL,
   }),
   sharp,
   email: nodemailerAdapter({
@@ -169,11 +194,11 @@ export default buildConfig({
     // On n'active le transport réel que si SMTP_HOST est présent
     transportOptions: process.env.SMTP_HOST
       ? {
-        host: process.env.SMTP_HOST,
+        host: process.env.SMTP_HOST || '',
         port: Number(process.env.SMTP_PORT) || 587,
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          user: process.env.SMTP_USER || '',
+          pass: process.env.SMTP_PASS || '',
         },
       }
       : {
@@ -203,8 +228,10 @@ export default buildConfig({
       globals: ['site-settings', 'about'],
       uploadsCollection: 'media',
       tabbedUI: true,
-      generateTitle: ({ doc }: any) => `Mama Couture - ${doc?.title?.value || doc?.name?.value || 'Atelier'}`,
-      generateDescription: ({ doc }: any) => doc?.description?.value || doc?.bio?.value,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      generateTitle: ({ doc }: { doc: any }) => `Mama Couture - ${doc?.title?.value || doc?.name?.value || 'Atelier'}`,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      generateDescription: ({ doc }: { doc: any }) => doc?.description?.value || doc?.bio?.value,
     }),
   ],
 })
