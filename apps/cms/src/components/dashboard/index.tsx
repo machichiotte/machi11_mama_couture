@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { Gutter, useAuth } from '@payloadcms/ui'
+import Link from 'next/link'
 
 const Dashboard: React.FC = () => {
     const { user } = useAuth()
@@ -22,7 +23,7 @@ const Dashboard: React.FC = () => {
                             Bienvenue, {user?.name || 'Mama Couture'} 🧵
                         </h1>
                         <p style={{ color: 'var(--theme-elevation-400)', maxWidth: '600px' }}>
-                            Votre centre de commande pour gérer l'atelier, vos pièces uniques et rester en contact avec vos clients.
+                            Votre centre de commande pour gérer le site, vos pièces uniques et rester en contact avec vos clients.
                         </p>
                     </div>
 
@@ -31,12 +32,12 @@ const Dashboard: React.FC = () => {
                         <a href="http://localhost:3001" target="_blank" rel="noreferrer" style={quickButtonStyle}>
                             👁️ Voir le site
                         </a>
-                        <a href="/admin/collections/creations/create" style={quickButtonStyle}>
+                        <Link href="/admin/collections/creations/create" style={quickButtonStyle}>
                             ✨ Nouvelle création
-                        </a>
-                        <a href="/admin/globals/about" style={quickButtonStyle}>
+                        </Link>
+                        <Link href="/admin/globals/about" style={quickButtonStyle}>
                             📖 Ma Bio
-                        </a>
+                        </Link>
                     </div>
                 </div>
 
@@ -47,8 +48,8 @@ const Dashboard: React.FC = () => {
                         <h2 style={cardTitleStyle}>👗 Boutique</h2>
                         <p style={cardDescStyle}>Gérez vos pièces uniques et organisez vos collections thématiques.</p>
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <a href="/admin/collections/creations" style={primaryButtonStyle}>Gérer les créations</a>
-                            <a href="/admin/collections/series" style={secondaryButtonStyle}>Collections</a>
+                            <Link href="/admin/collections/creations" style={primaryButtonStyle}>Gérer les créations</Link>
+                            <Link href="/admin/collections/series" style={secondaryButtonStyle}>Collections</Link>
                         </div>
                     </div>
 
@@ -56,23 +57,23 @@ const Dashboard: React.FC = () => {
                     <div style={{ ...cardStyle, borderLeft: '4px solid #10b981' }}>
                         <h2 style={cardTitleStyle}>💌 Derniers Messages</h2>
                         <p style={cardDescStyle}>Consultez vos demandes de personnalisation et réservations.</p>
-                        <a href="/admin/collections/messages" style={primaryButtonStyle}>Voir la messagerie</a>
+                        <Link href="/admin/collections/messages" style={primaryButtonStyle}>Voir la messagerie</Link>
                     </div>
 
                     {/* Card Configuration */}
                     <div style={{ ...cardStyle, borderLeft: '4px solid #f59e0b' }}>
                         <h2 style={cardTitleStyle}>🛠️ Configuration</h2>
-                        <p style={cardDescStyle}>Textes du site, interface et paramètres globaux de l'Atelier.</p>
+                        <p style={cardDescStyle}>Textes du site, interface et paramètres globaux du site.</p>
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <a href="/admin/globals/ui-strings" style={primaryButtonStyle}>Textes</a>
-                            <a href="/admin/globals/site-settings" style={secondaryButtonStyle}>Réglages</a>
+                            <Link href="/admin/globals/ui-strings" style={primaryButtonStyle}>Textes</Link>
+                            <Link href="/admin/globals/site-settings" style={secondaryButtonStyle}>Réglages</Link>
                         </div>
                     </div>
 
                     {/* Boîte à outils */}
                     <div style={{ ...cardStyle, borderLeft: '4px solid #6366f1' }}>
                         <h2 style={cardTitleStyle}>🧰 Boîte à outils</h2>
-                        <p style={cardDescStyle}>Accès rapides à vos supports externes pour l'atelier.</p>
+                        <p style={cardDescStyle}>Accès rapides à vos supports externes pour le site.</p>
                         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                             <a href="https://cloudinary.com/console" target="_blank" rel="noreferrer" style={primaryButtonStyle}>📸 Cloudinary</a>
                             <a href="https://instagram.com" target="_blank" rel="noreferrer" style={secondaryButtonStyle}>📸 Instagram</a>
@@ -157,15 +158,6 @@ const quickButtonStyle: React.CSSProperties = {
     fontWeight: '600',
     border: '1px solid var(--theme-elevation-200)',
     transition: 'all 0.2s'
-}
-
-const toolLinkStyle: React.CSSProperties = {
-    fontSize: '0.85rem',
-    color: 'var(--theme-elevation-600)',
-    textDecoration: 'none',
-    borderBottom: '1px solid var(--theme-elevation-200)',
-    paddingBottom: '2px',
-    width: 'fit-content'
 }
 
 export default Dashboard
