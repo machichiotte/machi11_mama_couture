@@ -4,7 +4,7 @@ export const Messages: CollectionConfig = {
     slug: 'messages',
     admin: {
         useAsTitle: 'subject',
-        defaultColumns: ['name', 'email', 'subject', 'createdAt'],
+        defaultColumns: ['name', 'email', 'subject', 'createdAt', 'delete'],
         group: 'Communication',
     },
     labels: {
@@ -12,8 +12,9 @@ export const Messages: CollectionConfig = {
         plural: 'Messages',
     },
     access: {
-        create: () => true, // Anyone can send a message
+        create: () => false, // On ne crée pas de message manuellement depuis l'admin
         read: ({ req: { user } }) => !!user, // Only admins can read
+        delete: ({ req: { user } }) => !!user,
     },
     fields: [
         {
@@ -38,6 +39,15 @@ export const Messages: CollectionConfig = {
             label: 'Message',
             type: 'textarea',
             required: true,
+        },
+        {
+            name: 'delete',
+            type: 'ui',
+            admin: {
+                components: {
+                    Cell: './components/cells/DeleteCell#default',
+                },
+            },
         },
     ],
     hooks: {

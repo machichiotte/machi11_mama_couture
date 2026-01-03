@@ -6,8 +6,7 @@ export const Users: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Système',
     defaultColumns: ['avatar', 'name', 'email', 'edit'],
-    // Utilisation du composant personnalisé pour l'avatar dans tout le CMS
-    avatar: './components/header/HeaderAvatar#default' as any,
+    avatar: 'avatar' as any,
   },
   auth: true,
   labels: {

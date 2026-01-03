@@ -134,9 +134,16 @@ export default buildConfig({
           draft: 'Brouillon',
           published: 'Publié',
         },
+        upload: {
+          bulkUpload: 'Envoi groupé',
+          dragAndDropHere: 'Glissez-déposez vos fichiers ici',
+          orClickToBrowse: 'ou cliquez pour parcourir',
+        },
         collections: {
           create: 'Ajouter',
           createNew: 'Ajouter',
+          delete: 'Supprimer',
+          deleteConfirm: 'Êtes-vous sûr de vouloir supprimer cet élément ?',
         }
       },
     },

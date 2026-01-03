@@ -1,6 +1,7 @@
 import { default as default_107cce43f0fb9efe5709f94e3a9e8e93 } from '../../../components/cells/TextCell'
 import { default as default_f2be05ffc97fa38da6e0ceaa3a7ddb35 } from '../../../components/cells/AvatarCell'
 import { default as default_c43902d1b12b6f59d116229b81b56332 } from '../../../components/cells/EditCell'
+import { default as default_e5551c78d7bc4482bd8fc5318c898601 } from '../../../components/cells/DeleteCell'
 import { default as default_70afc4ba5d103ed27afb06db9a8d44e5 } from '../../../components/cells/CoverImageCell'
 import { default as default_23adfc248b3f44caf7da94178512c5e8 } from '../../../components/cells/NumberCell'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -43,6 +44,7 @@ export const importMap = {
   "./components/cells/TextCell#default": default_107cce43f0fb9efe5709f94e3a9e8e93,
   "./components/cells/AvatarCell#default": default_f2be05ffc97fa38da6e0ceaa3a7ddb35,
   "./components/cells/EditCell#default": default_c43902d1b12b6f59d116229b81b56332,
+  "./components/cells/DeleteCell#default": default_e5551c78d7bc4482bd8fc5318c898601,
   "./components/cells/CoverImageCell#default": default_70afc4ba5d103ed27afb06db9a8d44e5,
   "./components/cells/NumberCell#default": default_23adfc248b3f44caf7da94178512c5e8,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,

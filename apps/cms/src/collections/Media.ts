@@ -5,7 +5,7 @@ export const Media: CollectionConfig = {
   admin: {
     group: 'Médiathèque',
     useAsTitle: 'alt',
-    defaultColumns: ['thumbnail', 'filename', 'alt', 'updatedAt', 'edit'],
+    defaultColumns: ['thumbnail', 'filename', 'alt', 'updatedAt', 'edit', 'delete'],
   },
   labels: {
     singular: 'Média',
@@ -35,6 +35,15 @@ export const Media: CollectionConfig = {
       admin: {
         components: {
           Cell: './components/cells/EditCell#default',
+        }
+      }
+    },
+    {
+      name: 'delete',
+      type: 'ui',
+      admin: {
+        components: {
+          Cell: './components/cells/DeleteCell#default',
         }
       }
     }

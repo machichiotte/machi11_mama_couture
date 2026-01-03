@@ -4,7 +4,7 @@ export const Creations: CollectionConfig = {
     slug: 'creations',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoLabel', 'promoPercentage', 'isPublished', 'edit'],
+        defaultColumns: ['images', 'title', 'series', 'stockStatus', 'price', 'promoLabel', 'promoPercentage', 'isPublished', 'edit', 'delete'],
         group: 'Boutique',
     },
     labels: {
@@ -20,6 +20,7 @@ export const Creations: CollectionConfig = {
                 },
             }
         },
+        delete: ({ req: { user } }) => !!user,
     },
     versions: {
         drafts: true,
@@ -206,6 +207,15 @@ export const Creations: CollectionConfig = {
             admin: {
                 components: {
                     Cell: './components/cells/EditCell#default',
+                },
+            },
+        },
+        {
+            name: 'delete',
+            type: 'ui',
+            admin: {
+                components: {
+                    Cell: './components/cells/DeleteCell#default',
                 },
             },
         },

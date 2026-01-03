@@ -92,3 +92,34 @@ td:first-child {
         height: 100%;
     }
 }
+
+// Header & Avatar
+.app-header {
+    .avatar {
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 50% !important;
+        overflow: hidden !important;
+        border: 1.5px solid var(--theme-elevation-200) !important;
+    }
+}
+
+// Mobile specific - on veut garder l'avatar visible en haut à droite
+@media (max-width: 768px) {
+    .app-header__actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 15px !important;
+    }
+}
+
+// Dashboard polissage
+.dashboard {
+    h1 {
+        font-family: serif;
+        font-size: 2.2rem;
+        background: linear-gradient(45deg, var(--theme-elevation-800), var(--theme-elevation-500));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
