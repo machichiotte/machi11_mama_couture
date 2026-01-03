@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const ImageCell: React.FC<any> = (props) => {
     const { rowData, collectionSlug: propsSlug, collectionConfig, collection } = props
@@ -41,7 +42,7 @@ const ImageCell: React.FC<any> = (props) => {
                         setUrl(data.url)
                     }
                 } catch (err) {
-                    console.error("Failed to fetch thumbnail", err)
+                    console.error("Failed to fetch thumbnail for ImageCell:", err)
                 }
             }
         }
@@ -75,9 +76,11 @@ const ImageCell: React.FC<any> = (props) => {
                     overflow: 'hidden'
                 }}>
                     {url ? (
-                        <img
+                        <Image
                             src={url}
-                            alt="Thumbnail"
+                            alt="Aperçu création"
+                            width={42}
+                            height={42}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                     ) : (

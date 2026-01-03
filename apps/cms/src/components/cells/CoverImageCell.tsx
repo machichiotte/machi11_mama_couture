@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const CoverImageCell: React.FC<any> = (props) => {
     const { rowData, cellData, collectionSlug: propsSlug, collectionConfig, collection } = props
@@ -37,7 +38,7 @@ const CoverImageCell: React.FC<any> = (props) => {
                         setUrl(data.url)
                     }
                 } catch (err) {
-                    console.error("Failed to fetch thumbnail", err)
+                    console.error("Failed to fetch thumbnail for CoverImageCell:", err)
                 }
             }
         }
@@ -64,9 +65,11 @@ const CoverImageCell: React.FC<any> = (props) => {
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
                 {url ? (
-                    <img
+                    <Image
                         src={url}
-                        alt="Thumbnail"
+                        alt="Aperçu couverture"
+                        width={42}
+                        height={42}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                 ) : (

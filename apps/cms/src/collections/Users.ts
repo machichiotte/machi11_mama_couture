@@ -6,8 +6,8 @@ export const Users: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Système',
     defaultColumns: ['avatar', 'name', 'email', 'edit'],
-    avatar: 'avatar' as any,
-  },
+    avatar: 'avatar',
+  } as any,
   auth: true,
   labels: {
     singular: 'Utilisateur',
@@ -66,7 +66,8 @@ export const Users: CollectionConfig = {
                   depth: 0,
                 });
                 return media?.url || null;
-              } catch (e) {
+              } catch (err) {
+                console.error('Error fetching avatar URL:', err);
                 return null;
               }
             }

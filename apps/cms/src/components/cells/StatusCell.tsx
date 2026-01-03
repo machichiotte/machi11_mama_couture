@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useConfig } from '@payloadcms/ui'
 
 const StatusCell: React.FC<any> = (props) => {
     const { cellData, rowData, field, collectionSlug: propsSlug, collectionConfig, collection } = props
@@ -10,7 +9,7 @@ const StatusCell: React.FC<any> = (props) => {
     const [error, setError] = useState(false)
     const router = useRouter()
 
-    const config = useConfig()
+
     const options = field.options || []
 
     // Détection robuste du slug de la collection avec stratégie anti-mismatch
@@ -47,7 +46,7 @@ const StatusCell: React.FC<any> = (props) => {
             setValue(newValue)
             router.refresh()
         } catch (err) {
-            console.error(err)
+            console.error(`Failed to update status for ${collectionSlug}:`, err)
             setError(true)
             setTimeout(() => setError(false), 2000)
         } finally {
