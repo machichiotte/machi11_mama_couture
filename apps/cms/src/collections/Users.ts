@@ -20,7 +20,7 @@ export const Users: CollectionConfig = {
       required: true,
       admin: {
         components: {
-          Cell: '../components/cells/TextCell#default',
+          Cell: './components/cells/TextCell#default',
         },
       },
     },
@@ -31,7 +31,7 @@ export const Users: CollectionConfig = {
       required: true,
       admin: {
         components: {
-          Cell: '../components/cells/TextCell#default',
+          Cell: './components/cells/TextCell#default',
         },
       },
     },
@@ -43,7 +43,7 @@ export const Users: CollectionConfig = {
       admin: {
         position: 'sidebar',
         components: {
-          Cell: '../components/cells/AvatarCell#default',
+          Cell: './components/cells/AvatarCell#default',
         },
       }
     },
@@ -80,7 +80,7 @@ export const Users: CollectionConfig = {
       type: 'ui',
       admin: {
         components: {
-          Cell: '../components/cells/EditCell#default',
+          Cell: './components/cells/EditCell#default',
         }
       }
     }

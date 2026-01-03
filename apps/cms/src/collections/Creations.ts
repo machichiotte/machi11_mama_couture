@@ -45,7 +45,7 @@ export const Creations: CollectionConfig = {
                             required: true,
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/TextCell#default',
+                                    Cell: './components/cells/TextCell#default',
                                 },
                             },
                         },
@@ -62,7 +62,7 @@ export const Creations: CollectionConfig = {
                             minRows: 1,
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/ImageCell#default',
+                                    Cell: './components/cells/ImageCell#default',
                                 },
                             },
                             fields: [
@@ -84,7 +84,7 @@ export const Creations: CollectionConfig = {
                             index: true,
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/RelationshipCell#default',
+                                    Cell: './components/cells/RelationshipCell#default',
                                 },
                             },
                         },
@@ -99,7 +99,7 @@ export const Creations: CollectionConfig = {
                             type: 'number',
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/NumberCell#default',
+                                    Cell: './components/cells/NumberCell#default',
                                 },
                                 condition: (data) => data.stockStatus !== 'hidden',
                             },
@@ -112,7 +112,7 @@ export const Creations: CollectionConfig = {
                             defaultValue: 'hidden',
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/StatusCell#default',
+                                    Cell: './components/cells/StatusCell#default',
                                 },
                             },
                             options: [
@@ -129,7 +129,7 @@ export const Creations: CollectionConfig = {
                             min: 0,
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/NumberCell#default',
+                                    Cell: './components/cells/NumberCell#default',
                                 },
                                 condition: (data) => data.stockStatus === 'in-stock',
                             },
@@ -140,7 +140,7 @@ export const Creations: CollectionConfig = {
                             type: 'text',
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/TextCell#default',
+                                    Cell: './components/cells/TextCell#default',
                                 },
                                 placeholder: 'Ex: -20%, NOUVEAU, Édition limitée',
                                 condition: (data) => data.stockStatus !== 'hidden',
@@ -153,7 +153,7 @@ export const Creations: CollectionConfig = {
                             defaultValue: '0',
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/SelectCell#default',
+                                    Cell: './components/cells/SelectCell#default',
                                 },
                                 condition: (data) => data.stockStatus !== 'hidden' && !!data.price,
                             },
@@ -181,7 +181,7 @@ export const Creations: CollectionConfig = {
                             index: true,
                             admin: {
                                 components: {
-                                    Cell: '../components/cells/ToggleCell#default',
+                                    Cell: './components/cells/ToggleCell#default',
                                 },
                             },
                         },
@@ -212,7 +212,7 @@ export const Creations: CollectionConfig = {
             type: 'ui',
             admin: {
                 components: {
-                    Cell: '../components/cells/EditCell#default',
+                    Cell: './components/cells/EditCell#default',
                 },
             },
         },
@@ -221,7 +221,7 @@ export const Creations: CollectionConfig = {
             type: 'ui',
             admin: {
                 components: {
-                    Cell: '../components/cells/DeleteCell#default',
+                    Cell: './components/cells/DeleteCell#default',
                 },
             },
         },
