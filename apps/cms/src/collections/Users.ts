@@ -31,7 +31,7 @@ export const Users: CollectionConfig = {
       required: true,
       admin: {
         components: {
-          Cell: './components/cells/TextCell#default',
+          Cell: '../components/cells/TextCell#default',
         },
       },
     },
