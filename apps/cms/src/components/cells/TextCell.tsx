@@ -18,15 +18,18 @@ const TextCell: React.FC<TextCellProps> = (props) => {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
-    // Détection du slug avec stratégie anti-mismatch
-    const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'creations')
+    // Détection robuste du slug de la collection
+    const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'users')
 
     useEffect(() => {
         if (!propsSlug && !collectionConfig?.slug && !collection?.slug) {
             const parts = window.location.pathname.split('/')
+            // support /admin/collections/users et /admin/users (si utilisateurs est top level)
             const colIndex = parts.indexOf('collections')
             if (colIndex !== -1 && parts[colIndex + 1]) {
                 setCollectionSlug(parts[colIndex + 1])
+            } else if (parts.includes('users')) {
+                setCollectionSlug('users')
             }
         }
     }, [propsSlug, collectionConfig, collection])
