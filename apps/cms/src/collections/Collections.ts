@@ -38,7 +38,7 @@ export const Collections: CollectionConfig = {
                             required: true,
                             admin: {
                                 components: {
-                                    Cell: './components/cells/TextCell#default',
+                                    Cell: '../components/cells/TextCell#default',
                                 },
                             },
                         },
@@ -55,7 +55,7 @@ export const Collections: CollectionConfig = {
                             required: true,
                             admin: {
                                 components: {
-                                    Cell: './components/cells/CoverImageCell#default',
+                                    Cell: '../components/cells/CoverImageCell#default',
                                 },
                             },
                         },
@@ -66,7 +66,7 @@ export const Collections: CollectionConfig = {
                             index: true,
                             admin: {
                                 components: {
-                                    Cell: './components/cells/NumberCell#default',
+                                    Cell: '../components/cells/NumberCell#default',
                                 },
                             },
                         },
@@ -101,7 +101,7 @@ export const Collections: CollectionConfig = {
             admin: {
                 position: 'sidebar',
                 components: {
-                    Cell: './components/cells/ToggleCell#default',
+                    Cell: '../components/cells/ToggleCell#default',
                 },
             },
             index: true,
@@ -111,7 +111,7 @@ export const Collections: CollectionConfig = {
             type: 'ui',
             admin: {
                 components: {
-                    Cell: './components/cells/EditCell#default',
+                    Cell: '../components/cells/EditCell#default',
                 },
             },
         },
