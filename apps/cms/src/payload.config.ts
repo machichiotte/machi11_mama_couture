@@ -182,7 +182,7 @@ export default buildConfig({
   editor: lexicalEditor(),
   secret: finalPayloadSecret,
   typescript: {
-    outputFile: path.resolve(dirname, '../../../packages/types/src/index.ts'),
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: mongooseAdapter({
     url: finalDatabaseURL,

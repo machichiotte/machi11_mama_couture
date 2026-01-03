@@ -1,4 +1,8 @@
-import type { CollectionConfig, CollectionSlug } from 'payload'
+import type { CollectionConfig } from 'payload'
+import type { Config } from '@/payload-types'
+
+type CollectionSlug = keyof Config['collections']
+
 
 
 

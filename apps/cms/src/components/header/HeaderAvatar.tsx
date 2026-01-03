@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { useAuth } from '@payloadcms/ui'
-import type { User } from '../../../../../packages/types/src'
+import type { User } from '@/payload-types'
 
 const HeaderAvatar: React.FC = () => {
     const { user } = useAuth()
