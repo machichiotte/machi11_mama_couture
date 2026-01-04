@@ -18,7 +18,10 @@ const StatusCell: React.FC<StatusCellProps> = (props) => {
     const [error, setError] = useState(false)
     const router = useRouter()
 
-    const options = field.options || []
+    if (!rowData?.id) return null
+
+    const options = field?.options || []
+    if (!field?.name) return null
 
     // Détection robuste du slug de la collection avec stratégie anti-mismatch
     const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'creations')

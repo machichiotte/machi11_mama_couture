@@ -18,6 +18,8 @@ const TextCell: React.FC<TextCellProps> = (props) => {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
+    if (!rowData?.id || !field?.name) return null
+
     // Détection robuste du slug de la collection
     const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'users')
 

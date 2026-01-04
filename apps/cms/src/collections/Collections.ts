@@ -12,14 +12,10 @@ export const Collections: CollectionConfig = {
         plural: 'Séries',
     },
     access: {
-        read: ({ req: { user } }) => {
-            if (user) return true
-            return {
-                isPublished: {
-                    equals: true,
-                },
-            }
-        },
+        read: () => true,
+        update: ({ req: { user } }) => !!user,
+        create: ({ req: { user } }) => !!user,
+        delete: ({ req: { user } }) => !!user,
     },
     versions: {
         drafts: true,

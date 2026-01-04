@@ -27,7 +27,8 @@ const EditCell: React.FC<EditCellProps> = (props) => {
         }
     }, [collectionSlug, collectionConfig, collection])
 
-    const editUrl = `/admin/collections/${slug}/${rowData.id}`
+    const editUrl = rowData?.id ? `/admin/collections/${slug}/${rowData.id}` : '#'
+    if (!rowData?.id) return null
 
     return (
         <div style={{ display: 'flex', alignItems: 'center', minHeight: '60px' }}>

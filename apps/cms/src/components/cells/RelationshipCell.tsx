@@ -22,7 +22,10 @@ const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
     const [value, setValue] = useState(initialId)
     const router = useRouter()
 
-    const relationTo = field.relationTo
+    if (!rowData?.id) return null
+
+    const relationTo = field?.relationTo
+    if (!relationTo) return null
 
     // Détection robuste du slug de la collection avec stratégie anti-mismatch
     const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'creations')
@@ -41,12 +44,15 @@ const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
         const fetchOptions = async () => {
             try {
                 const response = await fetch(`/api/${relationTo}?limit=100`)
+                if (!response.ok) throw new Error('API fetch failed')
                 const data = await response.json()
-                if (data.docs) {
+                if (data && Array.isArray(data.docs)) {
                     setOptions(data.docs.map((doc: { title?: string, name?: string, id: string }) => ({
                         label: doc.title || doc.name || doc.id,
                         value: doc.id
                     })))
+                } else {
+                    console.warn(`No docs found for relationTo: ${relationTo}`, data)
                 }
             } catch (err) {
                 console.error('Failed to fetch relation options', err)

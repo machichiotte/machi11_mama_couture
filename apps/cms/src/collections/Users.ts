@@ -12,6 +12,12 @@ export const Users: CollectionConfig = {
     singular: 'Utilisateur',
     plural: 'Utilisateurs',
   },
+  access: {
+    read: () => true,
+    create: () => true,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
+  },
   fields: [
     {
       name: 'name',

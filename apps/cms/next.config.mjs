@@ -10,6 +10,14 @@ const nextConfig = {
       allowedOrigins: ['petitpoint.pages.dev', 'machi11-mama-couture.onrender.com'],
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
+  },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
       '.cjs': ['.cts', '.cjs'],

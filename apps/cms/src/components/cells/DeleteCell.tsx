@@ -12,6 +12,8 @@ const DeleteCell: React.FC<DeleteCellProps> = (props) => {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
+    if (!rowData?.id) return null
+
     const handleDelete = async (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
