@@ -7,7 +7,10 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '50mb',
-      allowedOrigins: ['petitpoint.pages.dev', 'machi11-mama-couture.onrender.com'],
+      allowedOrigins: [
+        process.env.PAYLOAD_PUBLIC_SITE_URL,
+        process.env.PAYLOAD_PUBLIC_SERVER_URL
+      ].filter(Boolean),
     },
   },
   images: {

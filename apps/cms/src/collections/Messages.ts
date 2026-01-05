@@ -58,8 +58,8 @@ export const Messages: CollectionConfig = {
             }
         ],
         beforeDelete: [
-            ({ id, req }) => {
-                req.payload.logger.info(`🗑️ Tentative de suppression du message: ${id}`)
+            ({ id }) => {
+                console.log(`🗑️ [Messages] Tentative de suppression du message: ${id}`)
             }
         ],
         afterChange: [

@@ -35,7 +35,7 @@ const {
 // Normalisation des URLs (retrait du slash final pour éviter les conflits CORS/CSRF)
 const normalizeUrl = (url?: string) => url ? url.replace(/\/+$/, '') : ''
 
-const finalServerURL = normalizeUrl(PAYLOAD_PUBLIC_SERVER_URL || process.env.RENDER_EXTERNAL_URL || 'http://localhost:3000')
+const finalServerURL = normalizeUrl(PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000')
 const finalSiteURL = normalizeUrl(PAYLOAD_PUBLIC_SITE_URL || '')
 
 const finalDatabaseURL = DATABASE_URL || 'mongodb://127.0.0.1:27017/machi11_mama_couture_fallback'

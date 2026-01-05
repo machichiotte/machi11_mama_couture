@@ -36,21 +36,35 @@ const DeleteCell: React.FC<DeleteCellProps> = (props) => {
         if (window.confirm("Voulez-vous vraiment supprimer cet élément ?")) {
             setLoading(true)
             try {
-                const response = await fetch(`/api/${collectionSlug}/${rowData.id}`, {
+                // Utilisation de la variable d'environnement pour éviter le dur
+                const publicServerUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL || '';
+
+                const apiBase = (window.location.hostname.includes('pages.dev') && publicServerUrl)
+                    ? `${publicServerUrl.replace(/\/$/, '')}/api`
+                    : '/api'
+
+                const targetUrl = `${apiBase}/${collectionSlug}/${rowData.id}`
+                console.log(`🗑️ [DeleteCell] Request to: ${targetUrl}`)
+
+                const response = await fetch(targetUrl, {
                     method: 'DELETE',
                     credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
                 })
 
                 if (response.ok) {
+                    console.log("✅ Delete successful")
                     router.refresh()
                 } else {
-                    const errorData = await response.json().catch(() => ({}))
-                    console.error("Delete failed:", errorData)
-                    alert(`Erreur lors de la suppression (${response.status})`)
+                    const text = await response.text()
+                    console.error(`❌ Delete failed (${response.status}):`, text)
+                    alert(`Erreur ${response.status} lors de la suppression. Vérifiez les logs.`)
                 }
             } catch (error) {
-                console.error("Delete error:", error)
-                alert("Une erreur est survenue")
+                console.error("❌ Delete error:", error)
+                alert("Erreur réseau lors de la suppression")
             } finally {
                 setLoading(false)
             }

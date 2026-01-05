@@ -229,8 +229,8 @@ export const Creations: CollectionConfig = {
             }
         ],
         beforeDelete: [
-            ({ id, req }) => {
-                req.payload.logger.info(`🗑️ [Creations] Tentative de suppression: ${id}`)
+            ({ id }) => {
+                console.log(`🗑️ [Creations] Tentative de suppression: ${id}`)
             }
         ],
         afterChange: [
