@@ -3,10 +3,6 @@ import { withPayload } from '@payloadcms/next/withPayload'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  // On expose la variable existante au navigateur pour que le bouton Delete sache où taper en direct
-  env: {
-    PAYLOAD_PUBLIC_SERVER_URL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-  },
   experimental: {
     serverActions: {
       bodySizeLimit: '50mb',

@@ -38,18 +38,16 @@ const DeleteCell: React.FC<DeleteCellProps> = (props) => {
             try {
                 // LOGS DE DÉBOGAGE MASSIFS
                 console.log("🔍 [DeleteCell] Starting deletion process...");
-                console.log("🔍 [DeleteCell] process.env.PAYLOAD_PUBLIC_SERVER_URL:", process.env.PAYLOAD_PUBLIC_SERVER_URL);
-                console.log("🔍 [DeleteCell] process.env.NEXT_PUBLIC_SERVER_URL:", (process.env as any).NEXT_PUBLIC_SERVER_URL);
 
-                // Utilisation de la variable d'environnement pour éviter le dur
-                const publicServerUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL || '';
+                // Utilisation du préfixe NEXT_PUBLIC pour que la variable soit visible par le navigateur
+                const publicServerUrl = process.env.NEXT_PUBLIC_PAYLOAD_SERVER_URL || '';
 
                 // Si on est sur le domaine Cloudflare (.pages.dev), on privilégie l'URL directe Render
                 // pour éviter le crash du proxy Nitro sur les méthodes DELETE (Error 1101)
                 const isOnCloudflare = typeof window !== 'undefined' && window.location.hostname.includes('pages.dev');
 
+                console.log("🔍 [DeleteCell] process.env.NEXT_PUBLIC_PAYLOAD_SERVER_URL:", publicServerUrl);
                 console.log("🔍 [DeleteCell] isOnCloudflare:", isOnCloudflare);
-                console.log("🔍 [DeleteCell] publicServerUrl detected:", publicServerUrl);
 
                 const apiBase = (isOnCloudflare && publicServerUrl)
                     ? `${publicServerUrl.replace(/\/$/, '')}/api`
