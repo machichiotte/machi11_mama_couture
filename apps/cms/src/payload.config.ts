@@ -131,6 +131,11 @@ export default buildConfig({
     },
   },
   onInit: async (payload) => {
+    console.log('🚀 [CMS] Starting Payload...');
+    console.log(`🚀 [CMS] SERVER_URL configured as: ${finalServerURL}`);
+    console.log(`🚀 [CMS] SITE_URL configured as: ${finalSiteURL}`);
+    console.log(`🚀 [CMS] DATABASE_URL present: ${!!DATABASE_URL}`);
+
     payload.logger.info('--- CMS CONFIG DEBUG ---')
     payload.logger.info(`SERVER_URL: ${finalServerURL}`)
     payload.logger.info(`SITE_URL: ${finalSiteURL}`)
