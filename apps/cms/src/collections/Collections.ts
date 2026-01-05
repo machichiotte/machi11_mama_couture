@@ -4,7 +4,7 @@ export const Collections: CollectionConfig = {
     slug: 'series',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['coverImage', 'title', 'isPublished', 'order', 'edit'],
+        defaultColumns: ['coverImage', 'title', 'isPublished', 'order', 'edit', 'delete'],
         group: 'Boutique',
     },
     labels: {
@@ -108,6 +108,15 @@ export const Collections: CollectionConfig = {
             admin: {
                 components: {
                     Cell: './components/cells/EditCell#default',
+                },
+            },
+        },
+        {
+            name: 'delete',
+            type: 'ui',
+            admin: {
+                components: {
+                    Cell: './components/cells/DeleteCell#default',
                 },
             },
         },
