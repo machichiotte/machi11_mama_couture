@@ -57,6 +57,11 @@ export const Messages: CollectionConfig = {
                 return data
             }
         ],
+        beforeDelete: [
+            ({ id, req }) => {
+                req.payload.logger.info(`🗑️ Tentative de suppression du message: ${id}`)
+            }
+        ],
         afterChange: [
             async ({ doc, operation, req }) => {
                 if (operation === 'create') {

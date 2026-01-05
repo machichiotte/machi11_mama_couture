@@ -228,6 +228,11 @@ export const Creations: CollectionConfig = {
                 return data
             }
         ],
+        beforeDelete: [
+            ({ id, req }) => {
+                req.payload.logger.info(`🗑️ [Creations] Tentative de suppression: ${id}`)
+            }
+        ],
         afterChange: [
             ({ doc, operation, req }) => {
                 req.payload.logger.info(`✅ [Creations] ${operation.toUpperCase()} Success - ID: ${doc.id}`)

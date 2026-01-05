@@ -1,16 +1,31 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface DeleteCellProps {
-    collectionSlug: string
     rowData: { id: string }
+    collectionSlug?: string
+    collectionConfig?: { slug: string }
+    collection?: { slug: string }
 }
 
 const DeleteCell: React.FC<DeleteCellProps> = (props) => {
-    const { collectionSlug, rowData } = props
+    const { collectionSlug: propsSlug, rowData, collectionConfig, collection } = props
     const [loading, setLoading] = useState(false)
     const router = useRouter()
+
+    // Détection robuste du slug de la collection
+    const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'creations')
+
+    useEffect(() => {
+        if (!propsSlug && !collectionConfig?.slug && !collection?.slug) {
+            const parts = window.location.pathname.split('/')
+            const colIndex = parts.indexOf('collections')
+            if (colIndex !== -1 && parts[colIndex + 1]) {
+                setCollectionSlug(parts[colIndex + 1])
+            }
+        }
+    }, [propsSlug, collectionConfig, collection])
 
     if (!rowData?.id) return null
 
@@ -29,7 +44,9 @@ const DeleteCell: React.FC<DeleteCellProps> = (props) => {
                 if (response.ok) {
                     router.refresh()
                 } else {
-                    alert("Erreur lors de la suppression")
+                    const errorData = await response.json().catch(() => ({}))
+                    console.error("Delete failed:", errorData)
+                    alert(`Erreur lors de la suppression (${response.status})`)
                 }
             } catch (error) {
                 console.error("Delete error:", error)
