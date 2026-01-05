@@ -12,7 +12,7 @@ export const Messages: CollectionConfig = {
         plural: 'Messages',
     },
     access: {
-        create: () => false, // On ne crée pas de message manuellement depuis l'admin
+        create: () => true, // On autorise la création publique pour le formulaire de contact
         read: ({ req: { user } }) => !!user, // Only admins can read
         delete: ({ req: { user } }) => !!user,
     },

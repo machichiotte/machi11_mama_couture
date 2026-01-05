@@ -49,6 +49,7 @@ const TextCell: React.FC<TextCellProps> = (props) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     [field.name]: value,
                 }),

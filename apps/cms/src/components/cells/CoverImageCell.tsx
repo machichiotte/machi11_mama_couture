@@ -39,7 +39,9 @@ const CoverImageCell: React.FC<CoverImageCellProps> = (props) => {
 
             if (typeof imageDoc === 'string') {
                 try {
-                    const response = await fetch(`/api/media/${imageDoc}`)
+                    const response = await fetch(`/api/media/${imageDoc}`, {
+                        credentials: 'include'
+                    })
                     const data = await response.json()
                     if (data?.url) {
                         setUrl(data.url)

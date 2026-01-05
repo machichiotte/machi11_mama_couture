@@ -46,6 +46,7 @@ const NumberCell: React.FC<NumberCellProps> = (props) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     [fieldName]: Number(value),
                 }),

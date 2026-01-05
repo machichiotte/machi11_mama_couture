@@ -17,7 +17,7 @@ const AvatarCell: React.FC<AvatarCellProps> = (props) => {
             }
             // Si c'est un ID, on va chercher l'info
             else if (typeof cellData === 'string') {
-                fetch(`/api/media/${cellData}`)
+                fetch(`/api/media/${cellData}`, { credentials: 'include' })
                     .then(res => res.json())
                     .then(data => {
                         if (data.url) setUrl(data.url)

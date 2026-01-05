@@ -41,7 +41,9 @@ const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
         if (!relationTo) return
         const fetchOptions = async () => {
             try {
-                const response = await fetch(`/api/${relationTo}?limit=100`)
+                const response = await fetch(`/api/${relationTo}?limit=100`, {
+                    credentials: 'include'
+                })
                 if (!response.ok) throw new Error('API fetch failed')
                 const data = await response.json()
                 if (data && Array.isArray(data.docs)) {
@@ -72,6 +74,7 @@ const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     [field.name]: newValue,
                 }),

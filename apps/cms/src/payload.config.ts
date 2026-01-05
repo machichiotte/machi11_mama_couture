@@ -96,6 +96,7 @@ const customCloudinaryAdapter = () => ({
   },
 
   async handleDelete({ filename }: { filename: string }) {
+    if (!filename) return
     try {
       // Supprime en utilisant le chemin enregistré (machi11/...)
       await cloudinary.uploader.destroy(filename.replace(/\.[^/.]+$/, ''))
@@ -229,9 +230,14 @@ export default buildConfig({
       uploadsCollection: 'media',
       tabbedUI: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      generateTitle: ({ doc }: { doc: any }) => `Mama Couture - ${doc?.title?.value || doc?.name?.value || 'Atelier'}`,
+      generateTitle: ({ doc }: { doc: any }) => {
+        const title = doc?.title?.value || doc?.name?.value || doc?.title || doc?.name || 'Atelier'
+        return `Mama Couture - ${title}`
+      },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      generateDescription: ({ doc }: { doc: any }) => doc?.description?.value || doc?.bio?.value,
+      generateDescription: ({ doc }: { doc: any }) => {
+        return doc?.description?.value || doc?.bio?.value || doc?.description || doc?.bio || ''
+      },
     }),
   ],
 })

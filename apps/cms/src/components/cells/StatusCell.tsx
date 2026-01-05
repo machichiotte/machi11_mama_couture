@@ -46,6 +46,7 @@ const StatusCell: React.FC<StatusCellProps> = (props) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     [field.name]: newValue,
                 }),

@@ -23,6 +23,7 @@ const DeleteCell: React.FC<DeleteCellProps> = (props) => {
             try {
                 const response = await fetch(`/api/${collectionSlug}/${rowData.id}`, {
                     method: 'DELETE',
+                    credentials: 'include',
                 })
 
                 if (response.ok) {
