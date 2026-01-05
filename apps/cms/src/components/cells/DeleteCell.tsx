@@ -39,12 +39,15 @@ const DeleteCell: React.FC<DeleteCellProps> = (props) => {
                 // Utilisation de la variable d'environnement pour éviter le dur
                 const publicServerUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL || '';
 
-                const apiBase = (window.location.hostname.includes('pages.dev') && publicServerUrl)
+                // Si on est sur le domaine Cloudflare (.pages.dev), on privilégie l'URL directe Render
+                // pour éviter le crash du proxy Nitro sur les méthodes DELETE (Error 1101)
+                const isOnCloudflare = typeof window !== 'undefined' && window.location.hostname.includes('pages.dev');
+                const apiBase = (isOnCloudflare && publicServerUrl)
                     ? `${publicServerUrl.replace(/\/$/, '')}/api`
                     : '/api'
 
                 const targetUrl = `${apiBase}/${collectionSlug}/${rowData.id}`
-                console.log(`🗑️ [DeleteCell] Request to: ${targetUrl}`)
+                console.log(`🗑️ [DeleteCell] Request to: ${targetUrl} (On CF: ${isOnCloudflare})`)
 
                 const response = await fetch(targetUrl, {
                     method: 'DELETE',
