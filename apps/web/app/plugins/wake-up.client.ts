@@ -15,10 +15,14 @@ export default defineNuxtPlugin(() => {
 
             console.log('⏰ Mama Couture: Réveil du backend en cours...')
 
-            fetch(pingUrl).catch(() => {
-                // On ignore les erreurs de réseau ou de CORS ici
-                // car le but est simplement que la requête atteigne Render.
-            })
+            fetch(pingUrl)
+                .then(res => {
+                    if (res.ok) console.log('✅ Mama Couture: Backend réveillé et prêt !')
+                })
+                .catch(() => {
+                    // On ignore les erreurs de réseau ou de CORS ici
+                    // car le but est simplement que la requête atteigne Render.
+                })
         }
 
         // Réveil immédiat au chargement
