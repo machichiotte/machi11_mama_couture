@@ -32,8 +32,13 @@ const {
   PAYLOAD_PUBLIC_SITE_URL
 } = process.env
 
+// Normalisation des URLs (retrait du slash final pour éviter les conflits CORS/CSRF)
+const normalizeUrl = (url?: string) => url ? url.replace(/\/+$/, '') : ''
+
+const finalServerURL = normalizeUrl(PAYLOAD_PUBLIC_SERVER_URL || process.env.RENDER_EXTERNAL_URL || 'http://localhost:3000')
+const finalSiteURL = normalizeUrl(PAYLOAD_PUBLIC_SITE_URL || '')
+
 const finalDatabaseURL = DATABASE_URL || 'mongodb://127.0.0.1:27017/machi11_mama_couture_fallback'
-const finalServerURL = PAYLOAD_PUBLIC_SERVER_URL || process.env.RENDER_EXTERNAL_URL || 'http://localhost:3000'
 const finalPayloadSecret = PAYLOAD_SECRET || 'temp-secret-for-build-only'
 
 if (!DATABASE_URL && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
@@ -85,10 +90,9 @@ const customCloudinaryAdapter = () => ({
         uploadStream.end(file.buffer)
       })
 
-      const result = uploadResult
-      file.filename = `${result.public_id}.${result.format}`
-      file.mimeType = result.format
-      file.filesize = result.bytes
+      file.filename = `${uploadResult.public_id}.${uploadResult.format}`
+      file.mimeType = uploadResult.format
+      file.filesize = uploadResult.bytes
     } catch (err) {
       console.error('❌ Cloudinary Upload Error:', err)
       throw err
@@ -129,9 +133,10 @@ export default buildConfig({
   onInit: async (payload) => {
     payload.logger.info('--- CMS CONFIG DEBUG ---')
     payload.logger.info(`SERVER_URL: ${finalServerURL}`)
-    payload.logger.info(`SITE_URL: ${PAYLOAD_PUBLIC_SITE_URL || 'Not set'}`)
+    payload.logger.info(`SITE_URL: ${finalSiteURL}`)
+    payload.logger.info(`ALLOWED ORIGINS: ${[finalSiteURL, finalServerURL].filter(Boolean).join(', ')}`)
     payload.logger.info(`DATABASE: ${DATABASE_URL ? 'Connected' : 'FALLBACK USED'}`)
-    payload.logger.info(`SMTP: ${process.env.SMTP_HOST ? 'Configured' : 'MOCK USED'}`)
+    payload.logger.info(`SMTP: ${process.env.SMTP_HOST ? 'Configured (' + process.env.SMTP_HOST + ')' : 'MOCK USED'}`)
     payload.logger.info('------------------------')
   },
   i18n: {
@@ -185,8 +190,8 @@ export default buildConfig({
     fallbackLanguage: 'fr',
   },
   serverURL: finalServerURL,
-  cors: [PAYLOAD_PUBLIC_SITE_URL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
-  csrf: [PAYLOAD_PUBLIC_SITE_URL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
+  cors: [finalSiteURL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
+  csrf: [finalSiteURL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [About, SiteSettings, UIStrings],
   editor: lexicalEditor(),
@@ -211,7 +216,10 @@ export default buildConfig({
           user: process.env.SMTP_USER || '',
           pass: process.env.SMTP_PASS || '',
         },
-        connectionTimeout: 10000, // On évite les attentes infinies
+        connectionTimeout: 5000, // Timeout plus court pour ne pas bloquer
+        tls: {
+          rejectUnauthorized: false // Aide parfois avec les serveurs SMTP capricieux
+        }
       }
       : {
         // Bouchon (mock) pour le développement local
