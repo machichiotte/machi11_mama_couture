@@ -51,6 +51,12 @@ export const Messages: CollectionConfig = {
         },
     ],
     hooks: {
+        beforeChange: [
+            ({ data, req }) => {
+                req.payload.logger.info(`📩 Nouveau message de contact entrant de: ${data?.email}`)
+                return data
+            }
+        ],
         afterChange: [
             async ({ doc, operation, req }) => {
                 if (operation === 'create') {

@@ -32,12 +32,8 @@ const {
   PAYLOAD_PUBLIC_SITE_URL
 } = process.env
 
-// Fallback values for build time (Render doesn't provide env vars during docker build)
-if (!DATABASE_URL && process.env.NODE_ENV !== 'production') {
-  console.warn('⚠️ DATABASE_URL is missing, using fallback for local dev/build')
-}
-
 const finalDatabaseURL = DATABASE_URL || 'mongodb://127.0.0.1:27017/machi11_mama_couture_fallback'
+const finalServerURL = PAYLOAD_PUBLIC_SERVER_URL || process.env.RENDER_EXTERNAL_URL || 'http://localhost:3000'
 const finalPayloadSecret = PAYLOAD_SECRET || 'temp-secret-for-build-only'
 
 if (!DATABASE_URL && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
@@ -69,30 +65,34 @@ const customCloudinaryAdapter = () => ({
   name: 'cloudinary-adapter',
   async handleUpload({ file }: { file: UploadFileNode }) {
     const cleanName = file.filename.replace(/\.[^/.]+$/, '').replace(/\s+/g, '_')
+    try {
+      const uploadResult = await new Promise<CloudinaryResult>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: 'image',
+            public_id: cleanName, // Juste le nom, sans le dossier
+            asset_folder: CLOUDINARY_FOLDER, // Dossier dans la Media Library UI
+            use_asset_folder_as_public_id_prefix: true, // Le dossier sera aussi dans l'URL
+            tags: ['machi11_cms'],
+            overwrite: true,
+          },
+          (error, result) => {
+            if (error) return reject(error)
+            if (!result) return reject(new Error('Cloudinary upload failed'))
+            resolve(result)
+          },
+        )
+        uploadStream.end(file.buffer)
+      })
 
-    const uploadResult = await new Promise<CloudinaryResult>((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: 'image',
-          public_id: cleanName, // Juste le nom, sans le dossier
-          asset_folder: CLOUDINARY_FOLDER, // Dossier dans la Media Library UI
-          use_asset_folder_as_public_id_prefix: true, // Le dossier sera aussi dans l'URL
-          tags: ['machi11_cms'],
-          overwrite: true,
-        },
-        (error, result) => {
-          if (error) return reject(error)
-          if (!result) return reject(new Error('Cloudinary upload failed: No result returned'))
-          resolve(result)
-        },
-      )
-      uploadStream.end(file.buffer)
-    })
-
-    const result = uploadResult
-    file.filename = `${result.public_id}.${result.format}`
-    file.mimeType = result.format
-    file.filesize = result.bytes
+      const result = uploadResult
+      file.filename = `${result.public_id}.${result.format}`
+      file.mimeType = result.format
+      file.filesize = result.bytes
+    } catch (err) {
+      console.error('❌ Cloudinary Upload Error:', err)
+      throw err
+    }
   },
 
   async handleDelete({ filename }: { filename: string }) {
@@ -101,7 +101,7 @@ const customCloudinaryAdapter = () => ({
       // Supprime en utilisant le chemin enregistré (machi11/...)
       await cloudinary.uploader.destroy(filename.replace(/\.[^/.]+$/, ''))
     } catch (error) {
-      console.error('Cloudinary Delete Error:', error)
+      console.error('❌ Cloudinary Delete Error:', error)
     }
   },
 
@@ -126,6 +126,14 @@ export default buildConfig({
       },
     },
   },
+  onInit: async (payload) => {
+    payload.logger.info('--- CMS CONFIG DEBUG ---')
+    payload.logger.info(`SERVER_URL: ${finalServerURL}`)
+    payload.logger.info(`SITE_URL: ${PAYLOAD_PUBLIC_SITE_URL || 'Not set'}`)
+    payload.logger.info(`DATABASE: ${DATABASE_URL ? 'Connected' : 'FALLBACK USED'}`)
+    payload.logger.info(`SMTP: ${process.env.SMTP_HOST ? 'Configured' : 'MOCK USED'}`)
+    payload.logger.info('------------------------')
+  },
   i18n: {
     supportedLanguages: { fr },
     translations: {
@@ -141,6 +149,7 @@ export default buildConfig({
           loading: 'Chargement...',
           noResults: 'Aucun résultat trouvé',
           confirm: 'Confirmer',
+          confirmDelete: 'Supprimer définitivement',
         },
         fields: {
           name: 'Nom',
@@ -175,9 +184,9 @@ export default buildConfig({
     },
     fallbackLanguage: 'fr',
   },
-  serverURL: PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
-  cors: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
-  csrf: [PAYLOAD_PUBLIC_SITE_URL, PAYLOAD_PUBLIC_SERVER_URL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
+  serverURL: finalServerURL,
+  cors: [PAYLOAD_PUBLIC_SITE_URL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
+  csrf: [PAYLOAD_PUBLIC_SITE_URL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [About, SiteSettings, UIStrings],
   editor: lexicalEditor(),
@@ -197,10 +206,12 @@ export default buildConfig({
       ? {
         host: process.env.SMTP_HOST || '',
         port: Number(process.env.SMTP_PORT) || 587,
+        secure: Number(process.env.SMTP_PORT) === 465, // True pour 465, false pour 587
         auth: {
           user: process.env.SMTP_USER || '',
           pass: process.env.SMTP_PASS || '',
         },
+        connectionTimeout: 10000, // On évite les attentes infinies
       }
       : {
         // Bouchon (mock) pour le développement local

@@ -221,5 +221,18 @@ export const Creations: CollectionConfig = {
             },
         },
     ],
+    hooks: {
+        beforeChange: [
+            ({ data, operation, req }) => {
+                req.payload.logger.info(`📝 [Creations] ${operation.toUpperCase()} - Title: ${data?.title}`)
+                return data
+            }
+        ],
+        afterChange: [
+            ({ doc, operation, req }) => {
+                req.payload.logger.info(`✅ [Creations] ${operation.toUpperCase()} Success - ID: ${doc.id}`)
+            }
+        ],
+    },
     timestamps: true,
 }
