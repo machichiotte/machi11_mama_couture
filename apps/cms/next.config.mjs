@@ -1,4 +1,10 @@
 import { withPayload } from '@payloadcms/next/withPayload'
+import dotenv from 'dotenv'
+import path from 'path'
+
+// On charge explicitement les variables d'environnement pour être sûr qu'elles soient disponibles
+// au moment du build, notamment pour l'injection dans la config env: {} ci-dessous
+dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
