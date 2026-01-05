@@ -3,6 +3,10 @@ import { withPayload } from '@payloadcms/next/withPayload'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  // On force l'injection de la variable pour le navigateur (Client Component)
+  env: {
+    NEXT_PUBLIC_PAYLOAD_SERVER_URL: process.env.PAYLOAD_PUBLIC_SERVER_URL || process.env.NEXT_PUBLIC_PAYLOAD_SERVER_URL,
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: '50mb',
