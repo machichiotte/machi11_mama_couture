@@ -1,0 +1,26 @@
+# Règles de Développement - Mama Couture (machi11)
+
+Ce fichier définit les standards et contraintes à respecter impérativement par tous les agents IA intervenant sur le projet.
+
+## 1. Gestion des Variables d'Environnement
+- **Interdiction Formelle** : Ne JAMAIS créer de nouvelle variable d'environnement sans demander l'autorisation explicite de l'utilisateur.
+- **Source de Vérité** : Se référer TOUJOURS au fichier `apps/cms/.env.example` pour connaître les variables existantes et autorisées.
+- **Fallbacks** : Si une variable manque, prévoir un fallback sécurisé (ex: `localhost`) mais ne pas inventer de noms de variables (ex: pas de `RENDER_EXTERNAL_URL` si pas dans `.env.example`).
+
+## 2. Hardcoding (Texte en dur)
+- **Zéro Hardcoding** : Il est strictement interdit d'écrire en dur des URLs de production, des IDs, des secrets ou des clés d'API dans le code source.
+- **URLs de Serveur** : Utiliser systématiquement `process.env.PAYLOAD_PUBLIC_SERVER_URL` ou `process.env.PAYLOAD_PUBLIC_SITE_URL` pour les redirections et les appels API.
+- **i18n** : Tous les textes de l'interface doivent passer par les fichiers de traduction (`payload.config.ts` ou fichiers de locales frontend).
+
+## 3. Communication Inter-Hébergeurs (Render <-> Cloudflare)
+- **CORS & CSRF** : Toujours normaliser les URLs (retirer le slash final) avant de les injecter dans la configuration de sécurité.
+- **Bypass Proxy** : Pour les méthodes HTTP sensibles comme `DELETE`, privilégier l'appel direct au serveur backend si l'appel est fait depuis le domaine frontend, pour éviter les erreurs de proxy (Erreurs 500).
+
+## 4. Documentation & Journalisation
+- **Journal de Bord** : Chaque session de travail DOIT être consignée dans le journal (`machi00_ops/machi11_mama_couture/0-journal`).
+- **Mise à jour Active** : L'état actuel du projet (`machi00_ops/machi11_mama_couture/1-active`) doit être maintenu à jour après chaque changement significatif.
+- **Logs Verbeux** : En cas de débuggage, utiliser `console.log` pour les sorties système visibles sur Render et des préfixes clairs (ex: `🗑️ [DeleteCell]`).
+
+## 5. Maintenance du Backend (Render)
+- **Resilience SMTP** : Les envois d'emails ne doivent JAMAIS bloquer le thread principal. Toujours utiliser des envois asynchrones non-bloquants avec des timeouts courts (5s).
+- **Système de Réveil** : Le plugin `wake-up.client.ts` est crucial pour éviter les "Cold Starts" de Render. Ne pas le désactiver.
