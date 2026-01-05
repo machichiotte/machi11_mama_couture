@@ -22,11 +22,6 @@ const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
     const [value, setValue] = useState(initialId)
     const router = useRouter()
 
-    if (!rowData?.id) return null
-
-    const relationTo = field?.relationTo
-    if (!relationTo) return null
-
     // Détection robuste du slug de la collection avec stratégie anti-mismatch
     const [collectionSlug, setCollectionSlug] = useState(propsSlug || collectionConfig?.slug || collection?.slug || 'creations')
 
@@ -40,7 +35,10 @@ const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
         }
     }, [propsSlug, collectionConfig, collection])
 
+    const relationTo = field?.relationTo
+
     useEffect(() => {
+        if (!relationTo) return
         const fetchOptions = async () => {
             try {
                 const response = await fetch(`/api/${relationTo}?limit=100`)
@@ -60,6 +58,8 @@ const RelationshipCell: React.FC<RelationshipCellProps> = (props) => {
         }
         fetchOptions()
     }, [relationTo])
+
+    if (!rowData?.id || !relationTo) return null
 
     const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newValue = e.target.value
