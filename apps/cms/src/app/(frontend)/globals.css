@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Design System Mama Couture - Warm & Elegant */
+  --primary: #594a42; /* Warm Coffee Brown */
+  --secondary: #fcfbf7; /* Vintage Paper Cream */
+  --accent: #b05d54; /* Faded Terracotta */
+  --gold: #d4af37; /* Elegant Gold */
+}
+
+.dark {
+  /* Dark Mode - Luxurious Velvet & Gold */
+  --primary: #f2f0e4; /* Soft Antique Cream */
+  --secondary: #0f0d0c; /* Deep Velvet Midnight */
+  --accent: #d4976c; /* Muted Copper/Gold */
+  --gold: #f4d03f; /* Luminous Gold */
+}
+
+body {
+  @apply bg-secondary text-primary font-sans antialiased transition-colors duration-500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-serif text-primary;
+}
+
+.premium-button {
+  @apply px-6 py-2 rounded-full hover:opacity-90 transition-all duration-300 transform active:scale-95 disabled:opacity-50;
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.premium-card {
+  @apply relative overflow-hidden rounded-lg shadow-sm border transition-all duration-300 hover:shadow-md;
+  background-color: color-mix(in srgb, var(--secondary) 98%, var(--primary) 2%);
+  border-color: color-mix(in srgb, var(--primary) 10%, transparent);
+}

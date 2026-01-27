@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently -n \"CMS,WEB\" -c \"magenta,cyan\" \"npm run dev --workspace=cms\" \"npm run dev --workspace=web\"",
+    "dev": "npm run dev --workspace=cms",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "generate:types": "npm run generate:types --workspace=cms",

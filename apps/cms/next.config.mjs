@@ -8,7 +8,8 @@ const nextConfig = {
       bodySizeLimit: '50mb',
       allowedOrigins: [
         process.env.PAYLOAD_PUBLIC_SITE_URL,
-        process.env.PAYLOAD_PUBLIC_SERVER_URL
+        process.env.PAYLOAD_PUBLIC_SERVER_URL,
+        'https://mama-couture.netlify.app', // Example
       ].filter(Boolean),
     },
   },
@@ -18,6 +19,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
       },
+      {
+        protocol: 'https',
+        hostname: '**.koyeb.app',
+      }
     ],
   },
   webpack: (webpackConfig) => {

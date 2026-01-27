@@ -1,17 +1,32 @@
 import React from 'react'
+import { Playfair_Display, Lato } from 'next/font/google'
+import './globals.css'
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
+
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['300', '400', '700'],
+  variable: '--font-lato',
+  display: 'swap',
+})
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: 'Atelier Mama Couture - Créations artisanales uniques',
+  title: 'Mama Couture',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
 
   return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
+    <html lang="fr" className={`${playfair.variable} ${lato.variable}`} suppressHydrationWarning>
+      <body className="font-sans antialiased min-h-screen bg-secondary text-primary">
+        {children}
       </body>
     </html>
   )
