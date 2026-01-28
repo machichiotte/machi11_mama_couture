@@ -25,7 +25,7 @@ Site vitrine premium pour la créatrice **Mama Couture**, combinant la puissance
 
 ```bash
 # Installer les dépendances
-npm install
+pnpm install
 ```
 
 ### 2. Configuration
@@ -50,7 +50,7 @@ CLOUDINARY_API_SECRET=
 
 ```bash
 # Démarrer MongoDB en arrière-plan
-npm run db:dev
+pnpm run db:dev
 
 # Vérifier que MongoDB tourne
 docker ps | grep machi11_mama_couture_mongo_dev
@@ -76,7 +76,7 @@ docker compose -f infra/docker/docker-compose.yml down -v
 
 ```bash
 # Lancer l'application unifiée
-npm run dev
+pnpm run dev
 ```
 
 **Accès :**
@@ -97,18 +97,18 @@ npm run dev
 
 ```bash
 # Développement
-npm run dev              # Lancer CMS + Web
-npm run db:dev          # Lancer MongoDB
+pnpm run dev              # Lancer CMS + Web
+pnpm run db:dev          # Lancer MongoDB
 
 # Build
-npm run build           # Build CMS + Web
+pnpm run build           # Build CMS + Web
 
 # Types
-npm run generate:types  # Générer les types TypeScript
+pnpm run generate:types  # Générer les types TypeScript
 
 # Qualité de code
-npm run lint            # Linter tout le projet
-npm run lint:fix        # Corriger automatiquement
+pnpm run lint            # Linter tout le projet
+pnpm run lint:fix        # Corriger automatiquement
 ```
 
 ---
