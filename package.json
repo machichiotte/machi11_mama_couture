@@ -19,7 +19,6 @@
     "prepare": "husky || true"
   },
   "lint-staged": {
-    "apps/web/**/*.{js,ts,vue}": "pnpm --filter web lint",
     "apps/cms/**/*.{js,ts}": "pnpm --filter cms lint"
   },
   "keywords": [
