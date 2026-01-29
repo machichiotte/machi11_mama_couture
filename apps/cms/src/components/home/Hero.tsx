@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -37,7 +39,7 @@ export const Hero: React.FC<HeroProps> = ({
         <div className="absolute inset-0 bg-transparent dark:bg-black/60 transition-colors duration-500" />
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -54,8 +56,8 @@ export const Hero: React.FC<HeroProps> = ({
             {description}
           </p>
         )}
-        <Link 
-          href="/collections" 
+        <Link
+          href="/collections"
           className="premium-button text-lg px-10 py-4 font-medium transition-all duration-500 inline-block"
         >
           {buttonLabel}
