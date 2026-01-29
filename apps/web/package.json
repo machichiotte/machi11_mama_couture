@@ -11,7 +11,7 @@
     "lint": "echo 'Nuxt linting via TypeScript check' && nuxt typecheck"
   },
   "dependencies": {
-    "@machi10/types": "*",
+    "@machi11/types": "workspace:*",
     "@nuxtjs/sitemap": "^7.5.0",
     "nuxt": "^4.2.2",
     "vue": "^3.5.25",

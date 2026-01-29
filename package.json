@@ -8,12 +8,14 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=cms",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
-    "generate:types": "npm run generate:types --workspace=cms",
-    "lint:fix": "npm run lint --workspaces --if-present -- --fix",
-    "db:dev": "docker start machi11_mama_couture_mongo_dev || docker compose -f infra/docker/docker-compose.yml up -d",
+    "dev": "pnpm run dev --filter cms",
+    "build": "pnpm run build --recursive",
+    "lint": "pnpm run lint --recursive",
+    "generate:types": "pnpm run generate:types --filter cms",
+    "lint:fix": "pnpm run lint --recursive -- --fix",
+    "db:dev": "docker compose -f docker-compose.dev.yml up -d",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
     "prepare": "husky || true"
   },
   "lint-staged": {
@@ -32,5 +34,12 @@
     "concurrently": "^9.2.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild",
+      "unrs-resolver"
+    ]
   }
 }
