@@ -1,0 +1,14 @@
+node_modules
+**/node_modules
+.git
+.next
+.output
+.nuxt
+dist
+build
+*.log
+.env
+.env.*
+! .env.example
+docker/mongodb_data
+backups

@@ -1,0 +1,36 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: machi11_mongo
+    ports:
+      - "${DB_PORT:-27011}:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGODB_INITDB_DATABASE=mama_couture
+    networks:
+      - machi11-network
+    restart: always
+
+  cms:
+    build:
+      context: .
+      dockerfile: apps/cms/Dockerfile
+    image: machi11_mama-couture-cms:latest
+    container_name: machi11_mama-couture-cms
+    ports:
+      - "${PORT:-3011}:3000"
+    env_file:
+      - ./apps/cms/.env.production
+    depends_on:
+      - mongodb
+    networks:
+      - machi11-network
+    restart: always
+
+networks:
+  machi11-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
