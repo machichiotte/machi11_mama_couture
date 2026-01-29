@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
-import { Series, Media } from '@/payload-types'
+import { Series } from '@/payload-types'
 import { cn } from '@/lib/utils'
 
 interface CollectionsPreviewProps {
@@ -33,10 +33,10 @@ export const CollectionsPreview: React.FC<CollectionsPreviewProps> = ({ collecti
       <div className="space-y-10 md:space-y-40">
         {collections.map((collection, index) => {
           const imageUrl = typeof collection.coverImage === 'object' ? collection.coverImage?.url : null
-          
+
           return (
-            <div 
-              key={collection.id} 
+            <div
+              key={collection.id}
               className={cn(
                 "flex flex-col md:items-center gap-8 md:gap-12 lg:gap-24 group",
                 index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
@@ -64,7 +64,7 @@ export const CollectionsPreview: React.FC<CollectionsPreviewProps> = ({ collecti
               </div>
 
               {/* Text Section */}
-              <div 
+              <div
                 className={cn(
                   "w-full md:w-1/2 flex flex-col items-start",
                   index % 2 === 0 ? 'md:pl-12' : 'md:pr-12 md:text-right md:items-end'
@@ -77,7 +77,7 @@ export const CollectionsPreview: React.FC<CollectionsPreviewProps> = ({ collecti
                   {collection.title}
                 </h4>
                 {collection.description && (
-                  <p 
+                  <p
                     className={cn(
                       "text-primary/60 text-base md:text-lg font-light leading-relaxed mb-4 md:mb-10 max-w-md",
                       index % 2 === 0 ? '' : 'md:text-right'
@@ -86,7 +86,7 @@ export const CollectionsPreview: React.FC<CollectionsPreviewProps> = ({ collecti
                     {collection.description}
                   </p>
                 )}
-                <Link 
+                <Link
                   href={`/collections/${collection.slug || collection.id}`}
                   className="group/btn relative inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-bold text-primary"
                 >
@@ -103,8 +103,8 @@ export const CollectionsPreview: React.FC<CollectionsPreviewProps> = ({ collecti
 
       {/* Bottom View All */}
       <div className="mt-4 md:mt-32 text-center pt-2 md:pt-24 border-t border-primary/5">
-        <Link 
-          href="/collections" 
+        <Link
+          href="/collections"
           className="premium-button px-12 py-5 text-sm uppercase tracking-widest font-bold inline-block"
         >
           {uiStrings.viewAll}

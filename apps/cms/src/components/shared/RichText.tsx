@@ -1,7 +1,19 @@
 import React from 'react'
 
+interface RichTextNode {
+  type: string
+  text?: string
+  format?: number
+  children?: RichTextNode[]
+  listType?: string
+}
+
 interface RichTextProps {
-  content: any
+  content: {
+    root?: {
+      children?: RichTextNode[]
+    }
+  } | string | null | undefined
   className?: string
 }
 
@@ -11,21 +23,22 @@ export const RichText: React.FC<RichTextProps> = ({ content, className }) => {
   // Pour l'instant, on gère le cas où c'est déjà du HTML (fallback)
   if (typeof content === 'string') {
     return (
-      <div 
+      <div
         className={className}
-        dangerouslySetInnerHTML={{ __html: content }} 
+        dangerouslySetInnerHTML={{ __html: content }}
       />
     )
   }
 
   // Si c'est du Lexical (JSON)
   // Une version très simplifiée du sérialiseur
-  const serialize = (nodes: any[]): React.ReactNode[] => {
+  const serialize = (nodes: RichTextNode[]): React.ReactNode[] => {
     return nodes.map((node, i) => {
       if (node.type === 'text') {
         let text = <span key={i}>{node.text}</span>
-        if (node.format & 1) text = <strong key={i}>{text}</strong>
-        if (node.format & 2) text = <em key={i}>{text}</em>
+        const format = node.format || 0
+        if (format & 1) text = <strong key={i}>{text}</strong>
+        if (format & 2) text = <em key={i}>{text}</em>
         return text
       }
 
@@ -39,7 +52,7 @@ export const RichText: React.FC<RichTextProps> = ({ content, className }) => {
         case 'h3': return <h3 key={i}>{children}</h3>
         case 'p': return <p key={i}>{children}</p>
         case 'list':
-          return node.listType === 'number' 
+          return node.listType === 'number'
             ? <ol key={i} className="list-decimal pl-6">{children}</ol>
             : <ul key={i} className="list-disc pl-6">{children}</ul>
         case 'listitem': return <li key={i}>{children}</li>

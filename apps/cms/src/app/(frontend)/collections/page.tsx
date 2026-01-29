@@ -27,8 +27,8 @@ export default async function CollectionsPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header 
-        siteTitle={siteSettings.siteTitle} 
+      <Header
+        siteTitle={siteSettings.siteTitle}
         navStrings={{
           collections: uiStrings.nav?.collections || 'Collections',
           about: uiStrings.nav?.about || 'À propos',
@@ -51,12 +51,12 @@ export default async function CollectionsPage() {
 
         {collections.docs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-10 gap-y-10 md:gap-y-16">
-            {collections.docs.map((collection: any, index: number) => {
+            {collections.docs.map((collection: Series, index: number) => {
               const imageUrl = typeof collection.coverImage === 'object' ? collection.coverImage?.url : null
-              
+
               return (
-                <Link 
-                  key={collection.id} 
+                <Link
+                  key={collection.id}
                   href={`/collections/${collection.slug || collection.id}`}
                   className="group cursor-pointer block"
                 >
@@ -78,7 +78,7 @@ export default async function CollectionsPage() {
                     )}
 
                     <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500" />
-                    
+
                     {/* Badge Explorer */}
                     <div className="absolute bottom-10 left-10 right-10 flex justify-center items-center">
                       <span className="premium-button text-xs px-8 py-3 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 shadow-xl">
@@ -86,7 +86,7 @@ export default async function CollectionsPage() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <h2 className="text-3xl font-serif mb-3 text-primary group-hover:text-accent transition-colors duration-300">
                     {collection.title}
                   </h2>
@@ -102,8 +102,8 @@ export default async function CollectionsPage() {
             <p className="text-primary/40 font-serif text-2xl italic">
               {uiStrings.collections?.noCollections || 'Aucune collection trouvée'}
             </p>
-            <Link 
-              href="/contact" 
+            <Link
+              href="/contact"
               className="inline-block mt-8 premium-button px-10"
             >
               {uiStrings.collections?.notifyMe || 'Me prévenir'}
@@ -112,7 +112,7 @@ export default async function CollectionsPage() {
         )}
       </main>
 
-      <Footer 
+      <Footer
         copyright={uiStrings.common?.footerCopyright || '© Mama Couture'}
         adminAccess={uiStrings.common?.adminAccess || 'Administration'}
       />

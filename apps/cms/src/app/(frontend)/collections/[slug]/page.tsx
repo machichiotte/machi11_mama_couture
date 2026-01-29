@@ -9,7 +9,6 @@ import { Footer } from '@/components/layout/Footer'
 import { PriceDisplay } from '@/components/shared/PriceDisplay'
 import { StockBadge } from '@/components/shared/StockBadge'
 import { SiteSetting, UiString, About, Series, Creation } from '@/payload-types'
-import { cn } from '@/lib/utils'
 
 interface PageProps {
   params: Promise<{
@@ -58,8 +57,8 @@ export default async function CollectionDetailPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header 
-        siteTitle={siteSettings.siteTitle} 
+      <Header
+        siteTitle={siteSettings.siteTitle}
         navStrings={{
           collections: uiStrings.nav?.collections || 'Collections',
           about: uiStrings.nav?.about || 'À propos',
@@ -85,7 +84,7 @@ export default async function CollectionDetailPage({ params }: PageProps) {
               <div className="w-full h-full bg-accent/20" />
             )}
           </div>
-          
+
           <div className="relative z-10 text-center px-6 max-w-4xl">
             <h1 className="text-secondary text-4xl md:text-7xl font-serif mb-4 md:mb-6 leading-tight">
               {collection.title}
@@ -117,16 +116,16 @@ export default async function CollectionDetailPage({ params }: PageProps) {
               {creations.map((creation) => {
                 const mainImage = creation.images?.[0]?.image
                 const creationImageUrl = typeof mainImage === 'object' ? mainImage?.url : null
-                
+
                 return (
-                  <Link 
+                  <Link
                     key={creation.id}
                     href={`/creations/${creation.slug || creation.id}`}
                     className="group block cursor-pointer"
                   >
                     <article className="h-full flex flex-col">
                       <div className="relative aspect-square overflow-hidden bg-secondary/50 mb-4 rounded-sm shadow-md group-hover:shadow-2xl transition-all duration-500 border border-primary/5 group-hover:-translate-y-2">
-                        
+
                         {/* Promo Label */}
                         {creation.promoLabel && (
                           <div className="absolute top-0 right-0 z-20">
@@ -146,32 +145,32 @@ export default async function CollectionDetailPage({ params }: PageProps) {
                           />
                         ) : (
                           <div className="w-full h-full border border-primary/5 flex items-center justify-center text-primary/20">
-                             <span className="text-xs uppercase tracking-widest font-sans">
-                               {uiStrings.collections?.noImage || 'Image à venir'}
-                             </span>
+                            <span className="text-xs uppercase tracking-widest font-sans">
+                              {uiStrings.collections?.noImage || 'Image à venir'}
+                            </span>
                           </div>
                         )}
-                        
+
                         {/* Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/0 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        
+
                         {/* Status Badge */}
                         <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
-                          <StockBadge 
-                            status={creation.stockStatus} 
+                          <StockBadge
+                            status={creation.stockStatus}
                             quantity={creation.stockQuantity}
                           />
                         </div>
-                        
+
                         {/* Price */}
                         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                          <PriceDisplay 
-                            price={creation.price} 
+                          <PriceDisplay
+                            price={creation.price}
                             promoPercentage={creation.promoPercentage || undefined}
                           />
                         </div>
                       </div>
-                      
+
                       {/* Name & Short Description */}
                       <div className="flex-1 flex flex-col">
                         <h3 className="text-xl font-serif mb-2 text-primary group-hover:text-accent transition-colors text-center leading-tight">
@@ -193,19 +192,19 @@ export default async function CollectionDetailPage({ params }: PageProps) {
               <p className="text-primary/40 font-serif italic text-lg">
                 {uiStrings.collections?.emptyCollection || 'Cette collection est en cours de création.'}
               </p>
-              <Link 
-                href="/contact" 
+              <Link
+                href="/contact"
                 className="inline-block mt-6 text-accent hover:text-primary transition-colors font-medium border-b border-accent"
               >
                 {uiStrings.collections?.inquiryLink || 'Me contacter'}
               </Link>
             </div>
           )}
-          
+
           {/* Back Button */}
           <nav className="mt-16 md:mt-24 pt-8 md:pt-12 border-t border-primary/5 flex justify-center">
-            <Link 
-              href="/collections" 
+            <Link
+              href="/collections"
               className="text-primary hover:text-accent font-medium tracking-widest text-sm uppercase flex items-center group transition-all"
             >
               <span className="mr-3 transform group-hover:-translate-x-2 transition-transform duration-300">←</span>
@@ -215,7 +214,7 @@ export default async function CollectionDetailPage({ params }: PageProps) {
         </section>
       </main>
 
-      <Footer 
+      <Footer
         copyright={uiStrings.common?.footerCopyright || '© Mama Couture'}
         adminAccess={uiStrings.common?.adminAccess || 'Administration'}
       />

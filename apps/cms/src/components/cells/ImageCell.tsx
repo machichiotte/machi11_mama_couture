@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface ImageCellProps {
     rowData: {
@@ -85,13 +86,14 @@ const ImageCell: React.FC<ImageCellProps> = (props) => {
                     overflow: 'hidden'
                 }}>
                     {url ? (
-                        <img
+                        <Image
                             src={url}
                             alt="Aperçu création"
                             width={42}
                             height={42}
+                            unoptimized
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={(e) => {
+                            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                                 (e.target as HTMLImageElement).style.display = 'none';
                                 (e.target as HTMLImageElement).parentElement!.innerHTML = '<div style="font-size: 8px; color: #999;">Error</div>';
                             }}
