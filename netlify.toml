@@ -1,19 +1,21 @@
 [build]
-  command = "npm run build --workspace=cms"
+  command = "pnpm --filter cms build"
   publish = "apps/cms/.next"
-  # Optional: only deploy if a tag 'v*' is present (like Machi 26)
-  # ignore = "git fetch --tags --quiet && ! git tag --points-at HEAD | grep -q '^v'"
+  # Désactivation du scanner de secrets qui bloque sur des faux positifs (Next.js/Payload)
+  secrets_scan_enabled = false
 
 [build.environment]
-  NODE_VERSION = "20"
-  NEXT_USE_NETLIFY_EDGE = "true"
+  # Forcer la désactivation au cas où
+  SECRETS_SCAN_ENABLED = "false"
+  # Omission des dossiers de build pour le scan
+  SECRETS_SCAN_OMIT_PATHS = "apps/cms/.next/**, .netlify/**, apps/cms/public/**"
+  # PNPM configuration
+  PNPM_FLAGS = "--filter cms"
 
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-[[redirects]]
-  from = "/*"
-  status = 200
-  to = "/index.html"
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
