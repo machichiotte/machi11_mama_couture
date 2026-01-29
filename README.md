@@ -7,8 +7,7 @@ Site vitrine premium pour la créatrice **Mama Couture**, combinant la puissance
 ## 🏗 Structure du Projet
 
 - **`apps/cms`** : Application Unifiée (Next.js 15 + Payload CMS). Contient à la fois l'admin et le site public.
-- **`apps/web`** : ARCHIVE (Ancien frontend Nuxt).
-- **`packages/types`** : Définitions TypeScript.
+- **`packages/types`** : Définitions TypeScript partagées.
 - **`infra/docker`** : MongoDB local pour le développement.
 
 ---
@@ -101,7 +100,7 @@ pnpm run dev              # Lancer CMS + Web
 pnpm run db:dev          # Lancer MongoDB
 
 # Build
-pnpm run build           # Build CMS + Web
+pnpm run build           # Build l'application complète
 
 # Types
 pnpm run generate:types  # Générer les types TypeScript
