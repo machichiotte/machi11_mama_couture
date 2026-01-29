@@ -8,19 +8,19 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "pnpm run dev --filter cms",
-    "build": "pnpm run build --recursive",
-    "lint": "pnpm run lint --recursive",
-    "generate:types": "pnpm run generate:types --filter cms",
-    "lint:fix": "pnpm run lint --recursive -- --fix",
+    "dev": "pnpm --filter cms dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "generate:types": "pnpm --filter cms generate:types",
+    "lint:fix": "pnpm -r lint -- --fix",
     "db:dev": "docker compose -f docker-compose.dev.yml up -d",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "prepare": "husky || true"
   },
   "lint-staged": {
-    "apps/web/**/*.{js,ts,vue}": "npm run lint --workspace=web",
-    "apps/cms/**/*.{js,ts}": "npm run lint --workspace=cms"
+    "apps/web/**/*.{js,ts,vue}": "pnpm --filter web lint",
+    "apps/cms/**/*.{js,ts}": "pnpm --filter cms lint"
   },
   "keywords": [
     "payloadcms",
