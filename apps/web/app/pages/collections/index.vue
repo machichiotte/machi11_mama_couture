@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Series as Collection } from '@machi10/types'
+import type { Series as Collection } from '@machi11/types'
 import { usePayload } from '~/composables/usePayload'
 
 /**

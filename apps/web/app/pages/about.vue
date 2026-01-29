@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { About } from '@machi10/types'
+import type { About } from '@machi11/types'
 import { usePayload } from '~/composables/usePayload'
 import { useRichText } from '~/composables/useRichText'
 

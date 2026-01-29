@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SiteSetting, UiString, About } from '@machi10/types'
+import type { SiteSetting, UiString, About } from '@machi11/types'
 import { usePayload } from '~/composables/usePayload'
 
 const { ui, d } = useI18n()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Creation, Series as Collection } from '@machi10/types'
+import type { Creation, Series as Collection } from '@machi11/types'
 import { usePayload } from '~/composables/usePayload'
 
 const route = useRoute()

@@ -1,4 +1,4 @@
-import type { Config } from '@machi10/types'
+import type { Config } from '@machi11/types'
 
 export const usePayload = () => {
     const config = useRuntimeConfig()

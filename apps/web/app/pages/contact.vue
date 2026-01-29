@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { UiString } from '@machi10/types'
+import type { UiString } from '@machi11/types'
 import { usePayload } from '~/composables/usePayload'
 
 const { create, getGlobals } = usePayload()

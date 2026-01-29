@@ -6,7 +6,7 @@ Application Nuxt 4 pour la vitrine de **Mama Couture**.
 - **Framework** : Nuxt 4
 - **Langage** : TypeScript
 - **Style** : TailwindCSS + CSS Variables (Themeable)
-- **CMS** : @machi10/types (Payload CMS Types)
+- **CMS** : @machi11/types (Payload CMS Types)
 
 ## Design System
 Le design system est entièrement piloté par des variables CSS sémantiques définies dans `app/assets/css/main.css`.

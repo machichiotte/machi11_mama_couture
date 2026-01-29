@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { STRINGS_FR } from '../assets/locales/fr'
-import type { UiString } from '@machi10/types'
+import type { UiString } from '@machi11/types'
 
 export const useI18n = () => {
     const { getGlobals } = usePayload()
