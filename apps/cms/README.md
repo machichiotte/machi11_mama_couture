@@ -12,6 +12,6 @@ Backend Payload CMS pour la gestion de contenu de **Mama Couture**.
 Ce projet utilise une globale `UIStrings` pour externaliser tous les textes de l'interface utilisateur. Cela permet de modifier les labels du menu, les boutons et les titres sans toucher au code.
 
 ## Commandes
-- `npm run dev` : Lancer le serveur de développement (http://localhost:3000)
-- `npm run generate:types` : Générer les types TypeScript pour le frontend
-- `npm run lint` : Linter le code avec ESLint
+- `pnpm run dev` : Lancer le serveur de développement (http://localhost:3000)
+- `pnpm run generate:types` : Générer les types TypeScript pour le frontend
+- `pnpm run lint` : Linter le code avec ESLint

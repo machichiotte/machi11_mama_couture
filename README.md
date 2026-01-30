@@ -18,7 +18,7 @@ Site vitrine premium pour la créatrice **Mama Couture**, combinant la puissance
 
 - **Node.js** : v20+ recommandé
 - **Docker** : Pour MongoDB local
-- **pnpm/npm** : Gestionnaire de paquets
+- **pnpm** : Gestionnaire de paquets (recommandé)
 
 ### 1. Installation
 
@@ -129,5 +129,5 @@ pnpm run lint:fix        # Corriger automatiquement
 Ce projet n'est pas qu'un simple site, c'est un **outil de mise en valeur artisanale** :
 
 - **Design de Luxe** : Palette chaleureuse (Terracotta, Marron Café, Crème), typographies Serif élégantes et animations subtiles.
-- **Performance** : Utilisation de Nuxt Image pour des chargements ultra-rapides.
+- **Performance** : Utilisation de Next.js Image pour des chargements ultra-rapides.
 - **Gestion simplifiée** : Centralisation des messages de contact et des contenus via une interface intuitive.
