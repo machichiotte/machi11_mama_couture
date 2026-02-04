@@ -34,10 +34,10 @@ Créez les fichiers `.env` nécessaires :
 **`apps/cms/.env`** :
 
 ```env
-DATABASE_URL=mongodb://localhost:27017/machi11_mama_couture_dev
+DATABASE_URL=mongodb://localhost:27011/machi11_mama_couture_dev
 PAYLOAD_SECRET=votre-secret-ici
-PAYLOAD_PUBLIC_SERVER_URL=http://localhost:3000
-PAYLOAD_PUBLIC_SITE_URL=http://localhost:3000
+PAYLOAD_PUBLIC_SERVER_URL=http://localhost:3011
+PAYLOAD_PUBLIC_SITE_URL=http://localhost:3011
 
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=
@@ -80,9 +80,9 @@ pnpm run dev
 
 **Accès :**
 
-- 🔐 **Admin** : `http://localhost:3000/admin`
-- 🌐 **Site Public** : `http://localhost:3000`
-- 📡 **API** : `http://localhost:3000/api`
+- 🔐 **Admin** : `http://localhost:3011/admin`
+- 🌐 **Site Public** : `http://localhost:3011`
+- 📡 **API** : `http://localhost:3011/api`
 
 ### 5. Premier Lancement
 
