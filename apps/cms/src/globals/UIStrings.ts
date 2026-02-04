@@ -156,7 +156,7 @@ export const UIStrings: GlobalConfig = {
                 {
                     name: 'footerCopyright',
                     type: 'text',
-                    defaultValue: '© 2025 Mama Couture. Confection Artisanale & Passion.',
+                    defaultValue: '© 2025 Atelier Petit Point. Confection Artisanale & Passion.',
                 },
                 {
                     name: 'adminAccess',

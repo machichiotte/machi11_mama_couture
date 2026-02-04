@@ -3,19 +3,27 @@
 @tailwind utilities;
 
 :root {
-  /* Design System Mama Couture - Warm & Elegant */
-  --primary: #594a42; /* Warm Coffee Brown */
-  --secondary: #fcfbf7; /* Vintage Paper Cream */
-  --accent: #b05d54; /* Faded Terracotta */
-  --gold: #d4af37; /* Elegant Gold */
+  /* Design System Atelier Petit Point - Warm & Elegant */
+  --primary: #594a42;
+  /* Warm Coffee Brown */
+  --secondary: #fcfbf7;
+  /* Vintage Paper Cream */
+  --accent: #b05d54;
+  /* Faded Terracotta */
+  --gold: #d4af37;
+  /* Elegant Gold */
 }
 
 .dark {
   /* Dark Mode - Luxurious Velvet & Gold */
-  --primary: #f2f0e4; /* Soft Antique Cream */
-  --secondary: #0f0d0c; /* Deep Velvet Midnight */
-  --accent: #d4976c; /* Muted Copper/Gold */
-  --gold: #f4d03f; /* Luminous Gold */
+  --primary: #f2f0e4;
+  /* Soft Antique Cream */
+  --secondary: #0f0d0c;
+  /* Deep Velvet Midnight */
+  --accent: #d4976c;
+  /* Muted Copper/Gold */
+  --gold: #f4d03f;
+  /* Luminous Gold */
 }
 
 body {

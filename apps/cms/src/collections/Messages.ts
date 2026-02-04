@@ -65,13 +65,13 @@ export const Messages: CollectionConfig = {
         afterChange: [
             async ({ doc, operation, req }) => {
                 if (operation === 'create') {
-                    const artisanEmail = process.env.SMTP_FROM_ADDRESS || 'atelier@mamacouture.fr'
+                    const artisanEmail = process.env.SMTP_FROM_ADDRESS || 'atelier@petit-point.fr'
 
                     // On lance l'envoi en arrière-plan sans 'await' 
                     // pour ne pas faire attendre le client (surtout avec les timeouts SMTP sur Render)
                     req.payload.sendEmail({
                         to: artisanEmail,
-                        subject: `Nouveau message de contact : ${doc.subject || 'Mama Couture'}`,
+                        subject: `Nouveau message de contact : ${doc.subject || 'Atelier Petit Point'}`,
                         html: `
                             <div style="font-family: serif; padding: 20px; border: 1px solid #eee;">
                                 <h2 style="color: #6d4c41;">Nouveau message reçu</h2>

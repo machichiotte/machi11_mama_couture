@@ -16,8 +16,8 @@ const lato = Lato({
 })
 
 export const metadata = {
-  description: 'Atelier Mama Couture - Créations artisanales uniques',
-  title: 'Mama Couture',
+  description: 'Atelier Petit Point - Créations artisanales uniques',
+  title: 'Atelier Petit Point',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

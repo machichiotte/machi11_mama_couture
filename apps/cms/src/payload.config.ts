@@ -209,8 +209,8 @@ export default buildConfig({
   }),
   sharp,
   email: nodemailerAdapter({
-    defaultFromAddress: process.env.SMTP_FROM_ADDRESS || 'atelier@mamacouture.fr',
-    defaultFromName: process.env.SMTP_FROM_NAME || 'Mama Couture',
+    defaultFromAddress: process.env.SMTP_FROM_ADDRESS || 'atelier@petit-point.fr',
+    defaultFromName: process.env.SMTP_FROM_NAME || 'Atelier Petit Point',
     // On n'active le transport réel que si SMTP_HOST est présent
     transportOptions: process.env.SMTP_HOST
       ? {
@@ -256,7 +256,7 @@ export default buildConfig({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       generateTitle: ({ doc }: { doc: any }) => {
         const title = doc?.title?.value || doc?.name?.value || doc?.title || doc?.name || 'Atelier'
-        return `Mama Couture - ${title}`
+        return `Atelier Petit Point - ${title}`
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       generateDescription: ({ doc }: { doc: any }) => {

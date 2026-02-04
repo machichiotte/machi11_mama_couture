@@ -36,8 +36,8 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header 
-        siteTitle={siteSettings.siteTitle} 
+      <Header
+        siteTitle={siteSettings.siteTitle}
         navStrings={{
           collections: uiStrings.nav?.collections || 'Collections',
           about: uiStrings.nav?.about || 'À propos',
@@ -46,9 +46,9 @@ export default async function HomePage() {
         }}
         socialLinks={about.socialLinks || []}
       />
-      
+
       <main className="flex-grow">
-        <Hero 
+        <Hero
           siteTitle={siteSettings.siteTitle}
           tagline={siteSettings.tagline || ''}
           description={siteSettings.meta?.description || ''}
@@ -56,7 +56,7 @@ export default async function HomePage() {
           heroImage={siteSettings.heroImage || undefined}
         />
 
-        <CollectionsPreview 
+        <CollectionsPreview
           collections={collections.docs as unknown as Series[]}
           uiStrings={{
             title: uiStrings.collections?.title || 'Collections',
@@ -67,8 +67,8 @@ export default async function HomePage() {
         />
       </main>
 
-      <Footer 
-        copyright={uiStrings.common?.footerCopyright || '© Mama Couture'}
+      <Footer
+        copyright={uiStrings.common?.footerCopyright || '© Atelier Petit Point'}
         adminAccess={uiStrings.common?.adminAccess || 'Administration'}
       />
     </div>

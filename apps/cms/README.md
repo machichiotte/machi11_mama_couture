@@ -1,6 +1,6 @@
-# Mama Couture - CMS
+# Atelier Petit Point - CMS
 
-Backend Payload CMS pour la gestion de contenu de **Mama Couture**.
+Backend Payload CMS pour la gestion de contenu de **Atelier Petit Point**.
 
 ## Fonctionnalités
 - **Collections** : Créations, Utilisateurs, Médias
