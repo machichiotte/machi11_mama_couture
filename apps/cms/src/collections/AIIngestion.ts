@@ -9,11 +9,13 @@ export const AIIngestion: CollectionConfig = {
     admin: {
         useAsTitle: 'id',
         group: '🤖 Intelligence Artificielle',
-        hidden: ({ user }) => !user, // Masqué si non connecté
+        hidden: ({ user }) => !user,
         components: {
             views: {
-                list: {
-                    Component: './components/admin/AIIngestor/index.tsx#AIIngestor',
+                edit: {
+                    Default: {
+                        Component: './components/admin/AIIngestor/index.tsx#AIIngestor',
+                    },
                 },
             },
         },
