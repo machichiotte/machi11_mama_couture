@@ -39,7 +39,7 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV NEXT_PRIVATE_LOCAL_WEBPACK_THREADS=4
 
 # Build the CMS - run directly in workspace to avoid recursive filter issues
-RUN pnpm --filter cms build
+RUN DATABASE_URL=mongodb://127.0.0.1:27017/offline PAYLOAD_SECRET=temp-secret-for-build-only pnpm --filter cms build
 
 # 3. Production image, copy all the files and run next
 FROM base AS runner

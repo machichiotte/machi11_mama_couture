@@ -1,0 +1,181 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 481B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.27kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.17.0-alpine
+#3 DONE 0.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 166B 0.0s done
+#4 DONE 0.0s
+
+#5 [builder 1/7] WORKDIR /app
+#5 CACHED
+
+#6 [base 1/1] FROM docker.io/library/node:22.17.0-alpine@sha256:fc3e945f920b7e3000cd1af86c4ae406ec70c72f328b667baf0f3a8910d69eed
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 42.41kB 0.2s done
+#7 DONE 0.2s
+
+#8 [deps 1/7] RUN apk add --no-cache libc6-compat
+#8 0.468 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+#8 ...
+
+#9 [runner 2/8] RUN addgroup --system --gid 1001 nodejs
+#9 DONE 0.5s
+
+#10 [builder 2/7] RUN corepack enable pnpm
+#10 DONE 0.6s
+
+#11 [runner 3/8] RUN adduser --system --uid 1001 nextjs
+#11 DONE 0.3s
+
+#8 [deps 1/7] RUN apk add --no-cache libc6-compat
+#8 0.679 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+#8 ...
+
+#12 [runner 4/8] RUN mkdir -p apps/cms/.next
+#12 DONE 0.3s
+
+#13 [runner 5/8] RUN chown nextjs:nodejs apps/cms/.next
+#13 DONE 0.3s
+
+#8 [deps 1/7] RUN apk add --no-cache libc6-compat
+#8 1.324 (1/3) Installing musl-obstack (1.2.3-r2)
+#8 1.339 (2/3) Installing libucontext (1.3.2-r0)
+#8 1.351 (3/3) Installing gcompat (1.1.0-r4)
+#8 1.371 OK: 10 MiB in 21 packages
+#8 DONE 1.5s
+
+#14 [deps 2/7] WORKDIR /app
+#14 DONE 0.0s
+
+#15 [deps 3/7] RUN corepack enable pnpm
+#15 DONE 0.5s
+
+#16 [deps 4/7] COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+#16 DONE 0.1s
+
+#17 [deps 5/7] COPY apps/cms/package.json ./apps/cms/
+#17 DONE 0.0s
+
+#18 [deps 6/7] COPY packages/types/package.json ./packages/types/
+#18 DONE 0.0s
+
+#19 [deps 7/7] RUN pnpm install --frozen-lockfile --filter cms...
+#19 0.600 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-10.28.2.tgz
+#19 2.647 Lockfile is up to date, resolution step is skipped
+#19 2.834 Progress: resolved 1, reused 0, downloaded 0, added 0
+#19 3.226 .                                        | +942 ++++++++++++++++++++++++++++++++
+#19 3.904 Progress: resolved 942, reused 0, downloaded 9, added 0
+#19 4.917 Progress: resolved 942, reused 0, downloaded 140, added 124
+#19 5.916 Progress: resolved 942, reused 0, downloaded 231, added 231
+#19 6.916 Progress: resolved 942, reused 0, downloaded 321, added 320
+#19 7.924 Progress: resolved 942, reused 0, downloaded 451, added 442
+#19 8.925 Progress: resolved 942, reused 0, downloaded 562, added 562
+#19 9.925 Progress: resolved 942, reused 0, downloaded 653, added 653
+#19 10.93 Progress: resolved 942, reused 0, downloaded 794, added 793
+#19 11.93 Progress: resolved 942, reused 0, downloaded 926, added 925
+#19 12.93 Progress: resolved 942, reused 0, downloaded 932, added 931
+#19 13.93 Progress: resolved 942, reused 0, downloaded 933, added 933
+#19 14.93 Progress: resolved 942, reused 0, downloaded 937, added 937
+#19 15.93 Progress: resolved 942, reused 0, downloaded 938, added 938
+#19 16.93 Progress: resolved 942, reused 0, downloaded 939, added 939
+#19 18.32 Progress: resolved 942, reused 0, downloaded 940, added 939
+#19 19.32 Progress: resolved 942, reused 0, downloaded 941, added 941
+#19 21.21 Progress: resolved 942, reused 0, downloaded 942, added 941
+#19 21.55 Progress: resolved 942, reused 0, downloaded 942, added 942, done
+#19 22.17 .../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+#19 22.17 .../node_modules/unrs-resolver postinstall$ napi-postinstall unrs-resolver 1.11.1 check
+#19 22.17 .../esbuild@0.27.2/node_modules/esbuild postinstall$ node install.js
+#19 22.18 .../sharp@0.34.2/node_modules/sharp install$ node install/check
+#19 22.18 .../sharp@0.34.5/node_modules/sharp install$ node install/check.js || npm run build
+#19 22.51 .../node_modules/unrs-resolver postinstall: Done
+#19 22.51 .../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+#19 22.52 .../esbuild@0.27.2/node_modules/esbuild postinstall: Done
+#19 22.54 .../sharp@0.34.2/node_modules/sharp install: Done
+#19 22.60 .../sharp@0.34.5/node_modules/sharp install: Done
+#19 22.80 . prepare$ husky || true
+#19 22.95 . prepare: .git can't be found
+#19 22.95 . prepare: Done
+#19 23.16 Done in 21.3s using pnpm v10.28.2
+#19 DONE 23.8s
+
+#20 [builder 3/7] COPY --from=deps /app/node_modules ./node_modules
+#20 DONE 57.0s
+
+#21 [builder 4/7] COPY --from=deps /app/apps/cms/node_modules ./apps/cms/node_modules
+#21 DONE 0.0s
+
+#22 [builder 5/7] COPY --from=deps /app/packages/types/package.json ./packages/types/package.json
+#22 DONE 0.0s
+
+#23 [builder 6/7] COPY . .
+#23 DONE 1.3s
+
+#24 [builder 7/7] RUN DATABASE_URL=mongodb://127.0.0.1:27017/build-time-db PAYLOAD_SECRET=temp-build-secret pnpm --filter cms build
+#24 0.956 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-10.28.2.tgz
+#24 2.817 
+#24 2.817 > cms@1.0.0 build /app/apps/cms
+#24 2.817 > cross-env NODE_OPTIONS="--no-deprecation --max-old-space-size=4096" next build
+#24 2.817 
+#24 4.486    ▲ Next.js 15.4.10
+#24 4.486    - Environments: .env.production
+#24 4.487    - Experiments (use with caution):
+#24 4.487      · serverActions
+#24 4.487 
+#24 4.570    Creating an optimized production build ...
+#24 84.94 Failed to compile.
+#24 84.94 
+#24 84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/staticHandler.js
+#24 84.94 Attempted import error: 'getRangeRequestInfo' is not exported from 'payload/internal' (imported as 'getRangeRequestInfo').
+#24 84.94 
+#24 84.94 Import trace for requested module:
+#24 84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/staticHandler.js
+#24 84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/index.js
+#24 84.94 ./src/payload.config.ts
+#24 84.94 ./src/app/(frontend)/contact/actions.ts
+#24 84.94 
+#24 84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/staticHandler.js
+#24 84.94 Attempted import error: 'getRangeRequestInfo' is not exported from 'payload/internal' (imported as 'getRangeRequestInfo').
+#24 84.94 
+#24 84.94 Import trace for requested module:
+#24 84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/staticHandler.js
+#24 84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/index.js
+#24 84.94 ./src/payload.config.ts
+#24 84.94 ./src/app/my-route/route.ts
+#24 84.94 
+#24 84.94 
+#24 84.94 > Build failed because of webpack errors
+#24 85.50 /app/apps/cms:
+#24 85.50  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  cms@1.0.0 build: `cross-env NODE_OPTIONS="--no-deprecation --max-old-space-size=4096" next build`
+#24 85.50 Exit status 1
+#24 ERROR: process "/bin/sh -c DATABASE_URL=mongodb://127.0.0.1:27017/build-time-db PAYLOAD_SECRET=temp-build-secret pnpm --filter cms build" did not complete successfully: exit code: 1
+------
+ > [builder 7/7] RUN DATABASE_URL=mongodb://127.0.0.1:27017/build-time-db PAYLOAD_SECRET=temp-build-secret pnpm --filter cms build:
+84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/staticHandler.js
+84.94 ../../node_modules/.pnpm/@payloadcms+storage-s3@3.75.0_@types+react@19.2.1_monaco-editor@0.55.1_next@15.4.10_@ba_f6dd54319441b2f921b3eff0caf4be2a/node_modules/@payloadcms/storage-s3/dist/index.js
+84.94 ./src/payload.config.ts
+84.94 ./src/app/my-route/route.ts
+84.94 
+84.94 
+84.94 > Build failed because of webpack errors
+85.50 /app/apps/cms:
+85.50  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  cms@1.0.0 build: `cross-env NODE_OPTIONS="--no-deprecation --max-old-space-size=4096" next build`
+85.50 Exit status 1
+------
+Dockerfile:42
+--------------------
+  40 |     
+  41 |     # Build the CMS - run directly in workspace to avoid recursive filter issues
+  42 | >>> RUN DATABASE_URL=mongodb://127.0.0.1:27017/build-time-db PAYLOAD_SECRET=temp-build-secret pnpm --filter cms build
+  43 |     
+  44 |     # 3. Production image, copy all the files and run next
+--------------------
+failed to solve: process "/bin/sh -c DATABASE_URL=mongodb://127.0.0.1:27017/build-time-db PAYLOAD_SECRET=temp-build-secret pnpm --filter cms build" did not complete successfully: exit code: 1

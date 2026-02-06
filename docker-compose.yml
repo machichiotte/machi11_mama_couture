@@ -7,7 +7,7 @@ services:
     volumes:
       - mongodb_data:/data/db
     environment:
-      - MONGODB_INITDB_DATABASE=mama_couture
+      - MONGODB_INITDB_DATABASE=machi11_dev
     networks:
       - machi11-network
     restart: always
