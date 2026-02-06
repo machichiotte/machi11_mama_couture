@@ -4,7 +4,7 @@ export const Collections: CollectionConfig = {
     slug: 'series',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['coverImage', 'title', 'isPublished', 'order', 'edit', 'delete'],
+        defaultColumns: ['coverImage', 'title', 'isPublished', 'order', 'actions'],
         group: 'Boutique',
     },
     labels: {
@@ -16,9 +16,6 @@ export const Collections: CollectionConfig = {
         update: ({ req: { user } }) => !!user,
         create: ({ req: { user } }) => !!user,
         delete: ({ req: { user } }) => !!user,
-    },
-    versions: {
-        drafts: true,
     },
     fields: [
         {
@@ -103,20 +100,11 @@ export const Collections: CollectionConfig = {
             index: true,
         },
         {
-            name: 'edit',
+            name: 'actions',
             type: 'ui',
             admin: {
                 components: {
-                    Cell: './components/cells/EditCell#default',
-                },
-            },
-        },
-        {
-            name: 'delete',
-            type: 'ui',
-            admin: {
-                components: {
-                    Cell: './components/cells/DeleteCell#default',
+                    Cell: './components/cells/ActionsCell#default',
                 },
             },
         },
