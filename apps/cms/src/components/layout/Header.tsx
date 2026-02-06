@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon, Instagram, Facebook, Link as LinkIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -72,7 +73,16 @@ export const Header: React.FC<HeaderProps> = ({ siteTitle, navStrings, socialLin
       )}
     >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center relative z-[120]">
-        <Link href="/" className="group">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="relative w-10 h-10 overflow-hidden group-hover:scale-110 transition-transform duration-300">
+            <Image
+              src="/icon.png"
+              alt="Logo Atelier Petit Point"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
           <h1 className="text-2xl font-serif font-bold tracking-tight text-primary group-hover:text-accent transition-colors">
             {siteTitle}
           </h1>
