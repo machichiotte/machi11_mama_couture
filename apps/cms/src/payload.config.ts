@@ -136,6 +136,14 @@ export default buildConfig({
         dashboard: {
           Component: './components/dashboard/index.tsx#default',
         },
+        'ai-ingestor': {
+          Component: './components/admin/AIIngestor/index.tsx#AIIngestor',
+          path: '/ai-ingestor',
+          meta: {
+            title: 'Atelier IA',
+            description: 'Assistant de création intelligent',
+          }
+        },
       },
     },
   },
