@@ -79,6 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ siteTitle, navStrings, socialLin
               src="/icon.png"
               alt="Logo Atelier Petit Point"
               fill
+              sizes="40px"
               className="object-contain"
               priority
             />

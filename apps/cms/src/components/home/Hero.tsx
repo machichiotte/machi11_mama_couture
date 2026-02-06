@@ -32,6 +32,7 @@ export const Hero: React.FC<HeroProps> = ({
             src={imageUrl}
             alt={altText}
             fill
+            sizes="100vw"
             className="object-cover opacity-30 dark:opacity-100 transition-opacity duration-500"
             priority
           />

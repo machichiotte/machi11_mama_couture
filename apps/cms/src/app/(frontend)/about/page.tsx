@@ -42,6 +42,7 @@ export default async function AboutPage() {
                 src={profileImageUrl}
                 alt={uiStrings.about?.imageAlt || 'About Mama Couture'}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover transition-transform duration-1000 hover:scale-105"
               />
             ) : (

@@ -35,12 +35,13 @@ export const CreationGallery: React.FC<CreationGalleryProps> = ({ images }) => {
             src={mainImageUrl}
             alt="Détail de la création"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition-all duration-700"
             priority
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-primary/20 bg-secondary">
-             <span className="font-serif italic">Image indisponible</span>
+            <span className="font-serif italic">Image indisponible</span>
           </div>
         )}
       </div>
@@ -65,6 +66,7 @@ export const CreationGallery: React.FC<CreationGalleryProps> = ({ images }) => {
                   src={thumbUrl}
                   alt={`Thumbnail ${idx + 1}`}
                   fill
+                  sizes="(max-width: 768px) 25vw, 15vw"
                   className="object-cover"
                 />
               </button>
