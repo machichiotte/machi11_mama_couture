@@ -61,10 +61,10 @@ const ImageCell: React.FC<ImageCellProps> = (props) => {
     }, [imageDoc])
 
     return (
-        <Link href={editUrl} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', minHeight: '60px' }}>
+        <Link href={editUrl} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', minHeight: '40px', width: 'fit-content' }}>
             <div style={{
-                width: '42px',
-                height: '42px',
+                width: '36px',
+                height: '36px',
                 borderRadius: '6px',
                 overflow: 'visible',
                 border: '1px solid var(--theme-elevation-200)',

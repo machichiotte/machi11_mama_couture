@@ -98,7 +98,7 @@ const TextCell: React.FC<TextCellProps> = (props) => {
                 fontWeight: '600',
                 color: value ? 'inherit' : 'var(--theme-elevation-400)',
                 fontStyle: value ? 'normal' : 'italic',
-                minHeight: '60px',
+                minHeight: '40px',
                 display: 'flex',
                 alignItems: 'center',
                 opacity: loading ? 0.5 : 1,

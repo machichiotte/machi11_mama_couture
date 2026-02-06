@@ -75,7 +75,7 @@ const StatusCell: React.FC<StatusCellProps> = (props) => {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', minHeight: '60px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', minHeight: '40px' }}>
             <div style={{ position: 'relative', minWidth: '150px' }}>
                 <select
                     value={value}
@@ -89,7 +89,7 @@ const StatusCell: React.FC<StatusCellProps> = (props) => {
                         borderRight: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
                         borderBottom: `2px solid ${error ? '#ef4444' : loading ? '#e5e7eb' : 'transparent'}`,
                         borderLeft: `4px solid ${getStatusColor(value)}`,
-                        backgroundColor: error ? '#fee2e2' : 'var(--theme-elevation-100)',
+                        backgroundColor: error ? '#fee2e2' : 'var(--theme-elevation-50)',
                         color: 'var(--theme-elevation-800)',
                         fontSize: '12px',
                         fontWeight: '600',
