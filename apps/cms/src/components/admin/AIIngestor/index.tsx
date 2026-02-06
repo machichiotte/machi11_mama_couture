@@ -157,8 +157,8 @@ export const AIIngestor: React.FC = () => {
                     <button
                         onClick={() => { setMode('series'); reset() }}
                         className={`px-8 py-4 rounded-2xl font-bold shadow-lg transition-all ${mode === 'series'
-                                ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white scale-105 shadow-rose-500/50'
-                                : 'bg-white/10 text-white/60 hover:bg-white/20 border border-white/10'
+                            ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white scale-105 shadow-rose-500/50'
+                            : 'bg-white/10 text-white/60 hover:bg-white/20 border border-white/10'
                             }`}
                     >
                         ✨ Nouvelle Collection
@@ -166,8 +166,8 @@ export const AIIngestor: React.FC = () => {
                     <button
                         onClick={() => { setMode('creation'); reset() }}
                         className={`px-8 py-4 rounded-2xl font-bold shadow-lg transition-all ${mode === 'creation'
-                                ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white scale-105 shadow-amber-500/50'
-                                : 'bg-white/10 text-white/60 hover:bg-white/20 border border-white/10'
+                            ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white scale-105 shadow-amber-500/50'
+                            : 'bg-white/10 text-white/60 hover:bg-white/20 border border-white/10'
                             }`}
                     >
                         🧵 Nouvelles Créations
@@ -200,7 +200,7 @@ export const AIIngestor: React.FC = () => {
                         type="file"
                         ref={fileInputRef}
                         onChange={handleFileChange}
-                        multiple={mode === 'creation'}
+                        multiple
                         accept="image/*"
                         className="hidden"
                     />

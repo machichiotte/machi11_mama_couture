@@ -1,0 +1,10 @@
+@tailwind components;
+@tailwind utilities;
+
+/* 
+   Hack pour s'assurer que Tailwind est bien prioritaire sur Payload 
+   dans nos composants personnalisés qui utilisent des id spécifiques 
+*/
+#ai-ingestor-root {
+  @apply antialiased;
+}

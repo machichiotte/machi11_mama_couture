@@ -14,7 +14,6 @@ import { Media } from './collections/Media'
 import { Collections } from './collections/Collections'
 import { Creations } from './collections/Creations'
 import { Messages } from './collections/Messages'
-import { AIIngestion } from './collections/AIIngestion'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { About } from './globals/About'
 import { SiteSettings } from './globals/SiteSettings'
@@ -135,7 +134,7 @@ export default buildConfig({
     components: {
       views: {
         dashboard: {
-          Component: './components/dashboard/index.tsx#default',
+          Component: './components/admin/AIIngestor/index.tsx#AIIngestor',
         },
       },
     },
@@ -207,7 +206,7 @@ export default buildConfig({
   serverURL: finalServerURL,
   cors: [finalSiteURL, finalServerURL, 'http://localhost:3011', 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
   csrf: [finalSiteURL, finalServerURL, 'http://localhost:3011', 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
-  collections: [Users, Media, Collections, Creations, Messages, AIIngestion],
+  collections: [Users, Media, Collections, Creations, Messages],
   globals: [About, SiteSettings, UIStrings],
   editor: lexicalEditor(),
   secret: finalPayloadSecret,
