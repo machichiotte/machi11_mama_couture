@@ -1,7 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button } from '@payloadcms/ui/elements/Button'
+import { IngestorHeader } from './IngestorHeader'
+import { IngestorActions } from './IngestorActions'
+import { FileItem } from './FileItem'
 
 type AIResult = {
     title: string
@@ -12,35 +15,63 @@ type AIResult = {
     error?: string
 }
 
+type FileWithAnalysis = {
+    file: File
+    result?: AIResult
+    isAnalyzing: boolean
+}
+
 type Mode = 'series' | 'creation'
 
 export const AIIngestor: React.FC = () => {
     const [mode, setMode] = useState<Mode>('series')
-    const [files, setFiles] = useState<File[]>([])
+    const [files, setFiles] = useState<FileWithAnalysis[]>([])
     const [isProcessing, setIsProcessing] = useState(false)
-    const [results, setResults] = useState<Record<number, AIResult>>({})
-    const [progress, setProgress] = useState(0)
+    const [isDragging, setIsDragging] = useState(false)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setFiles(Array.from(e.target.files))
-            setResults({})
-            setProgress(0)
+            const newFiles = Array.from(e.target.files).map(file => ({
+                file,
+                isAnalyzing: false,
+            }))
+            setFiles(newFiles)
         }
     }
 
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault()
+        setIsDragging(true)
+    }
+
+    const handleDragLeave = () => {
+        setIsDragging(false)
+    }
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault()
+        setIsDragging(false)
+
+        const droppedFiles = Array.from(e.dataTransfer.files).map(file => ({
+            file,
+            isAnalyzing: false,
+        }))
+        setFiles(droppedFiles)
+    }
+
     const startAnalysis = async () => {
-        if (files.length === 0) return
         setIsProcessing(true)
-        setProgress(0)
 
-        const newResults: Record<number, AIResult> = {}
+        const updatedFiles = [...files]
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i]
+        for (let i = 0; i < updatedFiles.length; i++) {
+            updatedFiles[i].isAnalyzing = true
+            setFiles([...updatedFiles])
+
             try {
                 const formData = new FormData()
-                formData.append('file', file)
+                formData.append('file', updatedFiles[i].file)
                 formData.append('mode', mode)
 
                 const response = await fetch('/admin/api/ai', {
@@ -50,31 +81,37 @@ export const AIIngestor: React.FC = () => {
 
                 if (!response.ok) throw new Error("Analyse échouée")
                 const data = await response.json()
-                newResults[i] = data
+
+                updatedFiles[i].result = data
+                updatedFiles[i].isAnalyzing = false
             } catch (err) {
                 console.error(err)
-                newResults[i] = { title: "Erreur", description: "Impossible d'analyser cette image.", error: String(err) }
+                updatedFiles[i].result = {
+                    title: "Erreur",
+                    description: "Impossible d'analyser cette image.",
+                    error: String(err)
+                }
+                updatedFiles[i].isAnalyzing = false
             }
-            setResults({ ...newResults })
-            setProgress(Math.round(((i + 1) / files.length) * 100))
+
+            setFiles([...updatedFiles])
         }
 
         setIsProcessing(false)
     }
 
     const createEntry = async (index: number) => {
-        const result = results[index]
-        const file = files[index]
-        if (!result || !file) return
+        const fileData = files[index]
+        if (!fileData.result || !fileData.file) return
 
         try {
             const formData = new FormData()
-            formData.append('file', file)
-            formData.append('title', result.title)
-            formData.append('description', result.description)
-            if (result.price) formData.append('price', String(result.price))
-            if (result.alt) formData.append('alt', result.alt)
-            if (result.seriesMatch) formData.append('seriesMatch', result.seriesMatch)
+            formData.append('file', fileData.file)
+            formData.append('title', fileData.result.title)
+            formData.append('description', fileData.result.description)
+            if (fileData.result.price) formData.append('price', String(fileData.result.price))
+            if (fileData.result.alt) formData.append('alt', fileData.result.alt)
+            if (fileData.result.seriesMatch) formData.append('seriesMatch', fileData.result.seriesMatch)
 
             const apiEndpoint = mode === 'series' ? '/admin/api/create-collection' : '/admin/api/create-creation'
 
@@ -84,9 +121,7 @@ export const AIIngestor: React.FC = () => {
             })
 
             if (res.ok) {
-                const data = await res.json()
-                // On marque comme fait ou on redirige
-                alert('Entrée créée avec succès !')
+                alert('✓ Entrée créée avec succès !')
             } else {
                 throw new Error('Erreur création')
             }
@@ -96,125 +131,155 @@ export const AIIngestor: React.FC = () => {
         }
     }
 
+    const removeFile = (index: number) => {
+        setFiles(files.filter((_, i) => i !== index))
+    }
+
+    const reset = () => {
+        setFiles([])
+        setIsProcessing(false)
+    }
+
+    const hasAnalysisPending = files.length > 0 && files.some(f => !f.result)
+    const hasCreationPending = files.length > 0 && files.every(f => f.result && !f.result.error)
+
     return (
-        <div className="p-8 max-w-5xl mx-auto pb-20">
-            <header className="mb-10 text-center">
-                <h1 className="text-5xl font-serif mb-4 text-slate-800 dark:text-slate-100">
-                    L'Atelier Intelligent
-                </h1>
-                <p className="text-xl text-slate-500 max-w-2xl mx-auto italic">
-                    Laissez l'IA s'occuper des descriptions pendant que vous créez.
-                </p>
-            </header>
+        <div data-testid="ai-ingestor-root">
+            {/* Elegant Atelier Container */}
+            <div
+                data-testid="ai-ingestor"
+                className="bg-gradient-to-br from-zinc-950 via-rose-950/10 to-amber-950/10 text-white rounded-3xl overflow-hidden shadow-2xl border border-rose-200/10 p-6 md:p-10 relative isolate"
+            >
+                <IngestorHeader />
 
-            <div className="flex justify-center gap-4 mb-10">
-                <button
-                    onClick={() => { setMode('series'); setFiles([]); setResults({}) }}
-                    className={`px-8 py-3 rounded-full font-bold shadow-lg transition-all ${mode === 'series' ? 'bg-slate-800 text-white scale-105' : 'bg-white text-slate-600 hover:bg-slate-50'}`}
-                >
-                    ✨ Nouvelle Collection
-                </button>
-                <button
-                    onClick={() => { setMode('creation'); setFiles([]); setResults({}) }}
-                    className={`px-8 py-3 rounded-full font-bold shadow-lg transition-all ${mode === 'creation' ? 'bg-slate-800 text-white scale-105' : 'bg-white text-slate-600 hover:bg-slate-50'}`}
-                >
-                    🧵 Nouvelles Créations (Batch)
-                </button>
-            </div>
-
-            <section className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-800">
-                <div className="p-12 text-center border-b border-slate-50 dark:border-slate-800">
-                    <input
-                        type="file"
-                        accept="image/*"
-                        multiple={mode === 'creation'}
-                        onChange={handleFileChange}
-                        className="hidden"
-                        id="ai-upload-input"
-                    />
-                    <label htmlFor="ai-upload-input" className="group cursor-pointer block">
-                        <div className="mx-auto w-24 h-24 mb-6 rounded-3xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-100 dark:group-hover:bg-slate-700 transition-colors">
-                            <span className="text-4xl group-hover:scale-110 transition-transform">📸</span>
-                        </div>
-                        <h3 className="text-2xl font-bold mb-2">Choisir vos photos</h3>
-                        <p className="text-slate-400">
-                            {mode === 'series' ? 'Une photo d\'ambiance' : 'Sélectionnez plusieurs photos de vos créations'}
-                        </p>
-                    </label>
-
-                    {files.length > 0 && (
-                        <div className="mt-10">
-                            <p className="mb-6 font-bold text-slate-700 dark:text-slate-300">
-                                {files.length} fichier(s) prêt(s) pour l'analyse
-                            </p>
-                            <Button size="large" onClick={startAnalysis} disabled={isProcessing}>
-                                {isProcessing ? `Traitement en cours (${progress}%)` : "Lancer l'Analyse IA"}
-                            </Button>
-                        </div>
-                    )}
+                {/* Mode Selector */}
+                <div className="flex justify-center gap-4 mb-10">
+                    <button
+                        onClick={() => { setMode('series'); reset() }}
+                        className={`px-8 py-4 rounded-2xl font-bold shadow-lg transition-all ${mode === 'series'
+                                ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white scale-105 shadow-rose-500/50'
+                                : 'bg-white/10 text-white/60 hover:bg-white/20 border border-white/10'
+                            }`}
+                    >
+                        ✨ Nouvelle Collection
+                    </button>
+                    <button
+                        onClick={() => { setMode('creation'); reset() }}
+                        className={`px-8 py-4 rounded-2xl font-bold shadow-lg transition-all ${mode === 'creation'
+                                ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white scale-105 shadow-amber-500/50'
+                                : 'bg-white/10 text-white/60 hover:bg-white/20 border border-white/10'
+                            }`}
+                    >
+                        🧵 Nouvelles Créations
+                    </button>
                 </div>
 
-                {Object.keys(results).length > 0 && (
-                    <div className="p-10 space-y-8 bg-slate-50/50 dark:bg-slate-950/50">
-                        <h2 className="text-2xl font-bold border-b border-slate-200 dark:border-slate-800 pb-4">Résultats de l'analyse</h2>
-                        <div className="grid grid-cols-1 gap-8">
-                            {files.map((file, idx) => {
-                                const res = results[idx]
-                                if (!res) return null
-                                return (
-                                    <article key={idx} className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-md flex flex-col md:flex-row gap-8 border border-slate-100 dark:border-slate-800">
-                                        <div className="w-full md:w-1/3 aspect-square relative rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                            <img
-                                                src={URL.createObjectURL(file)}
-                                                alt="Input"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex-1 space-y-4">
-                                            {res.error ? (
-                                                <p className="text-red-500 font-bold">{res.error}</p>
-                                            ) : (
-                                                <>
-                                                    <header className="flex justify-between items-start">
-                                                        <div>
-                                                            <h3 className="text-2xl font-serif font-bold text-slate-800 dark:text-slate-100">{res.title}</h3>
-                                                            {res.seriesMatch && (
-                                                                <span className="inline-block px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-widest rounded mt-2">
-                                                                    Collection : {res.seriesMatch}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        {res.price && <div className="text-2xl font-bold text-emerald-600">{res.price} €</div>}
-                                                    </header>
+                {/* Drag & Drop Zone */}
+                <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`
+            group relative 
+            bg-gradient-to-br from-zinc-900/40 to-rose-950/20 backdrop-blur-xl border 
+            rounded-3xl p-16 text-center transition-all duration-500
+            ${isDragging ? 'border-rose-400/50 shadow-[0_0_50px_-12px_rgba(244,63,94,0.5)] scale-[1.01]' : 'border-white/5 hover:border-white/10'}
+          `}
+                >
+                    {/* Glowing Grid Background */}
+                    <div
+                        className={`
+              absolute inset-0 opacity-20 pointer-events-none transition-opacity duration-500
+              bg-[linear-gradient(to_right,#f4407620_1px,transparent_1px),linear-gradient(to_bottom,#f4407620_1px,transparent_1px)] bg-[size:40px_40px]
+              [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]
+              ${isDragging ? 'opacity-40 animate-pulse' : ''}
+            `}
+                    />
 
-                                                    <p className="text-slate-600 dark:text-slate-400 italic leading-relaxed">
-                                                        {res.description}
-                                                    </p>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        multiple={mode === 'creation'}
+                        accept="image/*"
+                        className="hidden"
+                    />
 
-                                                    {res.alt && (
-                                                        <div className="text-xs text-slate-400 bg-slate-50 dark:bg-slate-800/50 p-2 rounded">
-                                                            <strong>SEO Alt :</strong> {res.alt}
-                                                        </div>
-                                                    )}
+                    <div className="relative z-10 flex flex-col items-center gap-6">
+                        <div
+                            className={`
+                w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500
+                ${isDragging ? 'bg-rose-500/20 text-rose-400 scale-110' : 'bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-white'}
+              `}
+                        >
+                            <svg
+                                width="32"
+                                height="32"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="w-10 h-10"
+                            >
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                        </div>
 
-                                                    <div className="pt-6 flex gap-4">
-                                                        <Button onClick={() => createEntry(idx)}>
-                                                            Valider et Créer
-                                                        </Button>
-                                                        <Button buttonStyle="secondary">
-                                                            Modifier
-                                                        </Button>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    </article>
-                                )
-                            })}
+                        <div className="space-y-2">
+                            <p className="text-2xl font-serif font-light tracking-tight text-white/90">
+                                Glissez-déposez vos photos
+                            </p>
+                            <p className="text-xs font-black text-rose-400/80 uppercase tracking-[0.3em]">
+                                {mode === 'series' ? 'Créer une collection' : 'Ajouter des créations'}
+                            </p>
+                        </div>
+
+                        <div className="pt-2">
+                            <Button
+                                onClick={() => fileInputRef.current?.click()}
+                                className="bg-white text-zinc-950 hover:bg-rose-100 transition-colors font-bold rounded-full px-10 py-3 text-sm uppercase tracking-widest shadow-lg"
+                            >
+                                Importer des photos
+                            </Button>
                         </div>
                     </div>
+                </div>
+
+                {/* Files List */}
+                {files.length > 0 && (
+                    <div className="mt-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <IngestorActions
+                            filesCount={files.length}
+                            isProcessing={isProcessing}
+                            hasAnalysisPending={hasAnalysisPending}
+                            hasCreationPending={hasCreationPending}
+                            onReset={reset}
+                            onStartAnalysis={startAnalysis}
+                            onCreate={() => files.forEach((_, i) => createEntry(i))}
+                            mode={mode}
+                        />
+
+                        <ul className="grid grid-cols-1 gap-12 mt-12">
+                            {files.map((fileData, idx) => (
+                                <FileItem
+                                    key={`${fileData.file.name}-${idx}`}
+                                    file={fileData.file}
+                                    index={idx}
+                                    result={fileData.result}
+                                    isAnalyzing={fileData.isAnalyzing}
+                                    onRemove={removeFile}
+                                    onCreate={createEntry}
+                                    mode={mode}
+                                />
+                            ))}
+                        </ul>
+                    </div>
                 )}
-            </section>
+            </div>
         </div>
     )
 }
