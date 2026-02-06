@@ -1,11 +1,12 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { buildConfig, Payload } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { v2 as cloudinary } from 'cloudinary'
 import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
+import { s3Storage } from '@payloadcms/storage-s3'
 
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Users } from './collections/Users'
@@ -29,18 +30,26 @@ const {
   DATABASE_URL,
   PAYLOAD_SECRET,
   PAYLOAD_PUBLIC_SERVER_URL,
-  PAYLOAD_PUBLIC_SITE_URL
+  PAYLOAD_PUBLIC_SITE_URL,
+  // R2 Configuration
+  R2_ACCESS_KEY_ID,
+  R2_SECRET_ACCESS_KEY,
+  R2_BUCKET,
+  R2_ENDPOINT,
+  R2_REGION,
+  R2_PUBLIC_DOMAIN,
 } = process.env
 
 // Normalisation des URLs (retrait du slash final pour éviter les conflits CORS/CSRF)
 const normalizeUrl = (url?: string) => url ? url.replace(/\/+$/, '') : ''
 
-const finalServerURL = normalizeUrl(PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000')
+const finalServerURL = normalizeUrl(PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3011')
 const finalSiteURL = normalizeUrl(PAYLOAD_PUBLIC_SITE_URL || '')
 
-const finalDatabaseURL = DATABASE_URL || 'mongodb://127.0.0.1:27017/machi11_mama_couture_fallback'
+const finalDatabaseURL = DATABASE_URL || 'mongodb://localhost:27017/machi11_dev'
 const finalPayloadSecret = PAYLOAD_SECRET || 'temp-secret-for-build-only'
 
+// En production, on exige DATABASE_URL sauf pendant la phase de build de Next.js
 if (!DATABASE_URL && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
   throw new Error('FATAL: DATABASE_URL is missing in production runtime')
 }
@@ -130,7 +139,7 @@ export default buildConfig({
       },
     },
   },
-  onInit: async (payload) => {
+  onInit: async (payload: Payload) => {
     console.log('🚀 [CMS] Starting Payload...');
     console.log(`🚀 [CMS] SERVER_URL configured as: ${finalServerURL}`);
     console.log(`🚀 [CMS] SITE_URL configured as: ${finalSiteURL}`);
@@ -195,8 +204,8 @@ export default buildConfig({
     fallbackLanguage: 'fr',
   },
   serverURL: finalServerURL,
-  cors: [finalSiteURL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
-  csrf: [finalSiteURL, finalServerURL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
+  cors: [finalSiteURL, finalServerURL, 'http://localhost:3011', 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
+  csrf: [finalSiteURL, finalServerURL, 'http://localhost:3011', 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[],
   collections: [Users, Media, Collections, Creations, Messages],
   globals: [About, SiteSettings, UIStrings],
   editor: lexicalEditor(),
@@ -206,6 +215,10 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: finalDatabaseURL,
+    connectOptions: {
+      serverSelectionTimeoutMS: 5000, // Timeout court pour le build/développement
+      connectTimeoutMS: 10000,
+    }
   }),
   sharp,
   email: nodemailerAdapter({
@@ -234,20 +247,54 @@ export default buildConfig({
       },
   }),
   plugins: [
-    cloudStoragePlugin({
-      collections: {
-        media: {
-          adapter: customCloudinaryAdapter,
-          disableLocalStorage: true,
-          generateFileURL: ({ filename }) => {
-            // Payload enregistre juste le nom du fichier sans le dossier
-            // On doit donc le reconstruire : dossier + filename
-            const fullPath = `${CLOUDINARY_FOLDER}/${filename}`
-            return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${fullPath}`
+    // Storage R2 (Cloudflare) - Prioritaire si configuré
+    ...(R2_ACCESS_KEY_ID ? [
+      s3Storage({
+        collections: {
+          media: {
+            disableLocalStorage: true,
+            generateFileURL: ({ filename, prefix }) => {
+              const domain = R2_PUBLIC_DOMAIN
+              const bucket = R2_BUCKET
+              const endpoint = R2_ENDPOINT
+
+              let url = ''
+              if (domain) {
+                url = `${domain}/${bucket}/${prefix}/${filename}`
+              } else {
+                url = `${endpoint}/${bucket}/${prefix}/${filename}`
+              }
+              return url.replace(/([^:]\/)\/+/g, '$1')
+            },
+            prefix: process.env.NODE_ENV === 'production' ? 'prod' : 'dev',
           },
         },
-      },
-    }),
+        bucket: R2_BUCKET || '',
+        config: {
+          endpoint: R2_ENDPOINT || '',
+          region: R2_REGION || 'auto',
+          credentials: {
+            accessKeyId: R2_ACCESS_KEY_ID || '',
+            secretAccessKey: R2_SECRET_ACCESS_KEY || '',
+          },
+          forcePathStyle: true,
+        },
+      })
+    ] : [
+      // Fallback Cloudinary (Ancienne config)
+      cloudStoragePlugin({
+        collections: {
+          media: {
+            adapter: customCloudinaryAdapter,
+            disableLocalStorage: true,
+            generateFileURL: ({ filename }) => {
+              const fullPath = `${CLOUDINARY_FOLDER}/${filename}`
+              return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${fullPath}`
+            },
+          },
+        },
+      }),
+    ]),
     seoPlugin({
       collections: ['series', 'creations'],
       globals: ['site-settings', 'about'],
