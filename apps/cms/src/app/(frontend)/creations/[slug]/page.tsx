@@ -17,6 +17,8 @@ interface PageProps {
   }>
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function CreationDetailPage({ params }: PageProps) {
   const { slug } = await params
   const payload = await getPayload({ config })
@@ -45,8 +47,8 @@ export default async function CreationDetailPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header 
-        siteTitle={siteSettings.siteTitle} 
+      <Header
+        siteTitle={siteSettings.siteTitle}
         navStrings={{
           collections: uiStrings.nav?.collections || 'Collections',
           about: uiStrings.nav?.about || 'À propos',
@@ -59,8 +61,8 @@ export default async function CreationDetailPage({ params }: PageProps) {
       <main className="py-6 md:py-12 container mx-auto px-6 flex-grow">
         {/* Breadcrumb */}
         <nav className="mb-6 md:mb-8">
-          <Link 
-            href="/collections" 
+          <Link
+            href="/collections"
             className="text-[10px] uppercase tracking-widest text-primary/40 hover:text-accent transition-colors"
           >
             {uiStrings.nav?.collections || 'Collections'}
@@ -90,18 +92,18 @@ export default async function CreationDetailPage({ params }: PageProps) {
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-primary mb-4 leading-tight">
                 {creation.title}
               </h1>
-              
+
               {creation.stockStatus !== 'hidden' && (
-                <PriceDisplay 
-                  price={creation.price} 
+                <PriceDisplay
+                  price={creation.price}
                   promoPercentage={creation.promoPercentage || undefined}
                 />
               )}
             </div>
 
             {creation.stockStatus !== 'hidden' && (
-              <StockBadge 
-                status={creation.stockStatus} 
+              <StockBadge
+                status={creation.stockStatus}
                 quantity={creation.stockQuantity}
               />
             )}
@@ -114,7 +116,7 @@ export default async function CreationDetailPage({ params }: PageProps) {
               <div className="prose prose-primary max-w-none">
                 <p className="text-base leading-relaxed text-primary/70 italic font-serif">
                   {/* Rich text would be better here, but matching Nuxt version for now */}
-                   {typeof creation.description === 'string' ? creation.description : 'Détails à découvrir'}
+                  {typeof creation.description === 'string' ? creation.description : 'Détails à découvrir'}
                 </p>
               </div>
             </div>
@@ -135,7 +137,7 @@ export default async function CreationDetailPage({ params }: PageProps) {
             {/* Preorder Button */}
             {creation.stockStatus !== 'hidden' && (
               <div className="border-t border-primary/10 pt-6">
-                <Link 
+                <Link
                   href={`/contact?subject=${encodeURIComponent((uiStrings.creation?.preorderButton || 'Réserver') + ': ' + creation.title)}&message=${encodeURIComponent('Bonjour, je souhaite réserver ou avoir plus d\'informations sur la création : ' + creation.title + '.')}`}
                   className="premium-button w-full text-center flex items-center justify-center gap-3 py-4 shadow-xl hover:shadow-2xl active:scale-95 transition-all group"
                 >
@@ -144,7 +146,7 @@ export default async function CreationDetailPage({ params }: PageProps) {
                   </span>
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                
+
                 <p className="mt-3 text-[10px] text-center text-primary/30 uppercase tracking-widest font-bold">
                   {uiStrings.creation?.securityLabel || 'Paiement sécurisé et envoi soigné'}
                 </p>
@@ -154,7 +156,7 @@ export default async function CreationDetailPage({ params }: PageProps) {
         </div>
       </main>
 
-      <Footer 
+      <Footer
         copyright={uiStrings.common?.footerCopyright || '© Mama Couture'}
         adminAccess={uiStrings.common?.adminAccess || 'Administration'}
       />

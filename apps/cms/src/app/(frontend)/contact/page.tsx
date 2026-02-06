@@ -13,6 +13,8 @@ interface PageProps {
   }>
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function ContactPage({ searchParams }: PageProps) {
   const { message, subject } = await searchParams
   const payload = await getPayload({ config })
@@ -38,8 +40,8 @@ export default async function ContactPage({ searchParams }: PageProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header 
-        siteTitle={siteSettings.siteTitle} 
+      <Header
+        siteTitle={siteSettings.siteTitle}
         navStrings={{
           collections: uiStrings.nav?.collections || 'Collections',
           about: uiStrings.nav?.about || 'À propos',
@@ -57,8 +59,8 @@ export default async function ContactPage({ searchParams }: PageProps) {
           <h1 className="text-4xl md:text-5xl font-serif mb-6 md:mb-12 text-primary">
             {contactUi.title}
           </h1>
-          
-          <ContactForm 
+
+          <ContactForm
             uiStrings={contactUi}
             initialSubject={subject}
             initialMessage={message}
@@ -66,7 +68,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
         </div>
       </main>
 
-      <Footer 
+      <Footer
         copyright={uiStrings.common?.footerCopyright || '© Mama Couture'}
         adminAccess={uiStrings.common?.adminAccess || 'Administration'}
       />

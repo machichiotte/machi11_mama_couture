@@ -8,6 +8,8 @@ import { Footer } from '@/components/layout/Footer'
 import { RichText } from '@/components/shared/RichText'
 import { SiteSetting, UiString, About as AboutType } from '@/payload-types'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AboutPage() {
   const payload = await getPayload({ config })
 
@@ -19,8 +21,8 @@ export default async function AboutPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header 
-        siteTitle={siteSettings.siteTitle} 
+      <Header
+        siteTitle={siteSettings.siteTitle}
         navStrings={{
           collections: uiStrings.nav?.collections || 'Collections',
           about: uiStrings.nav?.about || 'À propos',
@@ -62,8 +64,8 @@ export default async function AboutPage() {
               {about.name || uiStrings.about?.defaultTitle || 'À propos'}
             </h1>
 
-            <RichText 
-              content={about.bio} 
+            <RichText
+              content={about.bio}
               className="prose prose-lg text-primary/80 font-light leading-relaxed mb-4 md:mb-6 max-w-none"
             />
 
@@ -74,7 +76,7 @@ export default async function AboutPage() {
               </h4>
 
               <div className="flex flex-col gap-4">
-                <a 
+                <a
                   href={`mailto:${about.contactEmail}`}
                   className="group flex items-center gap-4 text-primary/80 hover:text-accent transition-all duration-300"
                 >
@@ -89,9 +91,9 @@ export default async function AboutPage() {
                 {about.socialLinks && about.socialLinks.length > 0 && (
                   <div className="flex flex-wrap gap-4 mt-2">
                     {about.socialLinks.map((social) => (
-                      <a 
-                        key={social.platform} 
-                        href={social.url} 
+                      <a
+                        key={social.platform}
+                        href={social.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex items-center gap-3 px-5 py-3 bg-secondary/50 backdrop-blur-sm border border-primary/10 rounded-sm hover:border-accent/50 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
@@ -116,7 +118,7 @@ export default async function AboutPage() {
         </div>
       </main>
 
-      <Footer 
+      <Footer
         copyright={uiStrings.common?.footerCopyright || '© Mama Couture'}
         adminAccess={uiStrings.common?.adminAccess || 'Administration'}
       />

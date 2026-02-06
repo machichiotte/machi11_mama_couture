@@ -17,11 +17,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        hostname: 'pub-3b11f34eaeaf45e9991c383feefe0247.r2.dev',
       },
       {
         protocol: 'https',
-        hostname: '**.koyeb.app',
+        hostname: 'res.cloudinary.com',
       }
     ],
   },

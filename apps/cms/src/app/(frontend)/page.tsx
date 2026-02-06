@@ -6,6 +6,8 @@ import { Hero } from '@/components/home/Hero'
 import { CollectionsPreview } from '@/components/home/CollectionsPreview'
 import { SiteSetting, UiString, About, Series } from '@/payload-types'
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const payload = await getPayload({ config })
 
