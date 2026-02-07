@@ -31,7 +31,7 @@ export const FileItem: React.FC<FileItemProps> = ({
     presetResult
 }) => {
     const [objectUrl, setObjectUrl] = useState<string | null>(null)
-    const [selectedType, setSelectedType] = useState<'object' | 'theme' | 'creative'>('theme')
+    const [selectedType, setSelectedType] = useState<'object' | 'theme' | 'creative'>(mode === 'series' ? 'theme' : 'object')
     const [userTitle, setUserTitle] = useState('')
     const [userDescription, setUserDescription] = useState('')
 
@@ -74,9 +74,9 @@ export const FileItem: React.FC<FileItemProps> = ({
                                 alt={file.name}
                                 className="w-full aspect-square object-cover rounded-2xl shadow-2xl group-hover:scale-105 transition-transform duration-700"
                             />
-                            {/* Filename with more space */}
+                            {/* Filename with usual font */}
                             <div className="mt-8 text-center px-4">
-                                <span className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.2em] block break-all leading-relaxed">
+                                <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block break-all leading-relaxed">
                                     {file.name}
                                 </span>
                             </div>
@@ -98,7 +98,7 @@ export const FileItem: React.FC<FileItemProps> = ({
                             <div className="flex items-center gap-6 animate-in fade-in duration-500 py-12">
                                 <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(244,63,94,0.3)]" />
                                 <div className="space-y-1">
-                                    <span className="text-xl font-black text-white tracking-tight block uppercase">Analyse...</span>
+                                    <span className="text-xl font-bold text-white tracking-tight block">Analyse en cours...</span>
                                 </div>
                             </div>
                         ) : !result ? (
@@ -111,7 +111,7 @@ export const FileItem: React.FC<FileItemProps> = ({
 
                                 <button
                                     onClick={() => onAnalyze(index, userTitle || undefined, userDescription || undefined)}
-                                    className="px-10 py-5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-lg rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 w-fit group border-none"
+                                    className="px-10 py-5 bg-white text-black hover:bg-rose-500 hover:text-white font-bold text-lg rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 w-fit group border-none outline-none"
                                 >
                                     <Sparkles size={24} className="group-hover:rotate-12 transition-transform" />
                                     Lancer l'Analyse
@@ -126,16 +126,16 @@ export const FileItem: React.FC<FileItemProps> = ({
                                     </div>
                                 ) : (
                                     <>
-                                        {/* Version Selector (if available) */}
+                                        {/* Version Selector - Clean styles */}
                                         {result.titleOptions && (
-                                            <div className="flex bg-black/50 p-1.5 rounded-xl border border-white/10 gap-1 w-fit">
+                                            <div className="flex bg-black/50 p-1.5 rounded-xl gap-2 w-fit">
                                                 {(['object', 'theme', 'creative'] as const).map((type) => (
                                                     <button
                                                         key={type}
                                                         onClick={() => handleTypeChange(type)}
-                                                        className={`py-2 px-4 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all ${selectedType === type
-                                                            ? 'bg-rose-500 text-white shadow-lg'
-                                                            : 'text-zinc-500 hover:text-white'
+                                                        className={`py-2 px-6 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all border-none outline-none ${selectedType === type
+                                                            ? 'bg-rose-500 text-white shadow-lg shadow-rose-900/40'
+                                                            : 'bg-white text-black hover:bg-zinc-200'
                                                             }`}
                                                     >
                                                         {type}
@@ -147,7 +147,7 @@ export const FileItem: React.FC<FileItemProps> = ({
                                         <div className="space-y-8">
                                             <div className="p-10 bg-black/30 border border-white/5 rounded-[2.5rem] shadow-xl relative overflow-hidden group/result">
                                                 <div className="space-y-6 relative z-10">
-                                                    <div className="text-2xl lg:text-3xl font-black text-white leading-tight tracking-tight uppercase">{displayTitle}</div>
+                                                    <div className="text-2xl lg:text-3xl font-bold text-white leading-tight tracking-tight">{displayTitle}</div>
                                                     <div className="h-px bg-white/5 w-full" />
                                                     <div className="text-zinc-400 font-bold leading-relaxed text-sm lg:text-base line-clamp-6">{displayDescription}</div>
                                                 </div>

@@ -124,7 +124,7 @@ export const Step2Import: React.FC<Step2ImportProps> = ({ mode, onDrop, files, o
                         <div className="pt-8 relative z-10">
                             <button
                                 onClick={() => onStartAnalysis(title, description)}
-                                className="w-full py-6 bg-rose-500 text-white font-bold rounded-2xl hover:bg-rose-600 transition-all shadow-[0_0_40px_rgba(244,63,94,0.3)] flex items-center justify-center gap-4 text-2xl group active:scale-95 border-none"
+                                className="w-full py-6 bg-white text-black hover:bg-rose-500 hover:text-white font-bold rounded-2xl transition-all shadow-xl flex items-center justify-center gap-4 text-2xl group active:scale-95 border-none outline-none"
                             >
                                 <Sparkles size={28} className="group-hover:rotate-12 transition-transform" />
                                 Lancer l'Analyse

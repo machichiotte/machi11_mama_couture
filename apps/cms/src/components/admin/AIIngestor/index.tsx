@@ -58,8 +58,12 @@ export const AIIngestor: React.FC = () => {
             const data = await res.json()
 
             let defaultTitle = data.title
-            if (data.titleOptions) {
-                defaultTitle = mode === 'series' ? data.titleOptions.theme : data.titleOptions.object
+            let defaultDescription = data.description
+
+            if (data.titleOptions && data.descriptionOptions) {
+                const defaultType = mode === 'series' ? 'theme' : 'object'
+                defaultTitle = data.titleOptions[defaultType]
+                defaultDescription = data.descriptionOptions[defaultType]
             }
 
             setFiles(prev => prev.map((f, i) => i === index ? {
@@ -67,7 +71,8 @@ export const AIIngestor: React.FC = () => {
                 status: 'complete',
                 result: {
                     ...data,
-                    title: defaultTitle
+                    title: defaultTitle,
+                    description: defaultDescription
                 }
             } : f))
         } catch (e) {
