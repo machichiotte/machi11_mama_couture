@@ -6,7 +6,18 @@ import { Button } from '@payloadcms/ui/elements/Button'
 
 type AIResult = {
     title: string
+    titleOptions?: {
+        object: string
+        theme: string
+        creative: string
+    }
     description: string
+    descriptionOptions?: {
+        object: string
+        theme: string
+        creative: string
+    }
+    details?: string
     price?: number
     alt?: string
     seriesMatch?: string
@@ -21,6 +32,7 @@ interface FileItemProps {
     onRemove: (index: number) => void
     onCreate: (index: number) => void
     mode: 'series' | 'creation'
+    onUpdateResult: (index: number, newResult: AIResult) => void
 }
 
 export const FileItem: React.FC<FileItemProps> = ({
@@ -31,14 +43,33 @@ export const FileItem: React.FC<FileItemProps> = ({
     onRemove,
     onCreate,
     mode,
+    onUpdateResult
 }) => {
     const [objectUrl, setObjectUrl] = useState<string | null>(null)
+    const [selectedType, setSelectedType] = useState<'object' | 'theme' | 'creative'>('theme')
 
     useEffect(() => {
         const url = URL.createObjectURL(file)
         setObjectUrl(url)
         return () => URL.revokeObjectURL(url)
     }, [file])
+
+    // Handler pour changer le titre ET la description sélectionnés
+    const handleTitleSelect = (type: 'object' | 'theme' | 'creative') => {
+        if (!result || !result.titleOptions || !result.descriptionOptions) return
+
+        setSelectedType(type)
+
+        onUpdateResult(index, {
+            ...result,
+            title: result.titleOptions[type],
+            description: result.descriptionOptions[type]
+        })
+    }
+
+    // Déterminer le titre et la description affichés
+    const displayTitle = result?.title || ''
+    const displayDescription = result?.description || ''
 
     return (
         <li className="relative group overflow-hidden bg-gradient-to-br from-rose-950/20 to-amber-950/20 border border-rose-200/10 rounded-3xl shadow-2xl transition-all duration-500 hover:border-rose-200/30 hover:shadow-rose-500/10">
@@ -85,9 +116,48 @@ export const FileItem: React.FC<FileItemProps> = ({
                                 ) : (
                                     <>
                                         <div>
+                                            {/* Choix de titre si disponible */}
+                                            {result.titleOptions && result.descriptionOptions ? (
+                                                <div className="mb-4 space-y-3">
+                                                    <span className="text-xs text-white/40 uppercase tracking-wider font-bold block">Choisir un style :</span>
+                                                    <div className="grid grid-cols-1 gap-2">
+                                                        {[
+                                                            { key: 'object' as const, label: 'Objet', hint: 'Collection de cet objet' },
+                                                            { key: 'theme' as const, label: 'Thème', hint: 'Ambiance / Saison' },
+                                                            { key: 'creative' as const, label: 'Créatif', hint: 'Poétique' },
+                                                        ].map((opt) => (
+                                                            <button
+                                                                key={opt.key}
+                                                                onClick={() => handleTitleSelect(opt.key)}
+                                                                className={`px-4 py-3 rounded-xl border text-left transition-all ${selectedType === opt.key
+                                                                        ? 'bg-amber-500/20 border-amber-500/50 text-amber-200 shadow-lg'
+                                                                        : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
+                                                                    }`}
+                                                            >
+                                                                <div className="flex items-center justify-between gap-2">
+                                                                    <div className="flex-1">
+                                                                        <span className="block text-[10px] uppercase opacity-50 mb-1">{opt.label} · {opt.hint}</span>
+                                                                        <span className="font-serif font-bold text-sm">{result.titleOptions[opt.key]}</span>
+                                                                    </div>
+                                                                    {selectedType === opt.key && (
+                                                                        <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center">
+                                                                            <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ) : null}
+
+                                            {/* Titre sélectionné */}
                                             <h3 className="text-2xl font-serif font-bold text-white mb-2">
-                                                {result.title}
+                                                {displayTitle}
                                             </h3>
+
                                             {result.seriesMatch && (
                                                 <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-wider rounded-full border border-blue-500/30">
                                                     Collection : {result.seriesMatch}
@@ -101,8 +171,15 @@ export const FileItem: React.FC<FileItemProps> = ({
                                         </div>
 
                                         <p className="text-white/70 italic leading-relaxed text-base">
-                                            {result.description}
+                                            {displayDescription}
                                         </p>
+
+                                        {result.details && (
+                                            <div className="text-sm text-white/60 bg-white/5 p-4 rounded-xl border border-white/10 mt-4 leading-relaxed font-serif">
+                                                <strong className="text-amber-400 block mb-1 uppercase tracking-widest text-xs">Signature & Matières</strong>
+                                                {result.details}
+                                            </div>
+                                        )}
 
                                         {result.alt && (
                                             <div className="text-xs text-white/40 bg-white/5 p-3 rounded-lg border border-white/10">
