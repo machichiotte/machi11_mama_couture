@@ -225,6 +225,7 @@ export interface Creation {
     };
     [k: string]: unknown;
   } | null;
+  details?: string | null;
   images: {
     image: string | Media;
     id?: string | null;
@@ -422,6 +423,7 @@ export interface SeriesSelect<T extends boolean = true> {
 export interface CreationsSelect<T extends boolean = true> {
   title?: T;
   description?: T;
+  details?: T;
   images?:
     | T
     | {

@@ -1,28 +1,9 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
+import { X, Sparkles, CheckCircle2 } from 'lucide-react'
 import { Button } from '@payloadcms/ui/elements/Button'
-
-type AIResult = {
-    title: string
-    titleOptions?: {
-        object: string
-        theme: string
-        creative: string
-    }
-    description: string
-    descriptionOptions?: {
-        object: string
-        theme: string
-        creative: string
-    }
-    details?: string
-    price?: number
-    alt?: string
-    seriesMatch?: string
-    error?: string
-}
+import { AIResult } from './types'
 
 interface FileItemProps {
     file: File
@@ -31,8 +12,10 @@ interface FileItemProps {
     isAnalyzing: boolean
     onRemove: (index: number) => void
     onCreate: (index: number) => void
+    onAnalyze: (index: number, userTitle?: string, userDescription?: string) => void
     mode: 'series' | 'creation'
     onUpdateResult: (index: number, newResult: AIResult) => void
+    presetResult?: AIResult
 }
 
 export const FileItem: React.FC<FileItemProps> = ({
@@ -42,11 +25,21 @@ export const FileItem: React.FC<FileItemProps> = ({
     isAnalyzing,
     onRemove,
     onCreate,
+    onAnalyze,
     mode,
-    onUpdateResult
+    onUpdateResult,
+    presetResult
 }) => {
     const [objectUrl, setObjectUrl] = useState<string | null>(null)
     const [selectedType, setSelectedType] = useState<'object' | 'theme' | 'creative'>('theme')
+    const [userTitle, setUserTitle] = useState('')
+    const [userDescription, setUserDescription] = useState('')
+
+    useEffect(() => {
+        if (presetResult && !result) {
+            onUpdateResult(index, presetResult)
+        }
+    }, [presetResult, result, index, onUpdateResult])
 
     useEffect(() => {
         const url = URL.createObjectURL(file)
@@ -54,149 +47,121 @@ export const FileItem: React.FC<FileItemProps> = ({
         return () => URL.revokeObjectURL(url)
     }, [file])
 
-    // Handler pour changer le titre ET la description sélectionnés
-    const handleTitleSelect = (type: 'object' | 'theme' | 'creative') => {
-        if (!result || !result.titleOptions || !result.descriptionOptions) return
-
+    const handleTypeChange = (type: 'object' | 'theme' | 'creative') => {
         setSelectedType(type)
-
-        onUpdateResult(index, {
-            ...result,
-            title: result.titleOptions[type],
-            description: result.descriptionOptions[type]
-        })
+        if (result?.titleOptions && result?.descriptionOptions) {
+            onUpdateResult(index, {
+                ...result,
+                title: result.titleOptions[type],
+                description: result.descriptionOptions[type]
+            })
+        }
     }
 
-    // Déterminer le titre et la description affichés
     const displayTitle = result?.title || ''
     const displayDescription = result?.description || ''
 
     return (
-        <li className="relative group overflow-hidden bg-gradient-to-br from-rose-950/20 to-amber-950/20 border border-rose-200/10 rounded-3xl shadow-2xl transition-all duration-500 hover:border-rose-200/30 hover:shadow-rose-500/10">
-            <div className="flex flex-col md:grid md:grid-cols-[400px_1fr] h-auto md:h-[600px]">
+        <li className="relative group overflow-hidden bg-zinc-900/80 border border-white/10 rounded-[3rem] shadow-2xl transition-all duration-500 hover:border-rose-500/30">
+            <div className="flex flex-col lg:grid lg:grid-cols-12 h-auto">
+
                 {/* Image Column */}
-                <div className="relative h-96 md:h-full overflow-hidden border-r border-rose-200/10">
+                <div className="lg:col-span-5 relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/5 flex flex-col items-center justify-center bg-black/20 p-12">
                     {objectUrl && (
-                        <img
-                            src={objectUrl}
-                            alt={file.name}
-                            className="absolute inset-0 w-full h-full object-cover opacity-95 group-hover:opacity-100 transition-opacity"
-                        />
+                        <div className="relative group/img w-full max-w-[280px]">
+                            <img
+                                src={objectUrl}
+                                alt={file.name}
+                                className="w-full aspect-square object-cover rounded-2xl shadow-2xl group-hover:scale-105 transition-transform duration-700"
+                            />
+                            {/* Filename with more space */}
+                            <div className="mt-8 text-center px-4">
+                                <span className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.2em] block break-all leading-relaxed">
+                                    {file.name}
+                                </span>
+                            </div>
+                        </div>
                     )}
 
-                    {/* Image Overlay Info */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-6 z-20">
-                        <div className="flex flex-col gap-2">
-                            <span className="text-xs font-mono text-white/60 uppercase tracking-wider truncate">
-                                {file.name}
-                            </span>
-                            <span className="text-xs text-white/40 font-bold">
-                                {(file.size / 1024).toFixed(0)} KB
-                            </span>
-                        </div>
-                    </div>
+                    <button
+                        onClick={() => onRemove(index)}
+                        className="absolute top-8 left-8 p-3 bg-white text-black hover:bg-rose-500 hover:text-white rounded-full backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 z-30 shadow-xl border-none outline-none"
+                    >
+                        <X size={18} strokeWidth={3} />
+                    </button>
                 </div>
 
-                {/* Analysis Column */}
-                <div className="flex flex-col h-full overflow-hidden">
-                    <div className="p-8 flex-1 bg-gradient-to-br from-zinc-900/40 to-zinc-950/60 overflow-y-auto">
-                        <div className="text-xs uppercase tracking-widest text-rose-400 font-bold px-4 py-2 bg-rose-500/10 rounded-full border border-rose-500/20 w-fit mb-6 flex items-center gap-2">
-                            ✨ ANALYSE IA
-                        </div>
-
+                {/* Analysis/Results Column */}
+                <div className="lg:col-span-7 flex flex-col h-full">
+                    <div className="p-12 flex-1 flex flex-col justify-center">
                         {isAnalyzing ? (
-                            <div className="flex items-center gap-3 text-rose-400/80 animate-pulse font-mono text-sm">
-                                <div className="w-4 h-4 border-2 border-rose-400 border-t-transparent rounded-full animate-spin" />
-                                Analyse en cours...
+                            <div className="flex items-center gap-6 animate-in fade-in duration-500 py-12">
+                                <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(244,63,94,0.3)]" />
+                                <div className="space-y-1">
+                                    <span className="text-xl font-black text-white tracking-tight block uppercase">Analyse...</span>
+                                </div>
+                            </div>
+                        ) : !result ? (
+                            <div className="space-y-8">
+                                <p className="text-zinc-400 font-bold leading-relaxed italic opacity-80">
+                                    {mode === 'series'
+                                        ? "Guidez l'IA avec vos idées ou laissez-la créer votre collection."
+                                        : "Prêt pour l'analyse IA."}
+                                </p>
+
+                                <button
+                                    onClick={() => onAnalyze(index, userTitle || undefined, userDescription || undefined)}
+                                    className="px-10 py-5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-lg rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 w-fit group border-none"
+                                >
+                                    <Sparkles size={24} className="group-hover:rotate-12 transition-transform" />
+                                    Lancer l'Analyse
+                                </button>
                             </div>
                         ) : result ? (
-                            <div className="space-y-6">
+                            <div className="space-y-8 animate-in fade-in duration-700">
                                 {result.error ? (
-                                    <p className="text-red-400 font-bold">{result.error}</p>
+                                    <div className="p-8 bg-black/40 border border-red-500/30 rounded-3xl text-red-400 font-bold flex items-center gap-4">
+                                        <div className="p-2 bg-red-500/20 rounded-full">!</div>
+                                        {result.error}
+                                    </div>
                                 ) : (
                                     <>
-                                        <div>
-                                            {/* Choix de titre si disponible */}
-                                            {result.titleOptions && result.descriptionOptions ? (
-                                                <div className="mb-4 space-y-3">
-                                                    <span className="text-xs text-white/40 uppercase tracking-wider font-bold block">Choisir un style :</span>
-                                                    <div className="grid grid-cols-1 gap-2">
-                                                        {[
-                                                            { key: 'object' as const, label: 'Objet', hint: 'Collection de cet objet' },
-                                                            { key: 'theme' as const, label: 'Thème', hint: 'Ambiance / Saison' },
-                                                            { key: 'creative' as const, label: 'Créatif', hint: 'Poétique' },
-                                                        ].map((opt) => (
-                                                            <button
-                                                                key={opt.key}
-                                                                onClick={() => handleTitleSelect(opt.key)}
-                                                                className={`px-4 py-3 rounded-xl border text-left transition-all ${selectedType === opt.key
-                                                                        ? 'bg-amber-500/20 border-amber-500/50 text-amber-200 shadow-lg'
-                                                                        : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
-                                                                    }`}
-                                                            >
-                                                                <div className="flex items-center justify-between gap-2">
-                                                                    <div className="flex-1">
-                                                                        <span className="block text-[10px] uppercase opacity-50 mb-1">{opt.label} · {opt.hint}</span>
-                                                                        <span className="font-serif font-bold text-sm">{result.titleOptions[opt.key]}</span>
-                                                                    </div>
-                                                                    {selectedType === opt.key && (
-                                                                        <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center">
-                                                                            <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                                                            </svg>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ) : null}
-
-                                            {/* Titre sélectionné */}
-                                            <h3 className="text-2xl font-serif font-bold text-white mb-2">
-                                                {displayTitle}
-                                            </h3>
-
-                                            {result.seriesMatch && (
-                                                <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-wider rounded-full border border-blue-500/30">
-                                                    Collection : {result.seriesMatch}
-                                                </span>
-                                            )}
-                                            {result.price && (
-                                                <div className="text-3xl font-bold text-amber-400 mt-3">
-                                                    {result.price} €
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <p className="text-white/70 italic leading-relaxed text-base">
-                                            {displayDescription}
-                                        </p>
-
-                                        {result.details && (
-                                            <div className="text-sm text-white/60 bg-white/5 p-4 rounded-xl border border-white/10 mt-4 leading-relaxed font-serif">
-                                                <strong className="text-amber-400 block mb-1 uppercase tracking-widest text-xs">Signature & Matières</strong>
-                                                {result.details}
+                                        {/* Version Selector (if available) */}
+                                        {result.titleOptions && (
+                                            <div className="flex bg-black/50 p-1.5 rounded-xl border border-white/10 gap-1 w-fit">
+                                                {(['object', 'theme', 'creative'] as const).map((type) => (
+                                                    <button
+                                                        key={type}
+                                                        onClick={() => handleTypeChange(type)}
+                                                        className={`py-2 px-4 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all ${selectedType === type
+                                                            ? 'bg-rose-500 text-white shadow-lg'
+                                                            : 'text-zinc-500 hover:text-white'
+                                                            }`}
+                                                    >
+                                                        {type}
+                                                    </button>
+                                                ))}
                                             </div>
                                         )}
 
-                                        {result.alt && (
-                                            <div className="text-xs text-white/40 bg-white/5 p-3 rounded-lg border border-white/10">
-                                                <strong className="text-white/60">SEO Alt :</strong> {result.alt}
+                                        <div className="space-y-8">
+                                            <div className="p-10 bg-black/30 border border-white/5 rounded-[2.5rem] shadow-xl relative overflow-hidden group/result">
+                                                <div className="space-y-6 relative z-10">
+                                                    <div className="text-2xl lg:text-3xl font-black text-white leading-tight tracking-tight uppercase">{displayTitle}</div>
+                                                    <div className="h-px bg-white/5 w-full" />
+                                                    <div className="text-zinc-400 font-bold leading-relaxed text-sm lg:text-base line-clamp-6">{displayDescription}</div>
+                                                </div>
                                             </div>
-                                        )}
 
-                                        <div className="pt-6 flex gap-3">
-                                            <Button
-                                                onClick={() => onCreate(index)}
-                                                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold"
-                                            >
-                                                ✓ Valider et Créer
-                                            </Button>
-                                            <Button buttonStyle="secondary" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
-                                                Modifier
-                                            </Button>
+                                            <div className="flex justify-center">
+                                                <button
+                                                    onClick={() => onCreate(index)}
+                                                    className="px-12 py-5 bg-white text-black hover:bg-rose-500 hover:text-white font-bold text-lg rounded-2xl shadow-xl flex items-center justify-center gap-12 transition-all hover:scale-[1.02] active:scale-95 border-none outline-none"
+                                                >
+                                                    <span>Confirmer</span>
+                                                    <CheckCircle2 size={32} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </>
                                 )}
@@ -204,14 +169,6 @@ export const FileItem: React.FC<FileItemProps> = ({
                         ) : null}
                     </div>
                 </div>
-
-                {/* Remove Button */}
-                <button
-                    onClick={() => onRemove(index)}
-                    className="absolute top-6 right-6 z-50 p-2.5 bg-black/40 backdrop-blur-md text-white/40 hover:bg-red-500/90 hover:text-white rounded-full transition-all border border-white/10 shadow-2xl"
-                >
-                    <X size={18} />
-                </button>
             </div>
         </li>
     )
