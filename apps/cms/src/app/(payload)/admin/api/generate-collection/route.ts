@@ -6,89 +6,158 @@ import { generateCollectionFromText, generateImage } from '@/lib/ai/gemini'
 export const POST = async (req: NextRequest) => {
     try {
         const payload = await getPayload({ config })
-        const { collectionName } = await req.json()
 
-        if (!collectionName || typeof collectionName !== 'string') {
-            return NextResponse.json(
-                { error: 'Collection name is required' },
-                { status: 400 }
-            )
+        // On essaie de récupérer les données soit via FormData (Ingestor) soit via JSON (Ancien flux/Text Gen)
+        let mode: 'series' | 'creation' = 'series'
+        let title: string = ''
+        let description: string = ''
+        let file: File | null = null
+        let price: number | undefined
+        let details: string | undefined
+        let seriesMatch: string | undefined
+
+        const contentType = req.headers.get('content-type') || ''
+
+        if (contentType.includes('multipart/form-data')) {
+            const formData = await req.formData()
+            mode = (formData.get('mode') as 'series' | 'creation') || 'series'
+            title = formData.get('title') as string || formData.get('collectionName') as string || ''
+            description = formData.get('description') as string || ''
+            file = formData.get('file') as File | null
+            price = formData.get('price') ? Number(formData.get('price')) : undefined
+            details = formData.get('details') as string || undefined
+            seriesMatch = formData.get('seriesMatch') as string || undefined
+        } else {
+            const body = await req.json()
+            title = body.title || body.collectionName || ''
+            description = body.description || ''
+            mode = body.mode || 'series'
         }
 
-
-        console.log('🚀 [AI-GEN] Démarrage génération pour:', collectionName)
-
-        // 0. Récupérer les collections existantes pour contexte
-        const existingSeriesDocs = await payload.find({
-            collection: 'series',
-            limit: 20,
-            sort: '-createdAt',
-        })
-        const existingTitles = existingSeriesDocs.docs.map(doc => doc.title).filter(t => typeof t === 'string') as string[]
-
-        // 1. Générer les métadonnées
-        console.log('🤖 [AI-GEN] Appel Gemini avec contexte:', existingTitles.length, 'collections')
-        const metadata = await generateCollectionFromText(collectionName, existingTitles)
-        console.log('✅ [AI-GEN] Métadonnées reçues:', JSON.stringify(metadata.titleOptions))
-
-        // 2. Générer l'image via Gemini (avec fallback)
-        console.log('🎨 [AI-GEN] Génération image...')
-
-        let imageBuffer: Buffer
-        try {
-            // Utilisation directe de l'API Gemini 2.0 Flash
-            imageBuffer = await generateImage(metadata.imagePrompt)
-            console.log('✅ [AI-GEN] Image buffer récupéré via Gemini')
-        } catch (imageError) {
-            console.error('⚠️ [AI-GEN] Échec génération image:', imageError)
-            console.log('⚠️ [AI-GEN] Utilisation image fallback (gris)')
-            // A valid 1x1 gray pixel JPEG
-            const FALLBACK_IMAGE = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA="
-            imageBuffer = Buffer.from(FALLBACK_IMAGE, 'base64')
+        if (!title) {
+            return NextResponse.json({ error: 'Title is required' }, { status: 400 })
         }
 
-        // 3. Upload Media
-        console.log('📤 [AI-GEN] Création média dans Payload...')
-        const mediaDoc = await payload.create({
-            collection: 'media',
-            data: {
-                alt: metadata.titleOptions.object || collectionName,
-            },
-            file: {
-                data: imageBuffer,
-                name: `ai-gen-${collectionName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.jpg`,
-                mimetype: 'image/jpeg',
-                size: imageBuffer.length,
-            },
-        })
-        console.log('✅ [AI-GEN] Media créé ID:', mediaDoc.id)
+        console.log(`🚀 [AI-CREATE] Mode: ${mode} | Title: ${title}`)
 
-        // 4. Création de la Série
-        console.log('🏗️ [AI-GEN] Création de la collection (Series)...')
-        const seriesDoc = await payload.create({
-            collection: 'series',
-            data: {
-                title: metadata.titleOptions.theme || collectionName,
-                description: metadata.descriptionOptions.theme || '',
-                coverImage: mediaDoc.id,
-                isPublished: false,
-            },
-        })
-        console.log('✅ [AI-GEN] SUCCESS ! Collection créée ID:', seriesDoc.id)
+        let mediaId: string | number
 
-        return NextResponse.json({
-            success: true,
-            series: seriesDoc,
-            metadata: metadata,
-            message: `Collection "${seriesDoc.title}" créée avec succès.`
-        })
+        // CAS 1 : On a un fichier (Ingestor)
+        if (file) {
+            console.log('📤 [AI-CREATE] Uploading provided file...')
+            const buffer = Buffer.from(await file.arrayBuffer())
+            const mediaDoc = await payload.create({
+                collection: 'media',
+                data: { alt: title },
+                file: {
+                    data: buffer,
+                    name: `ai-ingest-${Date.now()}-${file.name.toLowerCase().replace(/\s+/g, '-')}`,
+                    mimetype: file.type || 'image/jpeg',
+                    size: buffer.length,
+                },
+            })
+            mediaId = mediaDoc.id
+        }
+        // CAS 2 : Pas de fichier -> On fait l'auto-génération (Text to Collection)
+        else {
+            console.log('🤖 [AI-CREATE] No file provided, starting auto-generation...')
+            const existingSeriesDocs = await payload.find({
+                collection: 'series',
+                limit: 20,
+                sort: '-createdAt',
+            })
+            const existingTitles = existingSeriesDocs.docs.map(doc => doc.title).filter(t => typeof t === 'string') as string[]
+
+            const metadata = await generateCollectionFromText(title, existingTitles)
+            title = metadata.titleOptions.theme || title
+            description = metadata.descriptionOptions.theme || description
+
+            let imageBuffer: Buffer
+            try {
+                imageBuffer = await generateImage(metadata.imagePrompt)
+            } catch (imageError) {
+                const FALLBACK_IMAGE = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA="
+                imageBuffer = Buffer.from(FALLBACK_IMAGE, 'base64')
+            }
+
+            const mediaDoc = await payload.create({
+                collection: 'media',
+                data: { alt: title },
+                file: {
+                    data: imageBuffer,
+                    name: `ai-gen-${Date.now()}.jpg`,
+                    mimetype: 'image/jpeg',
+                    size: imageBuffer.length,
+                },
+            })
+            mediaId = mediaDoc.id
+        }
+
+        // Création de l'entrée finale
+        if (mode === 'creation') {
+            console.log('🏗️ [AI-CREATE] Creating Creation entry...')
+
+            // Trouver la série correspondante si seriesMatch est fourni
+            let seriesId: string | number | undefined
+            if (seriesMatch) {
+                const matchedSeries = await payload.find({
+                    collection: 'series',
+                    where: { title: { equals: seriesMatch } },
+                    limit: 1
+                })
+                if (matchedSeries.docs.length > 0) {
+                    seriesId = matchedSeries.docs[0].id
+                }
+            }
+
+            const creationDoc = await payload.create({
+                collection: 'creations',
+                data: {
+                    title,
+                    description: {
+                        root: {
+                            type: 'root',
+                            children: [{
+                                type: 'paragraph',
+                                children: [{ text: description, type: 'text', detail: 0, format: 0, mode: 'normal', style: '' }],
+                                direction: 'ltr',
+                                format: '',
+                                indent: 0,
+                                version: 1
+                            }],
+                            direction: 'ltr',
+                            format: '',
+                            indent: 0,
+                            version: 1
+                        }
+                    },
+                    details: details || '',
+                    images: [{ image: mediaId }],
+                    series: seriesId as any, // Payload relation ID
+                    price: price || 0,
+                    stockStatus: 'hidden',
+                    isPublished: false,
+                } as any
+            })
+            return NextResponse.json({ success: true, doc: creationDoc })
+        } else {
+            console.log('🏗️ [AI-CREATE] Creating Series entry...')
+            const seriesDoc = await payload.create({
+                collection: 'series',
+                data: {
+                    title,
+                    description,
+                    coverImage: mediaId,
+                    isPublished: false,
+                },
+            })
+            return NextResponse.json({ success: true, doc: seriesDoc })
+        }
+
     } catch (error) {
-        console.error('Generate Collection API Error:', error)
+        console.error('Create Entry API Error:', error)
         return NextResponse.json(
-            {
-                error: 'Generation and Creation failed',
-                details: error instanceof Error ? error.message : String(error),
-            },
+            { error: 'Creation failed', details: error instanceof Error ? error.message : String(error) },
             { status: 500 }
         )
     }

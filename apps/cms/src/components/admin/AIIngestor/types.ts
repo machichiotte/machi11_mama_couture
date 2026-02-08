@@ -11,6 +11,10 @@ export type AIResult = {
         theme: string
         creative: string
     }
+    price?: number
+    details?: string
+    alt?: string
+    seriesMatch?: string
     error?: string
 }
 

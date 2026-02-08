@@ -47,6 +47,12 @@ export const Creations: CollectionConfig = {
                             type: 'richText',
                         },
                         {
+                            name: 'details',
+                            label: 'Détails Signature & Matières',
+                            type: 'textarea',
+                            required: false,
+                        },
+                        {
                             name: 'images',
                             label: 'Images',
                             type: 'array',

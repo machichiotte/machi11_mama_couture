@@ -8,6 +8,8 @@ export const POST = async (req: NextRequest) => {
         const formData = await req.formData()
         const file = formData.get('file') as File
         const mode = formData.get('mode') as 'series' | 'creation'
+        const userTitle = formData.get('userTitle') as string | null
+        const userDescription = formData.get('userDescription') as string | null
 
         if (!file) {
             return NextResponse.json({ error: 'No file provided' }, { status: 400 })
@@ -24,7 +26,7 @@ export const POST = async (req: NextRequest) => {
             const seriesNames = seriesDocs.docs.map((s: any) => s.title)
             result = await analyzeCreationImages([buffer], seriesNames, mimeType)
         } else {
-            result = await analyzeSeriesImage(buffer, mimeType)
+            result = await analyzeSeriesImage(buffer, mimeType, userTitle, userDescription)
         }
 
         return NextResponse.json(result)

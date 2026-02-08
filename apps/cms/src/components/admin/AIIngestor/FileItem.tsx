@@ -56,7 +56,7 @@ export const FileItem: React.FC<FileItemProps> = ({
             >
                 <X size={16} strokeWidth={3} />
             </button>
-            <div className="flex flex-col lg:grid lg:grid-cols-12 h-[500px] lg:h-[500px]">
+            <div className="flex flex-col lg:grid lg:grid-cols-12 h-[600px] lg:h-[600px]">
 
                 {/* Left Column: Image & Filename */}
                 <div className="lg:col-span-4 relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/5 flex flex-col items-center justify-center bg-white/5 p-12">

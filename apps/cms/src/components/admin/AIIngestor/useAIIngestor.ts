@@ -96,6 +96,9 @@ export const useAIIngestor = () => {
             formData.append('file', fileData.file)
             formData.append('title', fileData.result.title)
             formData.append('description', fileData.result.description)
+            if (fileData.result.price) formData.append('price', String(fileData.result.price))
+            if (fileData.result.details) formData.append('details', fileData.result.details)
+            if (fileData.result.seriesMatch) formData.append('seriesMatch', fileData.result.seriesMatch)
             formData.append('mode', mode)
 
             const res = await fetch('/admin/api/generate-collection', {

@@ -70,13 +70,14 @@ export const AIIngestor: React.FC = () => {
                                 >
                                     <CheckCircle2 size={16} />
                                     {mode === 'series'
-                                        ? `CRÉER ${files.length} COLLECTION${files.length > 1 ? 'S' : ''}`
-                                        : `CRÉER ${files.length} CRÉATION${files.length > 1 ? 'S' : ''}`
+                                        ? `AJOUTER ${files.length} COLLECTION${files.length > 1 ? 'S' : ''}`
+                                        : `AJOUTER ${files.length} CRÉATION${files.length > 1 ? 'S' : ''}`
                                     }
                                 </button>
                             )
                         )
                     )}
+                    showActionConnection={step === 3 && files.length > 0 && files.filter(f => f.status === 'analyzing').length === 0}
                 />
 
                 {/* Step Content */}

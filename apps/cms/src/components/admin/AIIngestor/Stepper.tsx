@@ -6,9 +6,10 @@ interface StepperProps {
     steps: { label: string; description: string }[]
     onBack?: () => void
     action?: React.ReactNode
+    showActionConnection?: boolean
 }
 
-export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack, action }) => {
+export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack, action, showActionConnection }) => {
     const [isActionHovered, setIsActionHovered] = React.useState(false)
 
     return (
@@ -42,7 +43,7 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack, ac
                                         style={{ width: isCompleted ? '100%' : '0%' }}
                                     />
                                 </div>
-                            ) : (action && currentStep === 3) && (
+                            ) : (action && currentStep === 3 && showActionConnection) && (
                                 <div className="absolute top-6 left-[50%] w-[200px] h-[6px] bg-white -z-0">
                                     <div
                                         className={`h-full bg-brand-accent transition-all duration-200 shadow-[0_0_20px_rgba(244,208,63,0.6)] ${isActionHovered ? 'opacity-100' : 'opacity-0'}`}

@@ -11,6 +11,7 @@ export const POST = async (req: NextRequest) => {
         const file = formData.get('file') as File
         const title = formData.get('title') as string
         const description = formData.get('description') as string
+        const details = formData.get('details') as string
         const price = formData.get('price') as string
         const alt = formData.get('alt') as string
         const seriesName = formData.get('seriesMatch') as string
@@ -54,6 +55,7 @@ export const POST = async (req: NextRequest) => {
             collection: 'creations',
             data: {
                 title,
+                details: details || '',
                 description: {
                     root: {
                         type: 'root',
