@@ -19,7 +19,11 @@ export type AIResult = {
 }
 
 export interface IngestorFile {
-    file: File
-    status: 'pending' | 'analyzing' | 'complete' | 'error'
+    id: string
+    files: File[]
+    status: 'pending' | 'analyzing' | 'done' | 'error'
     result?: AIResult
+    userTitle?: string
+    userDescription?: string
+    userSeries?: string
 }

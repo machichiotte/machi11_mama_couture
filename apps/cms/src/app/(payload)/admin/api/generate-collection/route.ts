@@ -3,6 +3,20 @@ import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { generateCollectionFromText, generateImage } from '@/lib/ai/gemini'
 
+export const GET = async (req: NextRequest) => {
+    try {
+        const payload = await getPayload({ config })
+        const series = await payload.find({
+            collection: 'series',
+            limit: 100,
+            sort: 'title'
+        })
+        return NextResponse.json(series.docs)
+    } catch (error) {
+        return NextResponse.json({ error: 'Failed to fetch series' }, { status: 500 })
+    }
+}
+
 export const POST = async (req: NextRequest) => {
     try {
         const payload = await getPayload({ config })
@@ -11,7 +25,7 @@ export const POST = async (req: NextRequest) => {
         let mode: 'series' | 'creation' = 'series'
         let title: string = ''
         let description: string = ''
-        let file: File | null = null
+        let files: File[] = []
         let price: number | undefined
         let details: string | undefined
         let seriesMatch: string | undefined
@@ -23,7 +37,7 @@ export const POST = async (req: NextRequest) => {
             mode = (formData.get('mode') as 'series' | 'creation') || 'series'
             title = formData.get('title') as string || formData.get('collectionName') as string || ''
             description = formData.get('description') as string || ''
-            file = formData.get('file') as File | null
+            files = formData.getAll('file') as File[]
             price = formData.get('price') ? Number(formData.get('price')) : undefined
             details = formData.get('details') as string || undefined
             seriesMatch = formData.get('seriesMatch') as string || undefined
@@ -38,25 +52,29 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ error: 'Title is required' }, { status: 400 })
         }
 
-        console.log(`🚀 [AI-CREATE] Mode: ${mode} | Title: ${title}`)
+        console.log(`🚀 [AI-CREATE] Mode: ${mode} | Title: ${title} | Files: ${files.length}`)
 
-        let mediaId: string | number
+        let mediaIds: (string | number)[] = []
 
-        // CAS 1 : On a un fichier (Ingestor)
-        if (file) {
-            console.log('📤 [AI-CREATE] Uploading provided file...')
-            const buffer = Buffer.from(await file.arrayBuffer())
-            const mediaDoc = await payload.create({
-                collection: 'media',
-                data: { alt: title },
-                file: {
-                    data: buffer,
-                    name: `ai-ingest-${Date.now()}-${file.name.toLowerCase().replace(/\s+/g, '-')}`,
-                    mimetype: file.type || 'image/jpeg',
-                    size: buffer.length,
-                },
-            })
-            mediaId = mediaDoc.id
+        // CAS 1 : On a des fichiers (Ingestor)
+        if (files.length > 0) {
+            console.log(`📤 [AI-CREATE] Uploading ${files.length} provided files...`)
+            mediaIds = await Promise.all(
+                files.map(async (file) => {
+                    const buffer = Buffer.from(await file.arrayBuffer())
+                    const mediaDoc = await payload.create({
+                        collection: 'media',
+                        data: { alt: title },
+                        file: {
+                            data: buffer,
+                            name: `ai-ingest-${Date.now()}-${file.name.toLowerCase().replace(/\s+/g, '-')}`,
+                            mimetype: file.type || 'image/jpeg',
+                            size: buffer.length,
+                        },
+                    })
+                    return mediaDoc.id
+                })
+            )
         }
         // CAS 2 : Pas de fichier -> On fait l'auto-génération (Text to Collection)
         else {
@@ -76,7 +94,7 @@ export const POST = async (req: NextRequest) => {
             try {
                 imageBuffer = await generateImage(metadata.imagePrompt)
             } catch (imageError) {
-                const FALLBACK_IMAGE = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA="
+                const FALLBACK_IMAGE = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAABAQABPxA="
                 imageBuffer = Buffer.from(FALLBACK_IMAGE, 'base64')
             }
 
@@ -90,7 +108,7 @@ export const POST = async (req: NextRequest) => {
                     size: imageBuffer.length,
                 },
             })
-            mediaId = mediaDoc.id
+            mediaIds = [mediaDoc.id]
         }
 
         // Création de l'entrée finale
@@ -132,7 +150,7 @@ export const POST = async (req: NextRequest) => {
                         }
                     },
                     details: details || '',
-                    images: [{ image: mediaId }],
+                    images: mediaIds.map(id => ({ image: id })),
                     series: seriesId as any, // Payload relation ID
                     price: price || 0,
                     stockStatus: 'hidden',
@@ -147,7 +165,7 @@ export const POST = async (req: NextRequest) => {
                 data: {
                     title,
                     description,
-                    coverImage: mediaId,
+                    coverImage: (mediaIds[0] as any) || '',
                     isPublished: false,
                 },
             })

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { toast } from '@payloadcms/ui'
 import { AIResult, IngestorFile } from './types'
 
@@ -6,11 +6,26 @@ export const useAIIngestor = () => {
     const [step, setStep] = useState<number>(1)
     const [mode, setMode] = useState<'series' | 'creation'>('creation')
     const [files, setFiles] = useState<IngestorFile[]>([])
+    const [series, setSeries] = useState<{ id: string | number, title: string }[]>([])
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        const fetchSeries = async () => {
+            try {
+                const res = await fetch('/admin/api/generate-collection')
+                const data = await res.json()
+                setSeries(data)
+            } catch (e) {
+                console.error('Failed to fetch series:', e)
+            }
+        }
+        fetchSeries()
+    }, [])
 
     const onDrop = (acceptedFiles: File[]) => {
         const newFiles = acceptedFiles.map(file => ({
-            file,
+            id: Math.random().toString(36).substr(2, 9),
+            files: [file],
             status: 'pending' as const
         }))
         setFiles(prev => [...prev, ...newFiles])
@@ -22,9 +37,9 @@ export const useAIIngestor = () => {
         }
     }
 
-    const removeFile = (index: number) => {
+    const removeFile = (id: string) => {
         setFiles(prev => {
-            const newFiles = prev.filter((_, i) => i !== index)
+            const newFiles = prev.filter(f => f.id !== id)
             if (newFiles.length === 0 && step === 3) {
                 setStep(2)
             }
@@ -32,14 +47,54 @@ export const useAIIngestor = () => {
         })
     }
 
-    const analyzeFile = async (index: number, userTitle?: string, userDescription?: string) => {
-        setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'analyzing' } : f))
+    const mergeFiles = (sourceId: string, targetId: string) => {
+        if (sourceId === targetId) return
+        setFiles(prev => {
+            const source = prev.find(f => f.id === sourceId)
+            const target = prev.find(f => f.id === targetId)
+            if (!source || !target) return prev
 
-        const fileData = files[index]
-        if (!fileData) return
+            return prev.filter(f => f.id !== sourceId).map(f => {
+                if (f.id === targetId) {
+                    return {
+                        ...f,
+                        files: [...f.files, ...source.files],
+                        status: 'pending' // Reset status if we add images
+                    }
+                }
+                return f
+            })
+        })
+    }
+
+    const addFilesToItem = (id: string, newFiles: File[]) => {
+        setFiles(prev => prev.map(f => {
+            if (f.id === id) {
+                return {
+                    ...f,
+                    files: [...f.files, ...newFiles],
+                    status: 'pending'
+                }
+            }
+            return f
+        }))
+    }
+
+    const updateItemFields = (id: string, fields: Partial<Pick<IngestorFile, 'userTitle' | 'userDescription' | 'userSeries'>>) => {
+        setFiles(prev => prev.map(f => f.id === id ? { ...f, ...fields } : f))
+    }
+
+    const analyzeFile = async (id: string, userTitle?: string, userDescription?: string) => {
+        setFiles(prev => prev.map(f => f.id === id ? { ...f, status: 'analyzing' } : f))
+
+        const fileData = files.find(f => f.id === id)
+        if (!fileData || fileData.files.length === 0) return
 
         const formData = new FormData()
-        formData.append('file', fileData.file)
+        // Envoi de TOUS les fichiers du groupe
+        fileData.files.forEach(file => {
+            formData.append('file', file) // Note: backend only takes one for now but we'll adapt
+        })
         formData.append('mode', mode)
 
         if (userTitle) formData.append('userTitle', userTitle)
@@ -50,6 +105,11 @@ export const useAIIngestor = () => {
                 method: 'POST',
                 body: formData
             })
+
+            if (!res.ok) {
+                throw new Error(`Erreur serveur: ${res.status}`)
+            }
+
             const data = await res.json()
 
             let defaultTitle = data.title
@@ -61,9 +121,9 @@ export const useAIIngestor = () => {
                 defaultDescription = data.descriptionOptions[defaultType]
             }
 
-            setFiles(prev => prev.map((f, i) => i === index ? {
+            setFiles(prev => prev.map(f => f.id === id ? {
                 ...f,
-                status: 'complete',
+                status: 'done',
                 result: {
                     ...data,
                     title: defaultTitle,
@@ -71,7 +131,7 @@ export const useAIIngestor = () => {
                 }
             } : f))
         } catch (e) {
-            setFiles(prev => prev.map((f, i) => i === index ? {
+            setFiles(prev => prev.map(f => f.id === id ? {
                 ...f,
                 status: 'error',
                 result: { title: '', description: '', error: 'Erreur analyse IA' }
@@ -80,25 +140,31 @@ export const useAIIngestor = () => {
     }
 
     const analyzeAll = () => {
-        files.forEach((file, index) => {
+        files.forEach((file) => {
             if (file.status === 'pending') {
-                analyzeFile(index)
+                analyzeFile(file.id)
             }
         })
     }
 
-    const createEntry = async (index: number) => {
-        const fileData = files[index]
-        if (!fileData || !fileData.result || !fileData.file) return
+    const createEntry = async (id: string) => {
+        const fileData = files.find(f => f.id === id)
+        if (!fileData || !fileData.result || fileData.files.length === 0) return
 
         try {
             const formData = new FormData()
-            formData.append('file', fileData.file)
-            formData.append('title', fileData.result.title)
-            formData.append('description', fileData.result.description)
+            // On envoie toutes les images pour la création
+            fileData.files.forEach(file => {
+                formData.append('file', file)
+            })
+            formData.append('title', fileData.userTitle || fileData.result.title)
+            formData.append('description', fileData.userDescription || fileData.result.description)
             if (fileData.result.price) formData.append('price', String(fileData.result.price))
             if (fileData.result.details) formData.append('details', fileData.result.details)
-            if (fileData.result.seriesMatch) formData.append('seriesMatch', fileData.result.seriesMatch)
+
+            const seriesToUse = fileData.userSeries || fileData.result.seriesMatch
+            if (seriesToUse) formData.append('seriesMatch', seriesToUse)
+
             formData.append('mode', mode)
 
             const res = await fetch('/admin/api/generate-collection', {
@@ -109,37 +175,32 @@ export const useAIIngestor = () => {
             if (!res.ok) throw new Error('Failed to create')
 
             toast.success(`${mode === 'series' ? 'Série' : 'Création'} créée avec succès !`)
-            removeFile(index)
+            removeFile(id)
         } catch (e) {
             toast.error(`Erreur lors de la création : ${e instanceof Error ? e.message : 'Erreur inconnue'}`)
         }
     }
 
     const createAll = async () => {
-        // Run in reverse to avoid index shifting issues if we remove items one by one
-        // Use a loop to be able to await each creation sequentially or use Promise.all if they can be parallel
-        // For CMS stability, sequential might be safer and show progress better via toasts
-        const completeIndices = files
-            .map((f, i) => f.status === 'complete' ? i : -1)
-            .filter(i => i !== -1)
+        const doneIndices = files
+            .filter(f => f.status === 'done')
+            .map(f => f.id)
             .reverse()
 
-        for (const index of completeIndices) {
-            await createEntry(index)
+        for (const id of doneIndices) {
+            await createEntry(id)
         }
     }
 
-    const handleUpdateResult = (index: number, newResult: AIResult) => {
-        setFiles(prev => prev.map((f, i) => i === index ? { ...f, result: newResult } : f))
+    const handleUpdateResult = (id: string, newResult: AIResult) => {
+        setFiles(prev => prev.map(f => f.id === id ? { ...f, result: newResult } : f))
     }
 
     const handleStartAnalysis = (userTitle?: string, userDescription?: string) => {
         setStep(3)
-        // Need to use the latest files from state inside the effect/callback
-        // Actually, since we're initiating analysis on all files just imported
-        files.forEach((file, index) => {
+        files.forEach((file) => {
             if (file.status === 'pending') {
-                analyzeFile(index, userTitle, userDescription)
+                analyzeFile(file.id, userTitle, userDescription)
             }
         })
     }
@@ -174,6 +235,10 @@ export const useAIIngestor = () => {
         handleUpdateResult,
         handleStartAnalysis,
         reset,
-        handleBack
+        handleBack,
+        mergeFiles,
+        addFilesToItem,
+        updateItemFields,
+        series
     }
 }

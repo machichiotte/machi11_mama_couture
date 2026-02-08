@@ -16,6 +16,7 @@ export const AIIngestor: React.FC = () => {
         mode,
         setMode,
         files,
+        series,
         fileInputRef,
         onDrop,
         handleFileChange,
@@ -26,7 +27,10 @@ export const AIIngestor: React.FC = () => {
         createAll,
         handleUpdateResult,
         handleStartAnalysis,
-        handleBack
+        handleBack,
+        mergeFiles,
+        addFilesToItem,
+        updateItemFields
     } = useAIIngestor()
 
     const STEPS = [
@@ -37,7 +41,7 @@ export const AIIngestor: React.FC = () => {
 
     return (
         <div className="ai-container">
-            <div className="max-w-7xl mx-auto space-y-16">
+            <div className="max-w-[1600px] mx-auto space-y-16">
                 {/* Header Section */}
                 <div className="space-y-8 text-center">
                     <h1 className="ai-title">
@@ -63,21 +67,21 @@ export const AIIngestor: React.FC = () => {
                                 </span>
                             </div>
                         ) : (
-                            files.length > 0 && (
+                            files.filter(f => f.status === 'done').length > 0 && (
                                 <button
                                     onClick={createAll}
                                     className="ai-button-primary px-8 whitespace-nowrap"
                                 >
                                     <CheckCircle2 size={16} />
                                     {mode === 'series'
-                                        ? `AJOUTER ${files.length} COLLECTION${files.length > 1 ? 'S' : ''}`
-                                        : `AJOUTER ${files.length} CRÉATION${files.length > 1 ? 'S' : ''}`
+                                        ? `AJOUTER ${files.filter(f => f.status === 'done').length} COLLECTION${files.filter(f => f.status === 'done').length > 1 ? 'S' : ''}`
+                                        : `AJOUTER ${files.filter(f => f.status === 'done').length} CRÉATION${files.filter(f => f.status === 'done').length > 1 ? 'S' : ''}`
                                     }
                                 </button>
                             )
                         )
                     )}
-                    showActionConnection={step === 3 && files.length > 0 && files.filter(f => f.status === 'analyzing').length === 0}
+                    showActionConnection={step === 3 && files.filter(f => f.status === 'done').length > 0 && files.filter(f => f.status === 'analyzing').length === 0}
                 />
 
                 {/* Step Content */}
@@ -90,7 +94,11 @@ export const AIIngestor: React.FC = () => {
                         mode={mode}
                         onDrop={onDrop}
                         files={files}
+                        series={series}
                         onRemoveFile={removeFile}
+                        onMergeFiles={mergeFiles}
+                        onAddFilesToItem={addFilesToItem}
+                        onUpdateItemFields={updateItemFields}
                         onStartAnalysis={handleStartAnalysis}
                     />
                 )}
@@ -100,10 +108,12 @@ export const AIIngestor: React.FC = () => {
                         <Step3Validation
                             files={files}
                             mode={mode}
+                            series={series}
                             onRemoveFile={removeFile}
                             onAnalyzeFile={analyzeFile}
                             onCreateEntry={createEntry}
                             onUpdateResult={handleUpdateResult}
+                            onUpdateItemFields={updateItemFields}
                             onAddMore={() => fileInputRef.current?.click()}
                         />
                     </div>

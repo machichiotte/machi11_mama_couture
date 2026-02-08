@@ -6,17 +6,19 @@ import { analyzeSeriesImage, analyzeCreationImages } from '@/lib/ai/gemini'
 export const POST = async (req: NextRequest) => {
     try {
         const formData = await req.formData()
-        const file = formData.get('file') as File
+        const files = formData.getAll('file') as File[]
         const mode = formData.get('mode') as 'series' | 'creation'
         const userTitle = formData.get('userTitle') as string | null
         const userDescription = formData.get('userDescription') as string | null
 
-        if (!file) {
+        if (!files || files.length === 0) {
             return NextResponse.json({ error: 'No file provided' }, { status: 400 })
         }
 
-        const buffer = Buffer.from(await file.arrayBuffer())
-        const mimeType = file.type || 'image/jpeg'
+        const buffers = await Promise.all(
+            files.map(async (file) => Buffer.from(await file.arrayBuffer()))
+        )
+        const mimeType = files[0].type || 'image/jpeg'
 
         const payload = await getPayload({ config })
 
@@ -24,9 +26,9 @@ export const POST = async (req: NextRequest) => {
         if (mode === 'creation') {
             const seriesDocs = await payload.find({ collection: 'series', depth: 0, limit: 100 })
             const seriesNames = seriesDocs.docs.map((s: any) => s.title)
-            result = await analyzeCreationImages([buffer], seriesNames, mimeType)
+            result = await analyzeCreationImages(buffers, seriesNames, mimeType)
         } else {
-            result = await analyzeSeriesImage(buffer, mimeType, userTitle, userDescription)
+            result = await analyzeSeriesImage(buffers[0], mimeType, userTitle, userDescription)
         }
 
         return NextResponse.json(result)
