@@ -17,6 +17,10 @@ const tailwindConfig = {
         primary: 'var(--primary)',
         secondary: 'var(--secondary)',
         accent: 'var(--accent)',
+        'brand-accent': 'var(--brand-accent)',
+        'brand-bg': 'var(--brand-bg)',
+        'brand-muted': 'var(--brand-muted)',
+        'brand-border': 'var(--brand-border)',
       },
       container: {
         center: true,

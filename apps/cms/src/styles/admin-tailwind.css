@@ -1,5 +1,100 @@
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --brand-accent: #d4976c;
+  /* Luminous Gold from frontend dark mode */
+  --brand-bg: rgba(24, 24, 27, 0.8);
+  /* base zinc-900/80 */
+  --brand-text: #ffffff;
+  --brand-muted: #a1a1aa;
+  /* zinc-400 */
+  --brand-border: rgba(255, 255, 255, 0.1);
+  /* white/10 */
+}
+
+@layer components {
+
+  /* Main Container */
+  .ai-container {
+    @apply min-h-screen bg-black text-white p-6 md:p-12 font-sans;
+  }
+
+  .ai-container::selection,
+  .ai-container ::selection {
+    background-color: rgba(212, 151, 108, 0.3);
+  }
+
+  /* Glassmorphism Classes */
+  .ai-glass {
+    @apply bg-zinc-900/80 backdrop-blur-md border border-brand-border shadow-2xl;
+  }
+
+  .ai-card {
+    @apply bg-zinc-600/60 backdrop-blur-md border-[3px] border-zinc-600/0 shadow-2xl rounded-[3rem] transition-all duration-500 overflow-hidden;
+  }
+
+  .ai-card-hover {
+    @apply transition-all duration-500;
+  }
+
+  .ai-card-hover:hover {
+    border-color: rgba(212, 151, 108, 0.5) !important;
+    background-color: rgba(113, 113, 122, 0.6) !important;
+    /* zinc-500/60 */
+  }
+
+  /* Typography */
+  .ai-title {
+    @apply text-6xl md:text-8xl font-black tracking-tighter text-white;
+  }
+
+  .ai-label {
+    @apply text-[10px] font-black text-brand-accent uppercase tracking-[0.3em];
+  }
+
+  /* Buttons */
+  .ai-button-primary {
+    @apply py-4 bg-white text-black hover:bg-brand-accent hover:text-black font-bold rounded-full transition-all shadow-xl flex items-center justify-center gap-4 active:scale-95 border-none outline-none;
+  }
+
+  .ai-button-secondary {
+    @apply px-6 py-4 rounded-full text-sm font-bold flex items-center gap-2 transition-all border border-brand-border text-brand-muted hover:text-white hover:bg-white/5;
+  }
+
+  .ai-button-white {
+    @apply py-4 px-6 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all bg-white text-black hover:bg-zinc-200 border-none outline-none;
+  }
+
+  .ai-button-active {
+    @apply bg-brand-accent text-black;
+    box-shadow: 0 10px 15px -3px rgba(212, 151, 108, 0.2);
+  }
+
+  .ai-button-ghost {
+    @apply w-full py-4 bg-transparent border border-brand-border text-zinc-500 font-bold text-sm uppercase tracking-widest rounded-full hover:bg-white/5 hover:text-white transition-all flex items-center justify-center gap-2 border-none outline-none;
+  }
+
+  .ai-button-circle {
+    @apply w-12 h-12 rounded-full bg-white text-black flex items-center justify-center hover:bg-brand-accent hover:text-black transition-all z-50 border-none outline-none;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+
+  .ai-button-circle:hover {
+    box-shadow: 0 0 20px rgba(212, 151, 108, 0.3);
+  }
+
+  /* Form Elements */
+  .ai-input {
+    @apply w-full bg-white/10 border border-white/5 rounded-2xl px-6 py-5 transition-all text-white font-bold placeholder:text-zinc-400 text-base;
+  }
+
+  .ai-input:focus {
+    outline: none;
+    border-color: rgba(212, 151, 108, 0.5);
+  }
+}
 
 /* 
    Hack pour s'assurer que Tailwind est bien prioritaire sur Payload 

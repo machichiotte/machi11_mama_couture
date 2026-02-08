@@ -1,6 +1,5 @@
 import React from 'react'
-import { Package, Plus } from 'lucide-react'
-import { Button } from '@payloadcms/ui/elements/Button'
+import { Plus } from 'lucide-react'
 import { FileItem } from './FileItem'
 import { IngestorFile, AIResult } from './types'
 
@@ -12,7 +11,6 @@ interface Step3ValidationProps {
     onCreateEntry: (index: number) => void
     onUpdateResult: (index: number, result: AIResult) => void
     onAddMore: () => void
-    onCreateAll: () => void
 }
 
 export const Step3Validation: React.FC<Step3ValidationProps> = ({
@@ -22,8 +20,7 @@ export const Step3Validation: React.FC<Step3ValidationProps> = ({
     onAnalyzeFile,
     onCreateEntry,
     onUpdateResult,
-    onAddMore,
-    onCreateAll
+    onAddMore
 }) => {
     if (files.length === 0) return null
 
@@ -45,8 +42,6 @@ export const Step3Validation: React.FC<Step3ValidationProps> = ({
                     />
                 ))}
             </ul>
-
-            <div className="pb-24" />
         </div>
     )
 }

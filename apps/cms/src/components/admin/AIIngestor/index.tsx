@@ -1,155 +1,33 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
-import { toast } from '@payloadcms/ui'
+import React from 'react'
+import { CheckCircle2 } from 'lucide-react'
 import { Stepper } from './Stepper'
 import { IngestorActions } from './IngestorActions'
 import { Step1Mode } from './Step1Mode'
 import { Step2Import } from './Step2Import'
 import { Step3Validation } from './Step3Validation'
-import { AIResult, IngestorFile } from './types'
+import { useAIIngestor } from './useAIIngestor'
 
 export const AIIngestor: React.FC = () => {
-    const [step, setStep] = useState<number>(1)
-    const [mode, setMode] = useState<'series' | 'creation'>('creation')
-    const [files, setFiles] = useState<IngestorFile[]>([])
-    const fileInputRef = useRef<HTMLInputElement>(null)
-
-    const onDrop = (acceptedFiles: File[]) => {
-        const newFiles = acceptedFiles.map(file => ({
-            file,
-            status: 'pending' as const
-        }))
-        setFiles(prev => [...prev, ...newFiles])
-    }
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            onDrop(Array.from(e.target.files))
-        }
-    }
-
-    const removeFile = (index: number) => {
-        setFiles(prev => {
-            const newFiles = prev.filter((_, i) => i !== index)
-            if (newFiles.length === 0 && step === 3) {
-                setStep(2)
-            }
-            return newFiles
-        })
-    }
-
-    const analyzeFile = async (index: number, userTitle?: string, userDescription?: string) => {
-        setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'analyzing' } : f))
-
-        const fileData = files[index]
-        const formData = new FormData()
-        formData.append('file', fileData.file)
-        formData.append('mode', mode)
-
-        if (userTitle) formData.append('userTitle', userTitle)
-        if (userDescription) formData.append('userDescription', userDescription)
-
-        try {
-            const res = await fetch('/admin/api/ai', {
-                method: 'POST',
-                body: formData
-            })
-            const data = await res.json()
-
-            let defaultTitle = data.title
-            let defaultDescription = data.description
-
-            if (data.titleOptions && data.descriptionOptions) {
-                const defaultType = mode === 'series' ? 'theme' : 'object'
-                defaultTitle = data.titleOptions[defaultType]
-                defaultDescription = data.descriptionOptions[defaultType]
-            }
-
-            setFiles(prev => prev.map((f, i) => i === index ? {
-                ...f,
-                status: 'complete',
-                result: {
-                    ...data,
-                    title: defaultTitle,
-                    description: defaultDescription
-                }
-            } : f))
-        } catch (e) {
-            setFiles(prev => prev.map((f, i) => i === index ? {
-                ...f,
-                status: 'error',
-                result: { title: '', description: '', error: 'Erreur analyse IA' }
-            } : f))
-        }
-    }
-
-    const analyzeAll = () => {
-        files.forEach((file, index) => {
-            if (file.status === 'pending') {
-                analyzeFile(index)
-            }
-        })
-    }
-
-    const createEntry = async (index: number) => {
-        const fileData = files[index]
-        if (!fileData.result || !fileData.file) return
-
-        try {
-            const formData = new FormData()
-            formData.append('file', fileData.file)
-            formData.append('title', fileData.result.title)
-            formData.append('description', fileData.result.description)
-            formData.append('mode', mode)
-
-            const res = await fetch('/admin/api/generate-collection', {
-                method: 'POST',
-                body: formData
-            })
-
-            if (!res.ok) throw new Error('Failed to create')
-
-            toast.success(`${mode === 'series' ? 'Série' : 'Création'} créée avec succès !`)
-            removeFile(index)
-        } catch (e) {
-            toast.error(`Erreur lors de la création : ${e instanceof Error ? e.message : 'Erreur inconnue'}`)
-        }
-    }
-
-    const createAll = async () => {
-        for (let i = files.length - 1; i >= 0; i--) {
-            if (files[i].status === 'complete') {
-                await createEntry(i)
-            }
-        }
-    }
-
-    const handleUpdateResult = (index: number, newResult: AIResult) => {
-        setFiles(prev => prev.map((f, i) => i === index ? { ...f, result: newResult } : f))
-    }
-
-    const handleStartAnalysis = (userTitle?: string, userDescription?: string) => {
-        setStep(3)
-        files.forEach((file, index) => {
-            if (file.status === 'pending') {
-                analyzeFile(index, userTitle, userDescription)
-            }
-        })
-    }
-
-    const reset = () => {
-        setFiles([])
-        setStep(1)
-        setMode('creation')
-    }
-
-    const handleBack = () => {
-        if (step > 1) {
-            setStep(step - 1)
-            if (step === 2) setFiles([])
-        }
-    }
+    const {
+        step,
+        setStep,
+        mode,
+        setMode,
+        files,
+        fileInputRef,
+        onDrop,
+        handleFileChange,
+        removeFile,
+        analyzeFile,
+        analyzeAll,
+        createEntry,
+        createAll,
+        handleUpdateResult,
+        handleStartAnalysis,
+        handleBack
+    } = useAIIngestor()
 
     const STEPS = [
         { label: 'MODE', description: step === 1 ? 'COLLECTION OU CRÉATIONS' : (mode === 'series' ? 'COLLECTION' : 'CRÉATIONS') },
@@ -158,15 +36,15 @@ export const AIIngestor: React.FC = () => {
     ]
 
     return (
-        <div className="min-h-screen bg-black text-white p-12 font-sans selection:bg-rose-500/30">
+        <div className="ai-container">
             <div className="max-w-7xl mx-auto space-y-16">
                 {/* Header Section */}
                 <div className="space-y-8 text-center">
-                    <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-white">
-                        Atelier <span className="text-rose-500">Petit Point</span>
+                    <h1 className="ai-title">
+                        Atelier <span className="text-brand-accent">Petit Point</span>
                     </h1>
                     <div className="flex justify-center">
-                        <p className="text-zinc-500 text-sm uppercase tracking-[0.3em] max-w-2xl font-bold leading-relaxed border-y border-white/5 py-4 text-center">
+                        <p className="text-white/60 text-base md:text-lg font-medium max-w-3xl leading-relaxed italic text-center">
                             Votre assistant créatif pour transformer vos photos en collections et créations prêtes à publier.
                         </p>
                     </div>
@@ -176,6 +54,29 @@ export const AIIngestor: React.FC = () => {
                     currentStep={step}
                     steps={STEPS}
                     onBack={step > 1 ? handleBack : undefined}
+                    action={step === 3 && (
+                        files.filter(f => f.status === 'analyzing').length > 0 ? (
+                            <div className="flex items-center gap-4 bg-white/5 px-8 py-4 rounded-full border border-white/5 animate-pulse">
+                                <div className="w-5 h-5 border-3 border-brand-accent border-t-transparent rounded-full animate-spin" />
+                                <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest whitespace-nowrap">
+                                    {files.filter(f => f.status === 'analyzing').length} Analyse{files.filter(f => f.status === 'analyzing').length > 1 ? 's' : ''} en cours
+                                </span>
+                            </div>
+                        ) : (
+                            files.length > 0 && (
+                                <button
+                                    onClick={createAll}
+                                    className="ai-button-primary px-8 whitespace-nowrap"
+                                >
+                                    <CheckCircle2 size={16} />
+                                    {mode === 'series'
+                                        ? `CRÉER ${files.length} COLLECTION${files.length > 1 ? 'S' : ''}`
+                                        : `CRÉER ${files.length} CRÉATION${files.length > 1 ? 'S' : ''}`
+                                    }
+                                </button>
+                            )
+                        )
+                    )}
                 />
 
                 {/* Step Content */}
@@ -194,17 +95,7 @@ export const AIIngestor: React.FC = () => {
                 )}
 
                 {step === 3 && (
-                    <div className="space-y-4">
-                        <IngestorActions
-                            filesCount={files.length}
-                            mode={mode}
-                            setMode={setMode}
-                            onReset={reset}
-                            onAnalyzeAll={analyzeAll}
-                            onCreateAll={createAll}
-                            hideModeSelector={true}
-                            hideActions={files.length === 0}
-                        />
+                    <div className="space-y-4 pt-10">
                         <Step3Validation
                             files={files}
                             mode={mode}
@@ -213,7 +104,6 @@ export const AIIngestor: React.FC = () => {
                             onCreateEntry={createEntry}
                             onUpdateResult={handleUpdateResult}
                             onAddMore={() => fileInputRef.current?.click()}
-                            onCreateAll={createAll}
                         />
                     </div>
                 )}

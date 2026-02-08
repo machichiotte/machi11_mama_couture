@@ -5,17 +5,20 @@ interface StepperProps {
     currentStep: number
     steps: { label: string; description: string }[]
     onBack?: () => void
+    action?: React.ReactNode
 }
 
-export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack }) => {
+export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack, action }) => {
+    const [isActionHovered, setIsActionHovered] = React.useState(false)
+
     return (
-        <div className="w-full max-w-4xl mx-auto mb-16 px-4">
-            <div className="relative flex justify-between items-start">
+        <div className="w-full max-w-7xl mx-auto mb-16 px-4 relative">
+            <div className="max-w-4xl mx-auto relative flex justify-between items-start">
 
                 {onBack && (
                     <button
                         onClick={onBack}
-                        className="absolute left-[-80px] top-0 w-12 h-12 rounded-full bg-white text-black flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(244,63,94,0.3)] z-50 group border-none outline-none"
+                        className="absolute left-[-80px] top-0 ai-button-circle group"
                     >
                         <ArrowLeft size={24} strokeWidth={3} className="group-hover:-translate-x-1 transition-transform" />
                     </button>
@@ -31,12 +34,18 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack }) 
                         <div key={index} className="flex flex-col items-center flex-1 relative">
 
                             {/* LIGNE DE CONNEXION (Segmentée - 6px) */}
-                            {!isLast && (
+                            {!isLast ? (
                                 <div className="absolute top-6 left-[50%] w-full h-[6px] bg-white -z-0">
                                     {/* Barre de progression remplie */}
                                     <div
-                                        className="h-full bg-rose-500 transition-all duration-700 ease-in-out shadow-[0_0_20px_rgba(244,63,94,0.6)]"
+                                        className="h-full bg-brand-accent transition-all duration-700 ease-in-out shadow-[0_0_20px_rgba(244,208,63,0.6)]"
                                         style={{ width: isCompleted ? '100%' : '0%' }}
+                                    />
+                                </div>
+                            ) : (action && currentStep === 3) && (
+                                <div className="absolute top-6 left-[50%] w-[200px] h-[6px] bg-white -z-0">
+                                    <div
+                                        className={`h-full bg-brand-accent transition-all duration-200 shadow-[0_0_20px_rgba(244,208,63,0.6)] ${isActionHovered ? 'opacity-100' : 'opacity-0'}`}
                                     />
                                 </div>
                             )}
@@ -46,13 +55,13 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack }) 
                                 className={`
                                     w-12 h-12 rounded-full flex items-center justify-center font-black text-lg transition-all duration-500 z-10 
                                     ${(isCompleted || isActive || stepNumber === 1)
-                                        ? 'bg-rose-500 text-white shadow-[0_0_30px_rgba(244,63,94,0.5)]'
+                                        ? 'bg-brand-accent text-black shadow-[0_0_30px_rgba(244,208,63,0.5)]'
                                         : 'bg-white text-black scale-90 border-4 border-black/10'
                                     }
-                                    ${isActive ? 'scale-110 ring-4 ring-rose-500/20' : ''}
+                                    ${isActive ? 'scale-110 ring-4 ring-brand-accent/20' : ''}
                                 `}
                             >
-                                {(isCompleted && stepNumber !== 1) ? <Check size={24} strokeWidth={4} /> : stepNumber}
+                                {(isCompleted) ? <Check size={24} strokeWidth={4} /> : stepNumber}
                             </div>
 
                             {/* Labels */}
@@ -60,12 +69,12 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack }) 
                                 <span
                                     className={`
                                         block text-[13px] font-black uppercase tracking-[0.25em] mb-1 transition-colors duration-300
-                                        ${isActive || isCompleted || stepNumber === 1 ? 'text-rose-500' : 'text-white'}
+                                        ${isActive || isCompleted || stepNumber === 1 ? 'text-brand-accent' : 'text-white'}
                                     `}
                                 >
                                     {step.label}
                                 </span>
-                                <span className={`block text-[11px] tracking-widest uppercase font-bold transition-colors duration-300 ${isActive || isCompleted || stepNumber === 1 ? 'text-rose-400/80' : 'text-white'}`}>
+                                <span className={`block text-[11px] tracking-widest uppercase font-bold transition-colors duration-300 ${isActive || isCompleted || stepNumber === 1 ? 'text-brand-accent/80' : 'text-white'}`}>
                                     {step.description}
                                 </span>
                             </div>
@@ -73,6 +82,16 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps, onBack }) 
                     )
                 })}
             </div>
+
+            {action && (
+                <div
+                    className="absolute -right-4 top-6 -translate-y-1/2 h-fit flex items-center"
+                    onMouseEnter={() => setIsActionHovered(true)}
+                    onMouseLeave={() => setIsActionHovered(false)}
+                >
+                    {action}
+                </div>
+            )}
         </div>
     )
 }
