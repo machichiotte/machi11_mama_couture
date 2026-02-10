@@ -17,4 +17,29 @@ describe('API', () => {
     })
     expect(users).toBeDefined()
   })
+
+  it('can submit the contact form', async () => {
+    const { submitContactForm } = await import('@/app/(frontend)/contact/actions')
+
+    const result = await submitContactForm({
+      name: 'Test Tester',
+      email: 'test@example.com',
+      message: 'Hello from integration test',
+    })
+
+    expect(result.success).toBe(true)
+
+    // Verify it was created in the database
+    const messages = await payload.find({
+      collection: 'messages',
+      where: {
+        email: {
+          equals: 'test@example.com',
+        },
+      },
+    })
+
+    expect(messages.docs.length).toBeGreaterThan(0)
+    expect(messages.docs[0].name).toBe('Test Tester')
+  })
 })

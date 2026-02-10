@@ -16,7 +16,11 @@ export const POST = async (req: NextRequest) => {
         }
 
         const buffers = await Promise.all(
-            files.map(async (file) => Buffer.from(await file.arrayBuffer()))
+            files.map(async (file) => Buffer.from(
+                typeof file.arrayBuffer === 'function'
+                    ? await file.arrayBuffer()
+                    : await (new Response(file).arrayBuffer())
+            ))
         )
         const mimeType = files[0].type || 'image/jpeg'
 

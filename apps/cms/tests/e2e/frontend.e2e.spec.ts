@@ -8,13 +8,34 @@ test.describe('Frontend', () => {
     page = await context.newPage()
   })
 
-  test('can go on homepage', async ({ page }) => {
-    await page.goto('http://localhost:3000')
+  test('can navigate and submit contact form', async ({ page }) => {
+    // 1. Visit homepage
+    await page.goto('/')
 
-    await expect(page).toHaveTitle(/Payload Blank Template/)
+    // Check for contact link in header (usually) or footer
+    const contactLinks = page.locator('a[href="/contact"]')
+    await expect(contactLinks.first()).toBeVisible()
 
-    const heading = page.locator('h1').first()
+    // 2. Go to contact page
+    await page.goto('/contact')
 
-    await expect(heading).toHaveText('Welcome to your new project.')
+    // 3. Fill the form
+    await page.fill('input[type="text"]', 'E2E Tester')
+    await page.fill('input[type="email"]', 'e2e@test.com')
+    await page.fill('textarea', 'This is an automated E2E test message.')
+
+    // 4. Submit
+    await page.click('button[type="submit"]')
+
+    // 5. Check success message
+    // Based on ContactForm.tsx, it shows successTitle when success is true
+    await expect(page.locator('h3')).toContainText(/envoyé/i)
+  })
+
+  test('about page is accessible', async ({ page }) => {
+    await page.goto('/about')
+    // Use a more specific locator to avoid strict mode violation if logo is also an h1
+    const heading = page.locator('main h1')
+    await expect(heading.first()).toBeVisible()
   })
 })

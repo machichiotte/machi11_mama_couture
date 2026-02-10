@@ -43,15 +43,10 @@ export const AIIngestor: React.FC = () => {
         <div className="ai-container">
             <div className="max-w-[1600px] mx-auto space-y-16">
                 {/* Header Section */}
-                <div className="space-y-8 text-center">
+                <div className="text-center">
                     <h1 className="ai-title">
                         Atelier <span className="text-brand-accent">Petit Point</span>
                     </h1>
-                    <div className="flex justify-center">
-                        <p className="text-white/60 text-base md:text-lg font-medium max-w-3xl leading-relaxed italic text-center">
-                            Votre assistant créatif pour transformer vos photos en collections et créations prêtes à publier.
-                        </p>
-                    </div>
                 </div>
 
                 <Stepper

@@ -21,7 +21,7 @@ export const POST = async (req: NextRequest) => {
     try {
         const payload = await getPayload({ config })
 
-        // On essaie de récupérer les données soit via FormData (Ingestor) soit via JSON (Ancien flux/Text Gen)
+        // Extraction des données
         let mode: 'series' | 'creation' = 'series'
         let title: string = ''
         let description: string = ''
@@ -32,15 +32,26 @@ export const POST = async (req: NextRequest) => {
 
         const contentType = req.headers.get('content-type') || ''
 
-        if (contentType.includes('multipart/form-data')) {
-            const formData = await req.formData()
-            mode = (formData.get('mode') as 'series' | 'creation') || 'series'
-            title = formData.get('title') as string || formData.get('collectionName') as string || ''
-            description = formData.get('description') as string || ''
-            files = formData.getAll('file') as File[]
-            price = formData.get('price') ? Number(formData.get('price')) : undefined
-            details = formData.get('details') as string || undefined
-            seriesMatch = formData.get('seriesMatch') as string || undefined
+        if (contentType.includes('multipart/form-data') || !contentType) {
+            try {
+                const formData = await req.formData()
+                mode = (formData.get('mode') as 'series' | 'creation') || 'series'
+                title = formData.get('title') as string || formData.get('collectionName') as string || ''
+                description = formData.get('description') as string || ''
+                files = formData.getAll('file') as File[]
+                price = formData.get('price') ? Number(formData.get('price')) : undefined
+                details = formData.get('details') as string || undefined
+                seriesMatch = formData.get('seriesMatch') as string || undefined
+            } catch (formError) {
+                if (contentType.includes('application/json') || !contentType) {
+                    try {
+                        const body = await req.json()
+                        title = body.title || body.collectionName || ''
+                        description = body.description || ''
+                        mode = body.mode || 'series'
+                    } catch (jsonErr) { }
+                }
+            }
         } else {
             const body = await req.json()
             title = body.title || body.collectionName || ''
@@ -52,37 +63,40 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ error: 'Title is required' }, { status: 400 })
         }
 
-        console.log(`🚀 [AI-CREATE] Mode: ${mode} | Title: ${title} | Files: ${files.length}`)
-
         let mediaIds: (string | number)[] = []
 
         // CAS 1 : On a des fichiers (Ingestor)
         if (files.length > 0) {
-            console.log(`📤 [AI-CREATE] Uploading ${files.length} provided files...`)
-            mediaIds = await Promise.all(
-                files.map(async (file) => {
-                    const buffer = Buffer.from(await file.arrayBuffer())
-                    const mediaDoc = await payload.create({
-                        collection: 'media',
-                        data: { alt: title },
-                        file: {
-                            data: buffer,
-                            name: `ai-ingest-${Date.now()}-${file.name.toLowerCase().replace(/\s+/g, '-')}`,
-                            mimetype: file.type || 'image/jpeg',
-                            size: buffer.length,
-                        },
-                    })
-                    return mediaDoc.id
+            for (const [index, file] of files.entries()) {
+                const arrayBuffer = typeof file.arrayBuffer === 'function'
+                    ? await file.arrayBuffer()
+                    : await (new Response(file).arrayBuffer())
+
+                const buffer = Buffer.from(arrayBuffer)
+                const fileName = `ai-ingest-${Date.now()}-${index}-${file.name.toLowerCase().replace(/\s+/g, '-')}`
+                const mimeType = file.type || 'image/jpeg'
+
+                const mediaDoc = await payload.create({
+                    collection: 'media',
+                    data: { alt: title },
+                    file: {
+                        data: buffer,
+                        name: fileName,
+                        mimetype: mimeType,
+                        size: buffer.length,
+                    },
+                    overrideAccess: true,
                 })
-            )
+                mediaIds.push(mediaDoc.id)
+            }
         }
-        // CAS 2 : Pas de fichier -> On fait l'auto-génération (Text to Collection)
+        // CAS 2 : Pas de fichier -> Auto-génération
         else {
-            console.log('🤖 [AI-CREATE] No file provided, starting auto-generation...')
             const existingSeriesDocs = await payload.find({
                 collection: 'series',
                 limit: 20,
                 sort: '-createdAt',
+                overrideAccess: true,
             })
             const existingTitles = existingSeriesDocs.docs.map(doc => doc.title).filter(t => typeof t === 'string') as string[]
 
@@ -107,21 +121,19 @@ export const POST = async (req: NextRequest) => {
                     mimetype: 'image/jpeg',
                     size: imageBuffer.length,
                 },
+                overrideAccess: true,
             })
             mediaIds = [mediaDoc.id]
         }
 
-        // Création de l'entrée finale
         if (mode === 'creation') {
-            console.log('🏗️ [AI-CREATE] Creating Creation entry...')
-
-            // Trouver la série correspondante si seriesMatch est fourni
             let seriesId: string | number | undefined
             if (seriesMatch) {
                 const matchedSeries = await payload.find({
                     collection: 'series',
                     where: { title: { equals: seriesMatch } },
-                    limit: 1
+                    limit: 1,
+                    overrideAccess: true,
                 })
                 if (matchedSeries.docs.length > 0) {
                     seriesId = matchedSeries.docs[0].id
@@ -151,15 +163,15 @@ export const POST = async (req: NextRequest) => {
                     },
                     details: details || '',
                     images: mediaIds.map(id => ({ image: id })),
-                    series: seriesId as any, // Payload relation ID
+                    series: seriesId as any,
                     price: price || 0,
                     stockStatus: 'hidden',
                     isPublished: false,
-                } as any
+                } as any,
+                overrideAccess: true,
             })
             return NextResponse.json({ success: true, doc: creationDoc })
         } else {
-            console.log('🏗️ [AI-CREATE] Creating Series entry...')
             const seriesDoc = await payload.create({
                 collection: 'series',
                 data: {
@@ -168,6 +180,7 @@ export const POST = async (req: NextRequest) => {
                     coverImage: (mediaIds[0] as any) || '',
                     isPublished: false,
                 },
+                overrideAccess: true,
             })
             return NextResponse.json({ success: true, doc: seriesDoc })
         }

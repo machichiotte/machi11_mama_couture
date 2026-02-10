@@ -108,7 +108,20 @@ pnpm run generate:types  # Générer les types TypeScript
 # Qualité de code
 pnpm run lint            # Linter tout le projet
 pnpm run lint:fix        # Corriger automatiquement
+
+# Tests
+pnpm --filter cms test:int    # Lancer les tests d'intégration (Vitest)
+pnpm --filter cms test:e2e    # Lancer les tests de bout en bout (Playwright)
 ```
+
+---
+
+## 🧪 Stratégie de Test
+
+Le projet inclut une suite de tests automatisés pour garantir la stabilité en production :
+
+1.  **Tests d'Intégration** (`apps/cms/tests/int`) : Valident la communication avec la base de données Payload et les Server Actions (ex: soumission du formulaire).
+2.  **Tests E2E (End-to-End)** (`apps/cms/tests/e2e`) : Simulent le parcours réel d'un utilisateur sur le site (navigation, remplissage de formulaire, responsive).
 
 ---
 

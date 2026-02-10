@@ -35,7 +35,7 @@ export const Step2Import: React.FC<Step2ImportProps> = ({
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: { 'image/*': [] },
-        multiple: mode === 'creation'
+        multiple: true
     })
 
     const hasFiles = files.length > 0
@@ -184,7 +184,7 @@ export const Step2Import: React.FC<Step2ImportProps> = ({
                                 className="ai-button-primary w-full text-2xl group py-6"
                             >
                                 <Sparkles size={28} className="group-hover:rotate-12 transition-transform" />
-                                {hasFiles ? `Analyser ${files.length} Création${files.length > 1 ? 's' : ''}` : "Lancer l'Analyse"}
+                                {hasFiles ? `Analyser ${files.length} ${mode === 'series' ? 'Collection' : 'Création'}${files.length > 1 ? 's' : ''}` : "Lancer l'Analyse"}
                             </button>
                             <p className="mt-6 text-center text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-black opacity-60">
                                 {selectedId ? "L'analyse utilisera vos réglages" : "L'intelligence artificielle définit le thème"}

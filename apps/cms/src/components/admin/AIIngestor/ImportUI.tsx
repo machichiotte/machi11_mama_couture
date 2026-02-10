@@ -82,17 +82,18 @@ export const FilePreviewGrid: React.FC<FilePreviewGridProps> = ({
         e.stopPropagation()
         setDragOverId(null)
 
+        // Disable merging and multi-image grouping in series mode
+        if (mode === 'series') return
+
         // Handle external files from OS
         const droppedFiles = Array.from(e.dataTransfer.files)
         if (droppedFiles.length > 0) {
-            console.log('OS Files Drop:', droppedFiles.length, 'on', targetId)
             onAddFiles(targetId, droppedFiles)
             return
         }
 
         // Handle internal drag
         const sourceId = e.dataTransfer.getData('text/plain')
-        console.log('Internal Drop:', sourceId, 'on', targetId)
         if (sourceId && sourceId !== targetId) {
             onMerge(sourceId, targetId)
         }
@@ -109,15 +110,17 @@ export const FilePreviewGrid: React.FC<FilePreviewGridProps> = ({
                     return (
                         <div
                             key={fileData.id}
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, fileData.id)}
+                            draggable={mode === 'creation'}
+                            onDragStart={(e) => mode === 'creation' && handleDragStart(e, fileData.id)}
                             onDragOver={(e) => {
+                                if (mode === 'series') return;
                                 e.preventDefault();
                                 e.stopPropagation();
                                 e.dataTransfer.dropEffect = 'move';
                                 if (dragOverId !== fileData.id) setDragOverId(fileData.id);
                             }}
                             onDragLeave={(e) => {
+                                if (mode === 'series') return;
                                 e.preventDefault();
                                 e.stopPropagation();
                                 setDragOverId(null);

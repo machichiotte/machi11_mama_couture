@@ -175,10 +175,10 @@ export const FileItem: React.FC<FileItemProps> = ({
                                                                 value={userTitle || result.title}
                                                                 onChange={(e) => onUpdateFields(id, { userTitle: e.target.value })}
                                                                 className="w-full bg-transparent border-none p-0 text-3xl font-black text-white focus:ring-0 outline-none placeholder:opacity-20 tracking-tight"
-                                                                placeholder="Titre..."
+                                                                placeholder={mode === 'series' ? "Titre de la Collection..." : "Titre de la Création..."}
                                                             />
 
-                                                            {/* Integrated Collection Selector */}
+                                                            {/* Integrated Collection Selector - Only for creation mode */}
                                                             {mode === 'creation' && (
                                                                 <div className="max-w-md -ml-3">
                                                                     <SeriesSelector

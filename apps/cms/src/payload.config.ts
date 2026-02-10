@@ -27,7 +27,7 @@ const {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
   CLOUDINARY_FOLDER = 'machi11', // Dossier par défaut
-  DATABASE_URL,
+  MONGODB_URI,
   PAYLOAD_SECRET,
   PAYLOAD_PUBLIC_SERVER_URL,
   PAYLOAD_PUBLIC_SITE_URL,
@@ -46,12 +46,12 @@ const normalizeUrl = (url?: string) => url ? url.replace(/\/+$/, '') : ''
 const finalServerURL = normalizeUrl(PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3011')
 const finalSiteURL = normalizeUrl(PAYLOAD_PUBLIC_SITE_URL || '')
 
-const finalDatabaseURL = DATABASE_URL || 'mongodb://localhost:27017/machi11_dev'
+const finalDatabaseURL = MONGODB_URI || 'mongodb://localhost:27017/machi11_dev'
 const finalPayloadSecret = PAYLOAD_SECRET || 'temp-secret-for-build-only'
 
-// En production, on exige DATABASE_URL sauf pendant la phase de build de Next.js
-if (!DATABASE_URL && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
-  throw new Error('FATAL: DATABASE_URL is missing in production runtime')
+// En production, on exige MONGODB_URI sauf pendant la phase de build de Next.js
+if (!MONGODB_URI && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
+  throw new Error('FATAL: MONGODB_URI is missing in production runtime')
 }
 
 cloudinary.config({
@@ -143,13 +143,13 @@ export default buildConfig({
     console.log('🚀 [CMS] Starting Payload...');
     console.log(`🚀 [CMS] SERVER_URL configured as: ${finalServerURL}`);
     console.log(`🚀 [CMS] SITE_URL configured as: ${finalSiteURL}`);
-    console.log(`🚀 [CMS] DATABASE_URL present: ${!!DATABASE_URL}`);
+    console.log(`🚀 [CMS] MONGODB_URI present: ${!!MONGODB_URI}`);
 
     payload.logger.info('--- CMS CONFIG DEBUG ---')
     payload.logger.info(`SERVER_URL: ${finalServerURL}`)
     payload.logger.info(`SITE_URL: ${finalSiteURL}`)
     payload.logger.info(`ALLOWED ORIGINS: ${[finalSiteURL, finalServerURL].filter(Boolean).join(', ')}`)
-    payload.logger.info(`DATABASE: ${DATABASE_URL ? 'Connected' : 'FALLBACK USED'}`)
+    payload.logger.info(`DATABASE: ${MONGODB_URI ? 'Connected' : 'FALLBACK USED'}`)
     payload.logger.info(`SMTP: ${process.env.SMTP_HOST ? 'Configured (' + process.env.SMTP_HOST + ')' : 'MOCK USED'}`)
     payload.logger.info('------------------------')
   },
@@ -248,7 +248,7 @@ export default buildConfig({
   }),
   plugins: [
     // Storage R2 (Cloudflare) - Prioritaire si configuré
-    ...(R2_ACCESS_KEY_ID ? [
+    ...(R2_ACCESS_KEY_ID && process.env.NODE_ENV !== 'test' ? [
       s3Storage({
         collections: {
           media: {
@@ -280,8 +280,9 @@ export default buildConfig({
           forcePathStyle: true,
         },
       })
-    ] : [
-      // Fallback Cloudinary (Ancienne config)
+    ] : []),
+    // Fallback Cloudinary (Ancienne config) - Skip in tests
+    ...(CLOUDINARY_CLOUD_NAME && !R2_ACCESS_KEY_ID && process.env.NODE_ENV !== 'test' ? [
       cloudStoragePlugin({
         collections: {
           media: {
@@ -294,7 +295,7 @@ export default buildConfig({
           },
         },
       }),
-    ]),
+    ] : []),
     seoPlugin({
       collections: ['series', 'creations'],
       globals: ['site-settings', 'about'],
