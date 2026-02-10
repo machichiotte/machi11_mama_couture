@@ -21,7 +21,8 @@ export async function analyzeSeriesImage(
   imageBuffer: Buffer,
   mimeType: string = 'image/jpeg',
   userTitle?: string | null,
-  userDescription?: string | null
+  userDescription?: string | null,
+  fileName?: string | null
 ) {
   if (!GEMINI_API_KEY) throw new Error('GOOGLE_GENERATIVE_AI_API_KEY is missing')
 
@@ -68,7 +69,9 @@ export async function analyzeSeriesImage(
     2. Vérifier/améliorer la description (corrige les fautes, enrichis si nécessaire) :`
   }
 
-  const prompt = `${taskDescription}
+  const fileContext = fileName ? `\nNote : Le fichier original se nomme "${fileName}". Utilise cette information comme un indice si le nom est explicite.\n` : ''
+
+  const prompt = `${fileContext}${taskDescription}
        
        - "object": 
          * Titre : UNIQUEMENT le type d'objet au pluriel, SANS le mot "Collection" et SANS mentionner les motifs ni les matières (ex: "Bouillottes", "Marque-pages", "Sacs Cabas")
@@ -113,13 +116,16 @@ export async function analyzeSeriesImage(
 export async function analyzeCreationImages(
   imageBuffers: Buffer[],
   existingSeries: string[],
-  mimeType: string = 'image/jpeg'
+  mimeType: string = 'image/jpeg',
+  fileNames?: string[]
 ) {
   if (!GEMINI_API_KEY) throw new Error('GOOGLE_GENERATIVE_AI_API_KEY is missing')
 
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
-  const prompt = `Voici une ou plusieurs photos d'une même création de couture.
+  const fileContext = (fileNames && fileNames.length > 0) ? `\nNote : Le fichier principal se nomme "${fileNames[0]}". Utilise cette information comme un indice si le nom est explicite.\n` : ''
+
+  const prompt = `Voici une ou plusieurs photos d'une même création de couture.${fileContext}
     Analyse les détails, les textures et les formes.
     1. Suggère un titre (ex: "Le Sac Cabas en Lin").
     2. Rédige une description détaillant le soin apporté.

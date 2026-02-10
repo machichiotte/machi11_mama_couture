@@ -10,6 +10,7 @@ export const POST = async (req: NextRequest) => {
         const mode = formData.get('mode') as 'series' | 'creation'
         const userTitle = formData.get('userTitle') as string | null
         const userDescription = formData.get('userDescription') as string | null
+        const fileNames = files.map(f => f.name)
 
         if (!files || files.length === 0) {
             return NextResponse.json({ error: 'No file provided' }, { status: 400 })
@@ -30,9 +31,9 @@ export const POST = async (req: NextRequest) => {
         if (mode === 'creation') {
             const seriesDocs = await payload.find({ collection: 'series', depth: 0, limit: 100 })
             const seriesNames = seriesDocs.docs.map((s: any) => s.title)
-            result = await analyzeCreationImages(buffers, seriesNames, mimeType)
+            result = await analyzeCreationImages(buffers, seriesNames, mimeType, fileNames)
         } else {
-            result = await analyzeSeriesImage(buffers[0], mimeType, userTitle, userDescription)
+            result = await analyzeSeriesImage(buffers[0], mimeType, userTitle, userDescription, fileNames[0])
         }
 
         return NextResponse.json(result)
